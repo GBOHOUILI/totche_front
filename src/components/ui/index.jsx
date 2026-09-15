@@ -47,7 +47,10 @@ export function SiteCard({ site, index = 0 }) {
       </div>
       <div className="card__body">
         <h3 className="card__title">{site.libelle}</h3>
-        <p className="card__location">{site.adresse}</p>
+        <p className="card__location">
+          {site.adresse}
+          {typeof site.distance_km === 'number' && ` · ${site.distance_km.toFixed(1)} km`}
+        </p>
         <Stars value={site.moyenne_avis || 0} />
       </div>
     </Link>
@@ -75,7 +78,10 @@ export function EventCard({ event, index = 0 }) {
       </div>
       <div className="card__body">
         <h3 className="card__title">{event.libelle}</h3>
-        <p className="card__location">{event.adresse}</p>
+        <p className="card__location">
+          {event.adresse}
+          {typeof event.distance_km === 'number' && ` · ${event.distance_km.toFixed(1)} km`}
+        </p>
         {dateDebut && (
           <p className="card__date">
             {dateDebut.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}

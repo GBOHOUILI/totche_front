@@ -13,6 +13,11 @@ export default function Sites() {
   const [page, setPage] = useState(1)
   const [meta, setMeta] = useState(null)
   const [searchParams] = useSearchParams()
+  const [geo, setGeo] = useState(null) // { lat, lng } | null
+  const [radius, setRadius] = useState(25)
+  const [geoError, setGeoError] = useState('')
+  const [prixMin, setPrixMin] = useState('')
+  const [prixMax, setPrixMax] = useState('')
 
   useEffect(() => {
     setSearch(searchParams.get('q') || '')
@@ -25,13 +30,28 @@ export default function Sites() {
       page,
       libelle: search || undefined,
       id_cat_site: selectedCat || undefined,
+      lat: geo?.lat,
+      lng: geo?.lng,
+      radius: geo ? radius : undefined,
+      prix_min: prixMin || undefined,
+      prix_max: prixMax || undefined,
     })
       .then(r => {
         setSites(r.data?.data || r.data || [])
         setMeta(r.data?.meta || null)
       })
       .finally(() => setLoading(false))
-  }, [page, search, selectedCat])
+  }, [page, search, selectedCat, geo, radius, prixMin, prixMax])
+
+  const toggleGeo = () => {
+    if (geo) { setGeo(null); setGeoError(''); return }
+    if (!navigator.geolocation) { setGeoError('Géolocalisation non disponible sur cet appareil'); return }
+    setGeoError('')
+    navigator.geolocation.getCurrentPosition(
+      (pos) => { setGeo({ lat: pos.coords.latitude, lng: pos.coords.longitude }); setPage(1) },
+      () => setGeoError("Impossible d'accéder à votre position"),
+    )
+  }
 
   return (
     <div className="page-sites">
@@ -63,6 +83,43 @@ export default function Sites() {
                 {cat.libelle}
               </button>
             ))}
+          </div>
+
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center', margin: '0.75rem 0 0' }}>
+            <button
+              type="button"
+              className={`filters__cat${geo ? ' filters__cat--active' : ''}`}
+              onClick={toggleGeo}
+            >
+              <MapPin size={14} style={{ marginRight: 4, verticalAlign: -2 }} />
+              {geo ? 'Près de moi (actif)' : 'Près de moi'}
+            </button>
+            {geo && (
+              <select value={radius} onChange={e => { setRadius(Number(e.target.value)); setPage(1) }}>
+                <option value={5}>5 km</option>
+                <option value={10}>10 km</option>
+                <option value={25}>25 km</option>
+                <option value={50}>50 km</option>
+                <option value={100}>100 km</option>
+              </select>
+            )}
+            <input
+              type="number"
+              min="0"
+              placeholder="Prix min"
+              value={prixMin}
+              onChange={e => { setPrixMin(e.target.value); setPage(1) }}
+              style={{ width: 100, padding: '0.4rem 0.6rem', border: '1.5px solid var(--gray-200)', borderRadius: 8 }}
+            />
+            <input
+              type="number"
+              min="0"
+              placeholder="Prix max"
+              value={prixMax}
+              onChange={e => { setPrixMax(e.target.value); setPage(1) }}
+              style={{ width: 100, padding: '0.4rem 0.6rem', border: '1.5px solid var(--gray-200)', borderRadius: 8 }}
+            />
+            {geoError && <span style={{ color: '#dc2626', fontSize: '0.8rem' }}>{geoError}</span>}
           </div>
         </div>
 
