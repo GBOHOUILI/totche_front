@@ -55,7 +55,7 @@ export default function Home() {
 
   return (
     <div className="home">
-      {/* ── HERO ── */}
+      {/* ── HERO — image plein cadre, aucun contenu superposé ── */}
       <section className="hero">
         {HERO_IMAGES.map((src, i) => (
           <div
@@ -66,12 +66,23 @@ export default function Home() {
         ))}
         <div className="hero__overlay" />
 
-        <div className="hero__content">
-          <p className="hero__announce">
-            <span>Annonces :</span> Faites vos réservations depuis votre canapé et évitez les foules dans les ticketeries.
-          </p>
+        {/* Dots */}
+        <div className="hero__dots">
+          {HERO_IMAGES.map((_, i) => (
+            <button key={i} className={`hero__dot${i === heroIdx ? ' hero__dot--active' : ''}`} onClick={() => setHeroIdx(i)} />
+          ))}
+        </div>
+      </section>
 
-          {/* Search bar */}
+      {/* ── INTRO ÉDITORIALE — titre + recherche, sur fond blanc ── */}
+      <section className="hero__intro">
+        <div className="container hero__intro-grid">
+          <div>
+            <h1>Programmez votre prochaine escapade au Bénin</h1>
+            <p className="hero__intro-sub" style={{ marginTop: '1rem' }}>
+              Sites historiques, réserves naturelles et festivals culturels — réservez directement, sans détour par une agence.
+            </p>
+          </div>
           <form className="hero__search" onSubmit={handleSearch}>
             <div className="hero__search-field">
               <MapPin size={16} />
@@ -82,7 +93,6 @@ export default function Home() {
                 onChange={e => setSearch(s => ({ ...s, where: e.target.value }))}
               />
             </div>
-            <div className="hero__search-divider" />
             <div className="hero__search-field">
               <Calendar size={16} />
               <input
@@ -92,28 +102,10 @@ export default function Home() {
                 onChange={e => setSearch(s => ({ ...s, when: e.target.value }))}
               />
             </div>
-            <div className="hero__search-divider" />
-            <div className="hero__search-field">
-              <Users size={16} />
-              <input
-                type="number"
-                placeholder="Nbre Personnes"
-                min={1}
-                value={search.persons}
-                onChange={e => setSearch(s => ({ ...s, persons: e.target.value }))}
-              />
-            </div>
             <button type="submit" className="hero__search-btn">
               <Search size={18} />
             </button>
           </form>
-        </div>
-
-        {/* Dots */}
-        <div className="hero__dots">
-          {HERO_IMAGES.map((_, i) => (
-            <button key={i} className={`hero__dot${i === heroIdx ? ' hero__dot--active' : ''}`} onClick={() => setHeroIdx(i)} />
-          ))}
         </div>
       </section>
 
@@ -142,12 +134,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── TAGLINE ── */}
-      <section className="home__tagline">
-        <h1>Programmez votre vacance en 1 clic</h1>
-        <p>Faites vos réservations depuis votre canapé et évitez les foules dans les ticketeries.</p>
-      </section>
-
       {/* ── SITES TOURISTIQUES ── */}
       <section className="home__section">
         <div className="container">
@@ -158,7 +144,7 @@ export default function Home() {
           {loading ? (
             <div className="center-spinner"><Spinner /></div>
           ) : (
-            <div className="cards-grid cards-grid--5">
+            <div className="cards-grid cards-grid--5 cards-grid--home">
               {featuredSites.map((site, i) => <SiteCard key={site.id} site={site} index={i} />)}
             </div>
           )}
@@ -175,7 +161,7 @@ export default function Home() {
           {loading ? (
             <div className="center-spinner"><Spinner /></div>
           ) : (
-            <div className="cards-grid cards-grid--5">
+            <div className="cards-grid cards-grid--5 cards-grid--home">
               {featuredEvents.map((evt, i) => <EventCard key={evt.id} event={evt} index={i} />)}
             </div>
           )}
