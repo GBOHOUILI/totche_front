@@ -20,9 +20,16 @@ export default function Sites() {
   const [prixMax, setPrixMax] = useState('')
 
   useEffect(() => {
-    setSearch(searchParams.get('q') || '')
     categoriesApi.sites().then(r => setCategories(r.data?.data || r.data || []))
   }, [])
+
+  // Resynchronise avec l'URL à chaque navigation (ex: lien du mega-menu vers
+  // /sites?categorie=X depuis une page /sites déjà montée — pas de remount React Router).
+  useEffect(() => {
+    setSearch(searchParams.get('q') || '')
+    setSelectedCat(searchParams.get('categorie') || '')
+    setPage(1)
+  }, [searchParams])
 
   useEffect(() => {
     setLoading(true)

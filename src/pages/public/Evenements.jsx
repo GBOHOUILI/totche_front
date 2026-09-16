@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Search, X, Calendar, MapPin } from 'lucide-react'
 import { evenementsApi, categoriesApi } from '../../api/services'
 import { EventCard, Spinner, EmptyState } from '../../components/ui/index'
@@ -16,10 +17,19 @@ export default function Evenements() {
   const [geoError, setGeoError] = useState('')
   const [prixMin, setPrixMin] = useState('')
   const [prixMax, setPrixMax] = useState('')
+  const [searchParams] = useSearchParams()
 
   useEffect(() => {
     categoriesApi.evenements().then(r => setCategories(r.data?.data || r.data || []))
   }, [])
+
+  // Resynchronise avec l'URL à chaque navigation (ex: lien du mega-menu vers
+  // /evenements?categorie=X depuis une page /evenements déjà montée).
+  useEffect(() => {
+    setSearch(searchParams.get('q') || '')
+    setSelectedCat(searchParams.get('categorie') || '')
+    setPage(1)
+  }, [searchParams])
 
   useEffect(() => {
     setLoading(true)

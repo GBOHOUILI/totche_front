@@ -90,10 +90,39 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 }
 .navbar__link:hover { color: var(--black); }
 .navbar__link--active { color: var(--red); font-weight: 600; }
+.navbar__item { position: relative; }
+.navbar__link--mega { display: inline-flex; align-items: center; gap: 3px; }
+.navbar__chevron { transition: transform var(--transition); }
+.navbar__chevron--open { transform: rotate(180deg); }
+
+/* Mega-menu : panneau centré sous la nav, sous-liens + un item mis en avant (armenia.travel) */
+.mega-menu {
+  position: fixed; top: var(--nav-h); left: 50%; transform: translateX(-50%);
+  width: min(680px, 92vw);
+  background: var(--white); border: 1px solid var(--gray-100); box-shadow: var(--shadow-lg);
+  padding: 1.75rem; z-index: 150;
+  animation: megaMenuIn 0.18s ease both;
+}
+@keyframes megaMenuIn { from { opacity: 0; transform: translateX(-50%) translateY(-6px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+.mega-menu__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.25rem 1.5rem; }
+.mega-menu__item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.65rem 0.5rem; color: var(--gray-700); }
+.mega-menu__item:hover { background: var(--gray-100); }
+.mega-menu__item svg { color: var(--red); flex-shrink: 0; margin-top: 0.15rem; }
+.mega-menu__item strong { display: block; font-size: 0.9rem; font-weight: 600; color: var(--black); }
+.mega-menu__item em { display: block; font-style: normal; font-size: 0.78rem; color: var(--gray-500); margin-top: 0.1rem; }
+.mega-menu__featured { display: flex; gap: 1rem; align-items: center; margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--gray-100); }
+.mega-menu__featured img { width: 96px; height: 72px; object-fit: cover; flex-shrink: 0; }
+.mega-menu__featured h4 { font-size: 0.95rem; font-weight: 600; color: var(--black); margin-bottom: 0.2rem; }
+.mega-menu__featured p { font-size: 0.8rem; color: var(--gray-500); line-height: 1.4; margin-bottom: 0.3rem; }
+.mega-menu__featured a { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--red); }
 
 .navbar__actions { display: flex; align-items: center; gap: 0.5rem; margin-left: 1rem; }
 .navbar__icon-btn { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; color: var(--gray-700); transition: background var(--transition), color var(--transition); }
 .navbar__icon-btn:hover { background: var(--gray-100); color: var(--black); }
+.navbar__search { position: relative; }
+.navbar__search-panel { position: absolute; top: calc(100% + 10px); right: 0; display: flex; align-items: center; gap: 0.5rem; background: var(--white); border: 1px solid var(--gray-300); box-shadow: var(--shadow-md); padding: 0.6rem 0.9rem; width: 260px; z-index: 150; color: var(--gray-500); }
+.navbar__search-panel input { border: none; font-size: 0.875rem; flex: 1; color: var(--black); }
+.navbar__search-panel input:focus { outline: none; }
 
 .navbar__btn-participez {
   background: var(--red); color: var(--white);
