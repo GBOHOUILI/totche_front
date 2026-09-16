@@ -178,7 +178,7 @@ export default function AdminSites() {
                     <div key={g.id} style={{ position: 'relative' }}>
                       <img src={g.url_fichier || g.url} alt={g.libelle} style={{ borderRadius: 8, width: '100%', height: 80, objectFit: 'cover' }} />
                       <button
-                        style={{ position: 'absolute', top: 4, right: 4, background: '#E63946', color: '#fff', border: 'none', borderRadius: 4, padding: '2px 6px', cursor: 'pointer', fontSize: 11 }}
+                        style={{ position: 'absolute', top: 4, right: 4, background: 'var(--red)', color: 'var(--white)', border: 'none', borderRadius: 4, padding: '2px 6px', cursor: 'pointer', fontSize: 11 }}
                         onClick={async () => { await galeriesApi.deleteSite(g.id); load(); setGalModal(s => ({ ...s, galeries: s.galeries.filter(x => x.id !== g.id) })) }}
                       >✕</button>
                     </div>

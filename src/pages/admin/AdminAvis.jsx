@@ -5,15 +5,15 @@ import { Spinner } from '../../components/ui/index'
 import toast from 'react-hot-toast'
 
 const STATUS_LABELS = {
-  en_attente: { label: 'En attente', bg: '#fef9c3', color: '#ca8a04' },
-  approuve:   { label: 'Approuvé',   bg: '#dcfce7', color: '#16a34a' },
-  rejete:     { label: 'Rejeté',     bg: '#fee2e2', color: '#dc2626' },
+  en_attente: { label: 'En attente', variant: 'warning' },
+  approuve:   { label: 'Approuvé',   variant: 'success' },
+  rejete:     { label: 'Rejeté',     variant: 'danger' },
 }
 
 const StatusBadge = ({ status }) => {
   const s = STATUS_LABELS[status] || STATUS_LABELS['en_attente']
   return (
-    <span style={{ fontSize: '0.75rem', fontWeight: 600, padding: '2px 10px', borderRadius: '20px', background: s.bg, color: s.color }}>
+    <span className={`status-badge status-badge--${s.variant}`}>
       {s.label}
     </span>
   )
@@ -110,7 +110,7 @@ export default function AdminAvis() {
             onClick={() => { setFilter(f.key); setPage(1) }}
             style={{
               padding: '0.4rem 1rem', borderRadius: '20px', border: '1.5px solid',
-              borderColor: filter === f.key ? 'var(--primary)' : 'var(--gray-200)',
+              borderColor: filter === f.key ? 'var(--primary)' : 'var(--gray-300)',
               background:  filter === f.key ? 'var(--primary)' : 'white',
               color:       filter === f.key ? 'white' : 'var(--gray-700)',
               fontWeight: 500, fontSize: '0.85rem', cursor: 'pointer',
@@ -140,11 +140,11 @@ export default function AdminAvis() {
                 <tr key={a.id}>
                   <td>{a.id}</td>
                   <td><strong>{avisUser(a)?.nom || '—'}</strong></td>
-                  <td style={{ fontSize: '0.82rem', color: 'var(--gray-600)' }}>
+                  <td style={{ fontSize: '0.82rem', color: 'var(--gray-700)' }}>
                     {avisCible(a).libelle}
                   </td>
                   <td style={{ fontSize: '0.82rem', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {a.message || <span style={{ color: 'var(--gray-400)' }}>Aucun commentaire</span>}
+                    {a.message || <span style={{ color: 'var(--gray-500)' }}>Aucun commentaire</span>}
                   </td>
                   <td><StatusBadge status={a.status} /></td>
                   <td>
@@ -152,7 +152,7 @@ export default function AdminAvis() {
                       <button className="admin-icon-btn" title="Voir" onClick={() => setSelected(a)}><Eye size={15} /></button>
                       {(a.status || a.statut) !== 'approuve' && (
                         <button className="admin-icon-btn" title="Approuver"
-                          style={{ color: '#16a34a' }}
+                          style={{ color: 'var(--palm)' }}
                           disabled={actionLoading === a.id + '_approve'}
                           onClick={() => handleApprove(a.id)}>
                           <CheckCircle size={15} />
@@ -194,12 +194,12 @@ export default function AdminAvis() {
             </div>
             <div style={{ padding: '0 0 1rem' }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
-                <div style={{ background: 'var(--gray-50)', padding: '0.75rem', borderRadius: '8px' }}>
+                <div style={{ background: 'var(--gray-100)', padding: '0.75rem', borderRadius: '8px' }}>
                   <p style={{ fontSize: '0.75rem', color: 'var(--gray-500)', marginBottom: '0.25rem' }}>Utilisateur</p>
                   <p style={{ fontWeight: 600 }}>{avisUser(selected)?.nom} {avisUser(selected)?.prenom || ''}</p>
                   <p style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>{avisUser(selected)?.email || '—'}</p>
                 </div>
-                <div style={{ background: 'var(--gray-50)', padding: '0.75rem', borderRadius: '8px' }}>
+                <div style={{ background: 'var(--gray-100)', padding: '0.75rem', borderRadius: '8px' }}>
                   <p style={{ fontSize: '0.75rem', color: 'var(--gray-500)', marginBottom: '0.25rem' }}>Cible</p>
                   <p style={{ fontWeight: 600 }}>{avisCible(selected).libelle}</p>
                   <p style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>{avisCible(selected).type}</p>
@@ -207,21 +207,21 @@ export default function AdminAvis() {
               </div>
               <div style={{ marginBottom: '1.25rem' }}>
                 <p style={{ fontSize: '0.75rem', color: 'var(--gray-500)', marginBottom: '0.4rem' }}>Commentaire</p>
-                <p style={{ background: 'var(--gray-50)', padding: '0.75rem', borderRadius: '8px', lineHeight: 1.6, fontSize: '0.9rem' }}>
-                  {selected.message || <em style={{ color: 'var(--gray-400)' }}>Aucun commentaire</em>}
+                <p style={{ background: 'var(--gray-100)', padding: '0.75rem', borderRadius: '8px', lineHeight: 1.6, fontSize: '0.9rem' }}>
+                  {selected.message || <em style={{ color: 'var(--gray-500)' }}>Aucun commentaire</em>}
                 </p>
               </div>
               <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '0.5rem' }}>
                 <StatusBadge status={selected.status} />
-                <span style={{ color: 'var(--gray-400)', fontSize: '0.8rem' }}>
+                <span style={{ color: 'var(--gray-500)', fontSize: '0.8rem' }}>
                   {selected.created_at ? new Date(selected.created_at).toLocaleDateString('fr-FR') : ''}
                 </span>
               </div>
             </div>
             <div className="admin-form__footer">
-              <button className="btn btn--ghost btn--sm" style={{ color: '#dc2626' }} onClick={() => handleDelete(selected.id)}>Supprimer</button>
+              <button className="btn btn--ghost btn--sm" style={{ color: 'var(--red-dark)' }} onClick={() => handleDelete(selected.id)}>Supprimer</button>
               {(selected.status || selected.statut) !== 'rejete' && (
-                <button className="btn btn--ghost btn--sm" style={{ color: '#dc2626', border: '1px solid #dc2626' }}
+                <button className="btn btn--ghost btn--sm" style={{ color: 'var(--red-dark)', border: '1px solid var(--red-dark)' }}
                   disabled={actionLoading === selected.id + '_reject'}
                   onClick={() => handleReject(selected.id)}>
                   Rejeter

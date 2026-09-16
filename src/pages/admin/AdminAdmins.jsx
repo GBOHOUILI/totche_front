@@ -101,11 +101,7 @@ export default function AdminAdmins() {
                 <td>{a.email || '—'}</td>
                 <td>{a.tel || '—'}</td>
                 <td>
-                  <span style={{
-                    fontSize: '0.75rem', fontWeight: 600, padding: '2px 10px', borderRadius: '20px',
-                    background: a.status === 'actif' || !a.status ? '#dcfce7' : '#fee2e2',
-                    color:      a.status === 'actif' || !a.status ? '#16a34a' : '#dc2626',
-                  }}>
+                  <span className={`status-badge status-badge--${a.status === 'actif' || !a.status ? 'success' : 'danger'}`}>
                     {a.status || 'Actif'}
                   </span>
                 </td>
@@ -158,7 +154,7 @@ export default function AdminAdmins() {
                     style={{ paddingRight: '2.5rem' }}
                   />
                   <button type="button" onClick={() => setShowPwd(v => !v)}
-                    style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--gray-400)' }}>
+                    style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--gray-500)' }}>
                     {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
