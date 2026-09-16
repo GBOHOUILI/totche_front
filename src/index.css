@@ -154,7 +154,7 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .cta-block:hover img { transform: scale(1.04); }
 .cta-block a { position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 1.5rem; background: linear-gradient(to top, rgba(0,0,0,.72) 0%, transparent 55%); color: var(--white); font-family: var(--font-display); font-size: 1.375rem; font-weight: 600; gap: 0.5rem; }
 .cta-block--events { background: linear-gradient(135deg, var(--black), var(--red-dark)); }
-.cta-block__vodun { position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800') center/cover; }
+.cta-block__vodun { position: absolute; inset: 0; background: url('https://commons.wikimedia.org/wiki/Special:FilePath/10%20Janvier%202023,%20F%C3%AAte%20de%20vodoun%20%C3%A0%20Ouidah%2033.jpg?width=800') center 25%/cover; }
 
 .home__tagline { display: none; } /* fusionné dans .hero__intro */
 

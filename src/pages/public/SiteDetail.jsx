@@ -168,7 +168,7 @@ export default function SiteDetail() {
                       onChange={e => setReservation(r => ({ ...r, nombre: e.target.value }))} />
                   </div>
                   {reservation.prix > 0 && (
-                    <div style={{ background: 'var(--gray-100)', borderRadius: 8, padding: '0.75rem', fontSize: '0.875rem' }}>
+                    <div style={{ background: 'var(--gray-100)', padding: '0.75rem 1rem', fontSize: '0.875rem' }}>
                       <strong>Total : {(reservation.prix * reservation.nombre).toLocaleString('fr-FR')} FCFA</strong>
                     </div>
                   )}
