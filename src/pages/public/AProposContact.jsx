@@ -17,8 +17,8 @@ export function APropos() {
 
   return (
     <div className="page-apropos">
-      <div className="page-hero" style={{ backgroundImage: 'linear-gradient(135deg, #1D3557 0%, #E63946 100%)' }}>
-        <h1>À Propos d'Totché</h1>
+      <div className="page-hero" style={{ backgroundImage: 'linear-gradient(135deg, #202C46 0%, #B8432E 100%)' }}>
+        <h1>À propos de Totché</h1>
         <p>La plateforme qui valorise le patrimoine touristique et culturel du Bénin</p>
       </div>
 

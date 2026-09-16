@@ -92,7 +92,11 @@ export default function Evenements() {
               {geo ? 'Près de moi (actif)' : 'Près de moi'}
             </button>
             {geo && (
-              <select value={radius} onChange={e => { setRadius(Number(e.target.value)); setPage(1) }}>
+              <select
+                value={radius}
+                onChange={e => { setRadius(Number(e.target.value)); setPage(1) }}
+                style={{ padding: '0.4rem 0.6rem', border: '1px solid var(--gray-300)', borderRadius: 'var(--radius)', background: 'var(--white)', color: 'var(--black)', fontSize: '0.85rem' }}
+              >
                 <option value={5}>5 km</option>
                 <option value={10}>10 km</option>
                 <option value={25}>25 km</option>
@@ -106,7 +110,7 @@ export default function Evenements() {
               placeholder="Prix min"
               value={prixMin}
               onChange={e => { setPrixMin(e.target.value); setPage(1) }}
-              style={{ width: 100, padding: '0.4rem 0.6rem', border: '1.5px solid var(--gray-200)', borderRadius: 8 }}
+              style={{ width: 100, padding: '0.4rem 0.6rem', border: '1px solid var(--gray-300)', borderRadius: 'var(--radius)' }}
             />
             <input
               type="number"
@@ -114,9 +118,9 @@ export default function Evenements() {
               placeholder="Prix max"
               value={prixMax}
               onChange={e => { setPrixMax(e.target.value); setPage(1) }}
-              style={{ width: 100, padding: '0.4rem 0.6rem', border: '1.5px solid var(--gray-200)', borderRadius: 8 }}
+              style={{ width: 100, padding: '0.4rem 0.6rem', border: '1px solid var(--gray-300)', borderRadius: 'var(--radius)' }}
             />
-            {geoError && <span style={{ color: '#dc2626', fontSize: '0.8rem' }}>{geoError}</span>}
+            {geoError && <span style={{ color: 'var(--red-dark)', fontSize: '0.8rem' }}>{geoError}</span>}
           </div>
         </div>
 
