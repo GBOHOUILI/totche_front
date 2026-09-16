@@ -144,33 +144,27 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .navbar__mobile-link:hover { background: var(--gray-100); }
 
 /* ═══════════════════════════════════════════════════════════
-   HERO — image plein cadre, pas de contenu superposé lourd.
-   Le texte/CTA vivent dans la section qui suit, pas sur la photo.
+   HERO — image plein cadre, texte minimal centré superposé,
+   indicateur de scroll discret. Pas de barre de recherche
+   flottante (retirée — cf. recherche déplacée dans le header).
    ═══════════════════════════════════════════════════════════ */
-.hero { position: relative; height: calc(100vh - var(--nav-h)); min-height: 520px; max-height: 760px; overflow: hidden; }
+.hero { position: relative; height: calc(100vh - var(--nav-h)); min-height: 520px; max-height: 760px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 .hero__bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: opacity 1.4s ease; opacity: 0; }
 .hero__bg--active { opacity: 1; }
-.hero__overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.35) 0%, transparent 40%); pointer-events: none; }
+.hero__overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.32) 0%, rgba(0,0,0,.22) 32%, rgba(0,0,0,.35) 78%, rgba(0,0,0,.48) 100%); pointer-events: none; }
+
+.hero__content { position: relative; z-index: 1; text-align: center; color: var(--white); padding: 2.5rem 2rem; max-width: 46rem; text-shadow: 0 2px 20px rgba(0,0,0,.35); }
+.hero__content h1 { color: var(--white); }
+.hero__content p { margin-top: 0.9rem; font-size: 1.0625rem; color: rgba(255,255,255,.92); max-width: 40ch; margin-left: auto; margin-right: auto; }
+
+.hero__scroll { position: absolute; right: 2rem; bottom: 2rem; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; color: var(--white); }
+.hero__scroll span { writing-mode: vertical-rl; font-size: 0.7rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+.hero__scroll svg { animation: heroScrollBounce 1.8s ease-in-out infinite; }
+@keyframes heroScrollBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
 
 .hero__dots { position: absolute; bottom: 1.75rem; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 2; }
 .hero__dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.45); border: none; cursor: pointer; transition: background var(--transition), transform var(--transition); }
 .hero__dot--active { background: var(--white); transform: scale(1.25); }
-
-/* Bandeau éditorial juste après le hero : titre + texte court + recherche,
-   sur fond blanc — jamais superposé à la photo. */
-.hero__intro { padding: 3.5rem 0 3rem; border-bottom: 1px solid var(--gray-100); }
-.hero__intro-grid { display: grid; grid-template-columns: minmax(0,7fr) minmax(0,5fr); gap: 3rem; align-items: end; }
-.hero__intro h1 { max-width: 14ch; }
-.hero__intro-sub { color: var(--gray-700); font-size: 1rem; line-height: 1.6; max-width: 46ch; }
-
-.hero__search { display: flex; align-items: stretch; border: 1px solid var(--gray-300); }
-.hero__search-field { display: flex; align-items: center; gap: 0.6rem; flex: 1; padding: 0.85rem 1rem; color: var(--gray-700); border-right: 1px solid var(--gray-300); }
-.hero__search-field:last-of-type { border-right: none; }
-.hero__search-field input { border: none; outline: none; background: none; font-size: 0.875rem; width: 100%; color: var(--black); }
-.hero__search-field input::placeholder { color: var(--gray-500); }
-.hero__search-btn { width: 56px; flex-shrink: 0; background: var(--red); color: var(--white); display: flex; align-items: center; justify-content: center; transition: background var(--transition); }
-.hero__search-btn:hover { background: var(--red-dark); }
-.hero__announce { display: none; } /* bandeau marketing générique retiré — pas de valeur éditoriale */
 
 /* ═══════════════════════════════════════════════════════════
    HOME
@@ -575,7 +569,6 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
   .detail-sidebar { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
   .home__featured-inner { grid-template-columns: 1fr; gap: 2.5rem; }
   .home__cta-blocks { grid-template-columns: 1fr 1fr; }
-  .hero__intro-grid { grid-template-columns: 1fr; gap: 1.75rem; }
   .profil-layout { grid-template-columns: 1fr; }
   .apropos-intro { grid-template-columns: 1fr; gap: 2rem; }
   .apropos-values { grid-template-columns: 1fr 1fr; }
@@ -594,8 +587,7 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
   .admin-stats { grid-template-columns: 1fr; }
   .footer__grid { grid-template-columns: 1fr; gap: 1.5rem; }
   .footer__bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
-  .hero__search { flex-direction: column; }
-  .hero__search-field { border-right: none; border-bottom: 1px solid var(--gray-300); }
+  .hero__scroll { display: none; }
   .detail-sidebar { grid-template-columns: 1fr; }
   .apropos-values { grid-template-columns: 1fr; }
   .reservation-item { flex-wrap: wrap; }

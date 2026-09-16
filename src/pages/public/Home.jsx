@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { Search, MapPin, Calendar, Users, ChevronRight, ArrowRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { ChevronDown, ChevronRight, ArrowRight } from 'lucide-react'
 import { sitesApi, evenementsApi } from '../../api/services'
 import { SiteCard, EventCard, SectionHeader, Spinner } from '../../components/ui/index'
 
@@ -27,8 +27,6 @@ export default function Home() {
   const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(true)
   const [heroIdx, setHeroIdx] = useState(0)
-  const [search, setSearch] = useState({ where: '', when: '', persons: '' })
-  const navigate = useNavigate()
 
   useEffect(() => {
     Promise.all([sitesApi.list(), evenementsApi.list()])
@@ -45,17 +43,12 @@ export default function Home() {
     return () => clearInterval(t)
   }, [])
 
-  const handleSearch = (e) => {
-    e.preventDefault()
-    navigate(`/sites?q=${search.where}`)
-  }
-
   const featuredSites = sites.slice(0, 6)
   const featuredEvents = events.slice(0, 5)
 
   return (
     <div className="home">
-      {/* ── HERO — image plein cadre, aucun contenu superposé ── */}
+      {/* ── HERO — image plein cadre, texte minimal centré, scroll discret ── */}
       <section className="hero">
         {HERO_IMAGES.map((src, i) => (
           <div
@@ -66,46 +59,21 @@ export default function Home() {
         ))}
         <div className="hero__overlay" />
 
+        <div className="hero__content">
+          <h1>Le Bénin, à vivre pleinement</h1>
+          <p>Sites historiques, réserves naturelles et festivals culturels — réservez directement, sans détour par une agence.</p>
+        </div>
+
+        <div className="hero__scroll" aria-hidden="true">
+          <span>Scroll</span>
+          <ChevronDown size={16} />
+        </div>
+
         {/* Dots */}
         <div className="hero__dots">
           {HERO_IMAGES.map((_, i) => (
             <button key={i} className={`hero__dot${i === heroIdx ? ' hero__dot--active' : ''}`} onClick={() => setHeroIdx(i)} />
           ))}
-        </div>
-      </section>
-
-      {/* ── INTRO ÉDITORIALE — titre + recherche, sur fond blanc ── */}
-      <section className="hero__intro">
-        <div className="container hero__intro-grid">
-          <div>
-            <h1>Programmez votre prochaine escapade au Bénin</h1>
-            <p className="hero__intro-sub" style={{ marginTop: '1rem' }}>
-              Sites historiques, réserves naturelles et festivals culturels — réservez directement, sans détour par une agence.
-            </p>
-          </div>
-          <form className="hero__search" onSubmit={handleSearch}>
-            <div className="hero__search-field">
-              <MapPin size={16} />
-              <input
-                type="text"
-                placeholder="Où visitez-vous ?"
-                value={search.where}
-                onChange={e => setSearch(s => ({ ...s, where: e.target.value }))}
-              />
-            </div>
-            <div className="hero__search-field">
-              <Calendar size={16} />
-              <input
-                type="date"
-                placeholder="Quand ?"
-                value={search.when}
-                onChange={e => setSearch(s => ({ ...s, when: e.target.value }))}
-              />
-            </div>
-            <button type="submit" className="hero__search-btn">
-              <Search size={18} />
-            </button>
-          </form>
         </div>
       </section>
 
