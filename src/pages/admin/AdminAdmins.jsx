@@ -101,8 +101,8 @@ export default function AdminAdmins() {
                 <td>{a.email || '—'}</td>
                 <td>{a.tel || '—'}</td>
                 <td>
-                  <span className={`status-badge status-badge--${a.status === 'actif' || !a.status ? 'success' : 'danger'}`}>
-                    {a.status || 'Actif'}
+                  <span className={`status-badge status-badge--${a.status ? 'success' : 'danger'}`}>
+                    {a.status ? 'Actif' : 'Inactif'}
                   </span>
                 </td>
                 <td>
