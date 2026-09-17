@@ -157,6 +157,22 @@ export const reservationsApi = {
   delete: (id) => api.delete(`/reservations/${id}`),
 }
 
+// ─── COMMANDES / PAIEMENTS (Kkiapay) ──────────────────────────
+// GET   /api/commandes                    auth requis
+// GET   /api/commandes/{id}               auth requis
+// POST  /api/commandes                    auth requis  { reservation_ids: [], echelonner? }
+// PATCH /api/paiements/{id}/verifier      auth requis  { transaction_id }
+export const commandesApi = {
+  list: () => api.get('/commandes'),
+  get: (id) => api.get(`/commandes/${id}`),
+  create: (reservationIds, echelonner = false) =>
+    api.post('/commandes', { reservation_ids: reservationIds, echelonner }),
+}
+
+export const paiementsApi = {
+  verifier: (id, transactionId) => api.patch(`/paiements/${id}/verifier`, { transaction_id: transactionId }),
+}
+
 // ─── TICKETS ─────────────────────────────────────────────────
 // GET  /api/admin/tickets            (admin)
 // GET  /api/admin/tickets/{id}       (admin)
