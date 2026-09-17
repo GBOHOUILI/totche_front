@@ -1,8 +1,18 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { Search, X, MapPin } from 'lucide-react'
+import { Search, X, MapPin, Landmark, Trees, Building2, Milestone, Waves, Tag } from 'lucide-react'
 import { sitesApi, categoriesApi } from '../../api/services'
 import { SiteCard, Spinner, EmptyState } from '../../components/ui/index'
+
+// Icône par catégorie pour les filtres pilules — purement présentationnel,
+// catégorie non mappée -> icône générique (Tag), jamais d'erreur.
+const CAT_ICON = {
+  'Patrimoine historique': Landmark,
+  'Site naturel': Trees,
+  'Musée': Building2,
+  'Monument': Milestone,
+  'Plage': Waves,
+}
 
 export default function Sites() {
   const [sites, setSites] = useState([])
@@ -83,13 +93,16 @@ export default function Sites() {
           <div className="filters__cats">
             <button className={`filters__cat${!selectedCat ? ' filters__cat--active' : ''}`}
               onClick={() => { setSelectedCat(''); setPage(1) }}>Tous</button>
-            {categories.map(cat => (
-              <button key={cat.id}
-                className={`filters__cat${selectedCat == cat.id ? ' filters__cat--active' : ''}`}
-                onClick={() => { setSelectedCat(cat.id); setPage(1) }}>
-                {cat.libelle}
-              </button>
-            ))}
+            {categories.map(cat => {
+              const Icon = CAT_ICON[cat.libelle] || Tag
+              return (
+                <button key={cat.id}
+                  className={`filters__cat${selectedCat == cat.id ? ' filters__cat--active' : ''}`}
+                  onClick={() => { setSelectedCat(cat.id); setPage(1) }}>
+                  <Icon size={14} /> {cat.libelle}
+                </button>
+              )
+            })}
           </div>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center', margin: '0.75rem 0 0' }}>
