@@ -466,26 +466,35 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 /* ═══════════════════════════════════════════════════════════
    FOOTER
    ═══════════════════════════════════════════════════════════ */
-.footer { background: var(--black); color: rgba(255,255,255,.65); padding: 4.5rem 0 2rem; }
+.footer { background: var(--gray-100); color: var(--gray-700); padding: 4.5rem 0 0; overflow: hidden; }
 .footer__container { max-width: var(--container-w); margin: 0 auto; padding: 0 2rem; }
 .footer__grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.5fr; gap: 3rem; margin-bottom: 3rem; }
 .footer__brand .footer__logo { display: flex; align-items: baseline; gap: 2px; font-size: 1.4rem; font-family: var(--font-display); margin-bottom: 0.75rem; }
 .footer__brand p { font-size: 0.85rem; line-height: 1.7; max-width: 240px; }
 .footer__socials { display: flex; gap: 0.75rem; margin-top: 1.25rem; }
-.footer__socials a { width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255,255,255,.2); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.55); transition: all var(--transition); }
+.footer__socials a { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--gray-300); display: flex; align-items: center; justify-content: center; color: var(--gray-500); transition: all var(--transition); }
 .footer__socials a:hover { border-color: var(--red); color: var(--red); }
-.footer__col h4 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--white); margin-bottom: 1rem; }
+.footer__col h4 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--black); margin-bottom: 1rem; }
 .footer__col ul { display: flex; flex-direction: column; gap: 0.5rem; }
-.footer__col ul li a { font-size: 0.85rem; transition: color var(--transition); }
+.footer__col ul li a { font-size: 0.85rem; color: var(--gray-700); transition: color var(--transition); }
 .footer__col ul li a:hover { color: var(--red); }
 .footer__contact { gap: 0.65rem !important; }
 .footer__contact li { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; }
 .footer__newsletter { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
-.footer__newsletter input { flex: 1; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); padding: 0.6rem 0.875rem; color: var(--white); font-size: 0.875rem; outline: none; }
-.footer__newsletter input::placeholder { color: rgba(255,255,255,.35); }
+.footer__newsletter input { flex: 1; background: var(--white); border: 1px solid var(--gray-300); padding: 0.6rem 0.875rem; color: var(--black); font-size: 0.875rem; outline: none; }
+.footer__newsletter input::placeholder { color: var(--gray-500); }
 .footer__newsletter button { background: var(--red); color: var(--white); padding: 0.6rem 1.1rem; font-size: 0.8rem; font-weight: 700; transition: background var(--transition); }
 .footer__newsletter button:hover { background: var(--red-dark); }
-.footer__bottom { border-top: 1px solid rgba(255,255,255,.08); padding-top: 1.75rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; }
+.footer__bottom { border-top: 1px solid var(--gray-300); padding-top: 1.75rem; padding-bottom: 1.75rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--gray-500); }
+
+/* Signature géante en contour, tronquée en bas (armenia.travel, adapté) */
+.footer__wordmark { overflow: hidden; height: clamp(56px, 9vw, 150px); text-align: center; }
+.footer__wordmark span {
+  display: inline-block;
+  font-family: var(--font-display); font-weight: 600;
+  font-size: clamp(6rem, 17vw, 13.5rem); line-height: 1; letter-spacing: -0.02em;
+  color: transparent; -webkit-text-stroke: 1.5px var(--red); text-stroke: 1.5px var(--red);
+}
 
 /* ═══════════════════════════════════════════════════════════
    MISC

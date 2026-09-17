@@ -61,6 +61,10 @@ export default function Footer() {
           <p>Bénin Tourisme · Sen Impact Technologies</p>
         </div>
       </div>
+
+      <div className="footer__wordmark" aria-hidden="true">
+        <span>Totché</span>
+      </div>
     </footer>
   )
 }
