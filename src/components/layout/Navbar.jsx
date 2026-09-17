@@ -97,6 +97,7 @@ export default function Navbar() {
     { to: '/', label: 'Accueil' },
     { to: '/sites', label: 'Sites Touristiques', mega: 'sites' },
     { to: '/evenements', label: 'Événements', mega: 'evenements' },
+    { to: '/circuits', label: 'Circuits' },
     { to: '/a-propos', label: 'À Propos' },
     { to: '/contacts', label: 'Contacts' },
   ]
@@ -187,6 +188,7 @@ export default function Navbar() {
                 <div className="navbar__dropdown">
                   <Link to="/profil" onClick={() => setUserMenu(false)}>Mon profil</Link>
                   <Link to="/mes-reservations" onClick={() => setUserMenu(false)}>Mes réservations</Link>
+                  <Link to="/circuits" onClick={() => setUserMenu(false)}>Mes circuits</Link>
                   {isAdmin && <Link to="/admin" onClick={() => setUserMenu(false)}>Administration</Link>}
                   <button onClick={handleLogout}>Déconnexion</button>
                 </div>
@@ -218,6 +220,7 @@ export default function Navbar() {
             <>
               <Link to="/profil" className="navbar__mobile-link" onClick={() => setMenuOpen(false)}>Mon profil</Link>
               <Link to="/mes-reservations" className="navbar__mobile-link" onClick={() => setMenuOpen(false)}>Mes réservations</Link>
+              <Link to="/circuits" className="navbar__mobile-link" onClick={() => setMenuOpen(false)}>Mes circuits</Link>
               {isAdmin && <Link to="/admin" className="navbar__mobile-link" onClick={() => setMenuOpen(false)}>Administration</Link>}
             </>
           ) : (

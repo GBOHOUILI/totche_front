@@ -12,6 +12,8 @@ import AdminLogin from '../pages/admin/AdminLogin'
 import { APropos, Contact } from '../pages/public/AProposContact'
 import Profil from '../pages/user/Profil'
 import MesReservations from '../pages/user/MesReservations'
+import Circuits from '../pages/public/Circuits'
+import CircuitDetail from '../pages/public/CircuitDetail'
 import { Spinner } from '../components/ui/index'
 
 
@@ -58,11 +60,13 @@ const router = createBrowserRouter([
       { path: 'inscription', element: <Register /> },
       { path: 'a-propos', element: <APropos /> },
       { path: 'contacts', element: <Contact /> },
+      { path: 'circuits', element: <Circuits /> },
       {
         element: <RequireAuth />,
         children: [
           { path: 'profil', element: <Profil /> },
           { path: 'mes-reservations', element: <MesReservations /> },
+          { path: 'circuits/:id', element: <CircuitDetail /> },
         ]
       }
     ]
