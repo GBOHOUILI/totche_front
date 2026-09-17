@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { Search, MapPin, Calendar, Users, ChevronRight, ArrowRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { ChevronDown, ChevronRight, ArrowRight } from 'lucide-react'
 import { sitesApi, evenementsApi } from '../../api/services'
 import { SiteCard, EventCard, SectionHeader, Spinner } from '../../components/ui/index'
 
@@ -27,8 +27,6 @@ export default function Home() {
   const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(true)
   const [heroIdx, setHeroIdx] = useState(0)
-  const [search, setSearch] = useState({ where: '', when: '', persons: '' })
-  const navigate = useNavigate()
 
   useEffect(() => {
     Promise.all([sitesApi.list(), evenementsApi.list()])
@@ -45,17 +43,12 @@ export default function Home() {
     return () => clearInterval(t)
   }, [])
 
-  const handleSearch = (e) => {
-    e.preventDefault()
-    navigate(`/sites?q=${search.where}`)
-  }
-
   const featuredSites = sites.slice(0, 6)
   const featuredEvents = events.slice(0, 5)
 
   return (
     <div className="home">
-      {/* ── HERO ── */}
+      {/* ── HERO — image plein cadre, texte minimal centré, scroll discret ── */}
       <section className="hero">
         {HERO_IMAGES.map((src, i) => (
           <div
@@ -67,46 +60,13 @@ export default function Home() {
         <div className="hero__overlay" />
 
         <div className="hero__content">
-          <p className="hero__announce">
-            <span>Annonces :</span> Faites vos réservations depuis votre canapé et évitez les foules dans les ticketeries.
-          </p>
+          <h1>Le Bénin, à vivre pleinement</h1>
+          <p>Sites historiques, réserves naturelles et festivals culturels — réservez directement, sans détour par une agence.</p>
+        </div>
 
-          {/* Search bar */}
-          <form className="hero__search" onSubmit={handleSearch}>
-            <div className="hero__search-field">
-              <MapPin size={16} />
-              <input
-                type="text"
-                placeholder="Où visitez-vous ?"
-                value={search.where}
-                onChange={e => setSearch(s => ({ ...s, where: e.target.value }))}
-              />
-            </div>
-            <div className="hero__search-divider" />
-            <div className="hero__search-field">
-              <Calendar size={16} />
-              <input
-                type="date"
-                placeholder="Quand ?"
-                value={search.when}
-                onChange={e => setSearch(s => ({ ...s, when: e.target.value }))}
-              />
-            </div>
-            <div className="hero__search-divider" />
-            <div className="hero__search-field">
-              <Users size={16} />
-              <input
-                type="number"
-                placeholder="Nbre Personnes"
-                min={1}
-                value={search.persons}
-                onChange={e => setSearch(s => ({ ...s, persons: e.target.value }))}
-              />
-            </div>
-            <button type="submit" className="hero__search-btn">
-              <Search size={18} />
-            </button>
-          </form>
+        <div className="hero__scroll" aria-hidden="true">
+          <span>Scroll</span>
+          <ChevronDown size={16} />
         </div>
 
         {/* Dots */}
@@ -142,12 +102,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── TAGLINE ── */}
-      <section className="home__tagline">
-        <h1>Programmez votre vacance en 1 clic</h1>
-        <p>Faites vos réservations depuis votre canapé et évitez les foules dans les ticketeries.</p>
-      </section>
-
       {/* ── SITES TOURISTIQUES ── */}
       <section className="home__section">
         <div className="container">
@@ -158,7 +112,7 @@ export default function Home() {
           {loading ? (
             <div className="center-spinner"><Spinner /></div>
           ) : (
-            <div className="cards-grid cards-grid--5">
+            <div className="cards-grid cards-grid--5 cards-grid--home">
               {featuredSites.map((site, i) => <SiteCard key={site.id} site={site} index={i} />)}
             </div>
           )}
@@ -175,10 +129,35 @@ export default function Home() {
           {loading ? (
             <div className="center-spinner"><Spinner /></div>
           ) : (
-            <div className="cards-grid cards-grid--5">
+            <div className="cards-grid cards-grid--5 cards-grid--home">
               {featuredEvents.map((evt, i) => <EventCard key={evt.id} event={evt} index={i} />)}
             </div>
           )}
+        </div>
+      </section>
+
+      {/* ── IMMERSIF — deux photos en chevauchement + carte de contenu ── */}
+      <section className="home__overlap">
+        <div className="container home__overlap-inner">
+          <div className="home__overlap-images">
+            <img
+              className="home__overlap-img home__overlap-img--back"
+              src="https://commons.wikimedia.org/wiki/Special:FilePath/The%20village%20of%20Ganvi%C3%A9%20on%20Lake%20Nokou%C3%A9.jpg?width=700"
+              alt="Cité lacustre de Ganvié"
+            />
+            <img
+              className="home__overlap-img home__overlap-img--front"
+              src="https://commons.wikimedia.org/wiki/Special:FilePath/Plage%20de%20Grand-Popo%20(2).jpg?width=700"
+              alt="Plage de Grand-Popo"
+            />
+          </div>
+          <div className="home__overlap-card">
+            <h2>Deux visages du Bénin</h2>
+            <p>Des cases sur pilotis du lac Nokoué aux plages de sable fin bordées de cocotiers, chaque site raconte une facette différente du pays.</p>
+            <Link to="/sites" className="btn btn--primary">
+              Explorer les sites <ArrowRight size={16} />
+            </Link>
+          </div>
         </div>
       </section>
 

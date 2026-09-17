@@ -1,16 +1,17 @@
-import { useState, useEffect } from 'react'
-import { Search, CheckCircle, Clock, Ticket as TicketIcon, X, QrCode } from 'lucide-react'
-import { ticketsApi } from '../../api/services'
+import { useState, useEffect, useRef } from 'react'
+import { Search, CheckCircle, Clock, Ticket as TicketIcon, X, ScanLine } from 'lucide-react'
+import { ticketsApi, utilisationsApi } from '../../api/services'
 import { Spinner } from '../../components/ui/index'
 import toast from 'react-hot-toast'
 
+// Un ticket est "utilisé" si une Utilisation existe déjà pour lui — jamais un champ
+// direct de l'API. Selon la source, cette info arrive soit via la relation
+// `utilisations` (liste /admin/tickets), soit via `deja_utilise` (POST /tickets/verifier).
+const estUtilise = (ticket) =>
+  ticket?.deja_utilise === true || (ticket?.utilisations?.length ?? 0) > 0
+
 const StatusBadge = ({ utilise }) => (
-  <span style={{
-    fontSize: '0.75rem', fontWeight: 600, padding: '2px 10px', borderRadius: '20px',
-    background: utilise ? '#dcfce7' : '#fef9c3',
-    color:      utilise ? '#16a34a' : '#ca8a04',
-    display: 'inline-flex', alignItems: 'center', gap: '4px',
-  }}>
+  <span className={`status-badge status-badge--${utilise ? 'success' : 'warning'}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
     {utilise ? <><CheckCircle size={11} /> Utilisé</> : <><Clock size={11} /> Valide</>}
   </span>
 )
@@ -23,6 +24,8 @@ export default function AdminTickets() {
   const [selected, setSelected]   = useState(null)
   const [page, setPage]           = useState(1)
   const [meta, setMeta]           = useState(null)
+  const [scanMode, setScanMode]   = useState(false)
+  const scannerRef = useRef(null)
 
   useEffect(() => { load() }, [page])
 
@@ -36,28 +39,66 @@ export default function AdminTickets() {
       .finally(() => setLoading(false))
   }
 
-  const handleSearch = async (e) => {
-    e.preventDefault()
-    if (!searchNum.trim()) return
+  const rechercherNumero = async (numero) => {
     setSearchResult('loading')
     try {
-      const r = await ticketsApi.verify(searchNum.trim())
-      setSearchResult(r.data?.ticket || r.data || null)
+      const r = await ticketsApi.verifier(numero)
+      setSearchResult(r.data?.ticket ? { ...r.data.ticket, deja_utilise: r.data.deja_utilise } : null)
     } catch (err) {
       if (err.response?.status === 404) setSearchResult('not_found')
       else { setSearchResult(null); toast.error('Erreur lors de la recherche') }
     }
   }
 
-  const handleValidate = async (numero) => {
+  const handleSearch = (e) => {
+    e.preventDefault()
+    if (!searchNum.trim()) return
+    rechercherNumero(searchNum.trim())
+  }
+
+  // Action explicite et séparée : ce n'est jamais un effet de bord de la vérification.
+  const handleValidate = async (ticket) => {
+    const now = new Date()
     try {
-      await ticketsApi.use(numero)
+      await utilisationsApi.create({
+        id_ticket: ticket.id,
+        date_visite: now.toISOString().slice(0, 10),
+        heure: now.toTimeString().slice(0, 5),
+      })
       toast.success('Ticket marqué comme utilisé !')
       setSearchResult(null)
       setSearchNum('')
+      setSelected(null)
       load()
     } catch (err) { toast.error(err.response?.data?.message || 'Erreur') }
   }
+
+  // Scanner caméra : décode un QR (le contenu attendu est le numero du ticket) et
+  // réutilise exactement le même chemin qu'une saisie manuelle.
+  useEffect(() => {
+    if (!scanMode) return
+    let actif = true
+
+    import('html5-qrcode').then(({ Html5QrcodeScanner }) => {
+      if (!actif) return
+      const scanner = new Html5QrcodeScanner('qr-reader', { fps: 10, qrbox: 250 }, false)
+      scannerRef.current = scanner
+      scanner.render(
+        (decodedText) => {
+          setSearchNum(decodedText)
+          setScanMode(false)
+          rechercherNumero(decodedText)
+        },
+        () => {}, // erreurs de frame ignorées (pas de QR dans l'image courante)
+      )
+    })
+
+    return () => {
+      actif = false
+      scannerRef.current?.clear().catch(() => {})
+      scannerRef.current = null
+    }
+  }, [scanMode])
 
   return (
     <div className="admin-page">
@@ -72,9 +113,25 @@ export default function AdminTickets() {
 
       {/* Vérificateur de ticket */}
       <div className="admin-section" style={{ marginBottom: '1.5rem' }}>
-        <h2 style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Search size={16} /> Vérifier un ticket
-        </h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+          <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0 }}>
+            <Search size={16} /> Vérifier un ticket
+          </h2>
+          <button
+            type="button"
+            className={`btn btn--sm ${scanMode ? 'btn--primary' : 'btn--ghost'}`}
+            onClick={() => setScanMode(v => !v)}
+          >
+            <ScanLine size={14} /> {scanMode ? 'Fermer le scanner' : 'Scanner un QR'}
+          </button>
+        </div>
+
+        {scanMode && (
+          <div style={{ marginBottom: '1rem' }}>
+            <div id="qr-reader" style={{ maxWidth: 400 }} />
+          </div>
+        )}
+
         <form onSubmit={handleSearch} style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-end' }}>
           <div className="admin-form__field" style={{ flex: 1, marginBottom: 0 }}>
             <label>Numéro de ticket</label>
@@ -95,27 +152,27 @@ export default function AdminTickets() {
           <div style={{ marginTop: '1rem', textAlign: 'center' }}><Spinner /></div>
         )}
         {searchResult === 'not_found' && (
-          <div style={{ marginTop: '1rem', padding: '1rem', background: '#fee2e2', borderRadius: '8px', color: '#dc2626', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div style={{ marginTop: '1rem', padding: '1rem', background: 'color-mix(in srgb, var(--red) 12%, var(--white))', borderRadius: 'var(--radius)', color: 'var(--red-dark)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <X size={16} /> Aucun ticket trouvé avec ce numéro.
           </div>
         )}
         {searchResult && searchResult !== 'loading' && searchResult !== 'not_found' && (
-          <div style={{ marginTop: '1rem', padding: '1rem', background: searchResult.utilise ? '#f0fdf4' : '#fffbeb', border: `1px solid ${searchResult.utilise ? '#bbf7d0' : '#fde68a'}`, borderRadius: '10px' }}>
+          <div style={{ marginTop: '1rem', padding: '1rem', background: estUtilise(searchResult) ? 'color-mix(in srgb, var(--success) 10%, var(--white))' : 'color-mix(in srgb, var(--warning) 10%, var(--white))', border: `1px solid ${estUtilise(searchResult) ? 'var(--success)' : 'var(--warning)'}`, borderRadius: 'var(--radius)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
               <div>
                 <p style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: '1.1rem', marginBottom: '0.4rem' }}>{searchResult.numero}</p>
-                <StatusBadge utilise={searchResult.utilise} />
-                <div style={{ marginTop: '0.75rem', fontSize: '0.85rem', color: 'var(--gray-600)', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                <StatusBadge utilise={estUtilise(searchResult)} />
+                <div style={{ marginTop: '0.75rem', fontSize: '0.85rem', color: 'var(--gray-700)', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                   {searchResult.reservation?.site && <p>📍 {searchResult.reservation.site.libelle}</p>}
                   {searchResult.reservation?.evenement && <p>🎉 {searchResult.reservation.evenement.libelle}</p>}
                   {searchResult.reservation?.total && <p>💰 {Number(searchResult.reservation.total).toLocaleString('fr-FR')} FCFA</p>}
                   {searchResult.created_at && <p>🗓 Émis le {new Date(searchResult.created_at).toLocaleDateString('fr-FR')}</p>}
                 </div>
               </div>
-              {!searchResult.utilise && (
+              {!estUtilise(searchResult) && (
                 <button className="btn btn--primary"
-                  onClick={() => handleValidate(searchResult.numero)}
-                  style={{ background: '#16a34a', borderColor: '#16a34a' }}>
+                  onClick={() => handleValidate(searchResult)}
+                  style={{ background: 'var(--success)', borderColor: 'var(--success)' }}>
                   <CheckCircle size={16} /> Valider l'entrée
                 </button>
               )}
@@ -158,7 +215,7 @@ export default function AdminTickets() {
                   <td style={{ fontSize: '0.82rem', color: 'var(--gray-500)' }}>
                     {t.created_at ? new Date(t.created_at).toLocaleDateString('fr-FR') : '—'}
                   </td>
-                  <td><StatusBadge utilise={t.utilise} /></td>
+                  <td><StatusBadge utilise={estUtilise(t)} /></td>
                 </tr>
               ))}
             </tbody>
@@ -184,10 +241,10 @@ export default function AdminTickets() {
               <button onClick={() => setSelected(null)}><X size={20} /></button>
             </div>
             <div style={{ padding: '0 0 1rem' }}>
-              <div style={{ textAlign: 'center', padding: '1.5rem', background: 'var(--gray-50)', borderRadius: '10px', marginBottom: '1rem' }}>
-                <TicketIcon size={36} color="var(--primary)" style={{ marginBottom: '0.5rem' }} />
+              <div style={{ textAlign: 'center', padding: '1.5rem', background: 'var(--gray-100)', borderRadius: 'var(--radius)', marginBottom: '1rem' }}>
+                <TicketIcon size={36} color="var(--red)" style={{ marginBottom: '0.5rem' }} />
                 <p style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: '1.2rem', letterSpacing: '0.1em' }}>{selected.numero}</p>
-                <div style={{ marginTop: '0.75rem' }}><StatusBadge utilise={selected.utilise} /></div>
+                <div style={{ marginTop: '0.75rem' }}><StatusBadge utilise={estUtilise(selected)} /></div>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.875rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -206,19 +263,19 @@ export default function AdminTickets() {
                   <span style={{ color: 'var(--gray-500)' }}>Date d'émission</span>
                   <span>{selected.created_at ? new Date(selected.created_at).toLocaleDateString('fr-FR') : '—'}</span>
                 </div>
-                {selected.utilise && selected.updated_at && (
+                {estUtilise(selected) && selected.utilisations?.[0]?.date_visite && (
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ color: 'var(--gray-500)' }}>Utilisé le</span>
-                    <span>{new Date(selected.updated_at).toLocaleDateString('fr-FR')}</span>
+                    <span>{new Date(selected.utilisations[0].date_visite).toLocaleDateString('fr-FR')} {selected.utilisations[0].heure || ''}</span>
                   </div>
                 )}
               </div>
             </div>
-            {!selected.utilise && (
+            {!estUtilise(selected) && (
               <div className="admin-form__footer">
                 <button className="btn btn--ghost" onClick={() => setSelected(null)}>Fermer</button>
-                <button className="btn btn--primary" style={{ background: '#16a34a', borderColor: '#16a34a' }}
-                  onClick={() => handleValidate(selected.numero)}>
+                <button className="btn btn--primary" style={{ background: 'var(--success)', borderColor: 'var(--success)' }}
+                  onClick={() => handleValidate(selected)}>
                   <CheckCircle size={15} /> Valider l'entrée
                 </button>
               </div>

@@ -119,14 +119,17 @@ export default function EvenementDetail() {
               {showReservation && (
                 <form className="reservation-form" onSubmit={submitReservation}>
                   {prix.length > 0 && (
-                    <select required value={reservation.selectedPrix || ''}
-                      onChange={e => {
-                        const p = prix.find(x => x.id === parseInt(e.target.value))
-                        setReservation(r => ({ ...r, selectedPrix: p?.id, prix: p?.montant || 0 }))
-                      }}>
-                      <option value="">Choisir un tarif</option>
-                      {prix.map(p => <option key={p.id} value={p.id}>{p.libelle} – {Number(p.montant).toLocaleString()} FCFA</option>)}
-                    </select>
+                    <div>
+                      <label style={{ fontSize: '0.8rem', color: 'var(--gray-700)', display: 'block', marginBottom: '0.35rem' }}>Tarif</label>
+                      <select required value={reservation.selectedPrix || ''}
+                        onChange={e => {
+                          const p = prix.find(x => x.id === parseInt(e.target.value))
+                          setReservation(r => ({ ...r, selectedPrix: p?.id, prix: p?.montant || 0 }))
+                        }}>
+                        <option value="">Choisir un tarif</option>
+                        {prix.map(p => <option key={p.id} value={p.id}>{p.libelle} – {Number(p.montant).toLocaleString()} FCFA</option>)}
+                      </select>
+                    </div>
                   )}
                   <div className="reservation-form__row">
                     <label>Nombre de personnes</label>
@@ -134,7 +137,7 @@ export default function EvenementDetail() {
                       onChange={e => setReservation(r => ({ ...r, nombre: e.target.value }))} />
                   </div>
                   {reservation.prix > 0 && (
-                    <div style={{ background: 'var(--gray-100)', borderRadius: 8, padding: '0.75rem', fontSize: '0.875rem' }}>
+                    <div style={{ background: 'var(--gray-100)', padding: '0.75rem 1rem', fontSize: '0.875rem' }}>
                       <strong>Total : {(reservation.prix * reservation.nombre).toLocaleString('fr-FR')} FCFA</strong>
                     </div>
                   )}

@@ -19,9 +19,9 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="auth-page" style={{ background: '#0D0D0D' }}>
+    <div className="auth-page" style={{ background: 'var(--black)' }}>
       <div className="auth-card">
-        <div className="auth-card__icon" style={{ borderColor: '#E63946', color: '#E63946' }}>
+        <div className="auth-card__icon" style={{ borderColor: 'var(--red)', color: 'var(--red)' }}>
           <Shield size={32} />
         </div>
         <h1>Administration</h1>

@@ -12,12 +12,12 @@ export default function App() {
         toastOptions={{
           duration: 3500,
           style: {
-            fontFamily: 'DM Sans, sans-serif',
+            fontFamily: 'Karla, sans-serif',
             fontSize: '0.875rem',
-            borderRadius: '8px',
-            boxShadow: '0 4px 24px rgba(0,0,0,.12)',
+            borderRadius: 'var(--radius)',
+            boxShadow: 'var(--shadow-lg)',
           },
-          success: { iconTheme: { primary: '#E63946', secondary: '#fff' } },
+          success: { iconTheme: { primary: 'var(--success)', secondary: 'var(--white)' } },
         }}
       />
     </AuthProvider>

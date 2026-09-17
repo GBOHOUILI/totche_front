@@ -1,8 +1,18 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { Search, X, MapPin } from 'lucide-react'
+import { Search, X, MapPin, Landmark, Trees, Building2, Milestone, Waves, Tag } from 'lucide-react'
 import { sitesApi, categoriesApi } from '../../api/services'
 import { SiteCard, Spinner, EmptyState } from '../../components/ui/index'
+
+// Icône par catégorie pour les filtres pilules — purement présentationnel,
+// catégorie non mappée -> icône générique (Tag), jamais d'erreur.
+const CAT_ICON = {
+  'Patrimoine historique': Landmark,
+  'Site naturel': Trees,
+  'Musée': Building2,
+  'Monument': Milestone,
+  'Plage': Waves,
+}
 
 export default function Sites() {
   const [sites, setSites] = useState([])
@@ -20,9 +30,16 @@ export default function Sites() {
   const [prixMax, setPrixMax] = useState('')
 
   useEffect(() => {
-    setSearch(searchParams.get('q') || '')
     categoriesApi.sites().then(r => setCategories(r.data?.data || r.data || []))
   }, [])
+
+  // Resynchronise avec l'URL à chaque navigation (ex: lien du mega-menu vers
+  // /sites?categorie=X depuis une page /sites déjà montée — pas de remount React Router).
+  useEffect(() => {
+    setSearch(searchParams.get('q') || '')
+    setSelectedCat(searchParams.get('categorie') || '')
+    setPage(1)
+  }, [searchParams])
 
   useEffect(() => {
     setLoading(true)
@@ -76,13 +93,16 @@ export default function Sites() {
           <div className="filters__cats">
             <button className={`filters__cat${!selectedCat ? ' filters__cat--active' : ''}`}
               onClick={() => { setSelectedCat(''); setPage(1) }}>Tous</button>
-            {categories.map(cat => (
-              <button key={cat.id}
-                className={`filters__cat${selectedCat == cat.id ? ' filters__cat--active' : ''}`}
-                onClick={() => { setSelectedCat(cat.id); setPage(1) }}>
-                {cat.libelle}
-              </button>
-            ))}
+            {categories.map(cat => {
+              const Icon = CAT_ICON[cat.libelle] || Tag
+              return (
+                <button key={cat.id}
+                  className={`filters__cat${selectedCat == cat.id ? ' filters__cat--active' : ''}`}
+                  onClick={() => { setSelectedCat(cat.id); setPage(1) }}>
+                  <Icon size={14} /> {cat.libelle}
+                </button>
+              )
+            })}
           </div>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center', margin: '0.75rem 0 0' }}>
@@ -95,7 +115,11 @@ export default function Sites() {
               {geo ? 'Près de moi (actif)' : 'Près de moi'}
             </button>
             {geo && (
-              <select value={radius} onChange={e => { setRadius(Number(e.target.value)); setPage(1) }}>
+              <select
+                value={radius}
+                onChange={e => { setRadius(Number(e.target.value)); setPage(1) }}
+                style={{ padding: '0.4rem 0.6rem', border: '1px solid var(--gray-300)', borderRadius: 'var(--radius)', background: 'var(--white)', color: 'var(--black)', fontSize: '0.85rem' }}
+              >
                 <option value={5}>5 km</option>
                 <option value={10}>10 km</option>
                 <option value={25}>25 km</option>
@@ -109,7 +133,7 @@ export default function Sites() {
               placeholder="Prix min"
               value={prixMin}
               onChange={e => { setPrixMin(e.target.value); setPage(1) }}
-              style={{ width: 100, padding: '0.4rem 0.6rem', border: '1.5px solid var(--gray-200)', borderRadius: 8 }}
+              style={{ width: 100, padding: '0.4rem 0.6rem', border: '1px solid var(--gray-300)', borderRadius: 'var(--radius)' }}
             />
             <input
               type="number"
@@ -117,9 +141,9 @@ export default function Sites() {
               placeholder="Prix max"
               value={prixMax}
               onChange={e => { setPrixMax(e.target.value); setPage(1) }}
-              style={{ width: 100, padding: '0.4rem 0.6rem', border: '1.5px solid var(--gray-200)', borderRadius: 8 }}
+              style={{ width: 100, padding: '0.4rem 0.6rem', border: '1px solid var(--gray-300)', borderRadius: 'var(--radius)' }}
             />
-            {geoError && <span style={{ color: '#dc2626', fontSize: '0.8rem' }}>{geoError}</span>}
+            {geoError && <span style={{ color: 'var(--red-dark)', fontSize: '0.8rem' }}>{geoError}</span>}
           </div>
         </div>
 
