@@ -173,6 +173,31 @@ export const paiementsApi = {
   verifier: (id, transactionId) => api.patch(`/paiements/${id}/verifier`, { transaction_id: transactionId }),
 }
 
+// ─── CIRCUITS (itinéraires personnalisés) ─────────────────────
+// GET    /api/circuits                              auth requis — mes circuits
+// POST   /api/circuits                              auth requis  { libelle, description? }
+// GET    /api/circuits/{id}                         auth requis
+// PUT    /api/circuits/{id}                         auth requis  { libelle?, description? }
+// DELETE /api/circuits/{id}                         auth requis
+// POST   /api/circuits/{id}/etapes                  auth requis  { id_site? | id_evnmt?, ordre? }
+// PATCH  /api/circuits/{id}/etapes/reordonner        auth requis  { ordre: [id_etape,...] }
+// PUT    /api/etapes/{id}                           auth requis  { ordre?, id_reservation? }
+// DELETE /api/etapes/{id}                           auth requis
+export const circuitsApi = {
+  list: () => api.get('/circuits'),
+  get: (id) => api.get(`/circuits/${id}`),
+  create: (data) => api.post('/circuits', data),
+  update: (id, data) => api.put(`/circuits/${id}`, data),
+  delete: (id) => api.delete(`/circuits/${id}`),
+  reordonner: (id, ordre) => api.patch(`/circuits/${id}/etapes/reordonner`, { ordre }),
+}
+
+export const etapesApi = {
+  create: (idCircuit, data) => api.post(`/circuits/${idCircuit}/etapes`, data),
+  update: (id, data) => api.put(`/etapes/${id}`, data),
+  delete: (id) => api.delete(`/etapes/${id}`),
+}
+
 // ─── TICKETS ─────────────────────────────────────────────────
 // GET  /api/admin/tickets            (admin)
 // GET  /api/admin/tickets/{id}       (admin)

@@ -100,6 +100,12 @@ export default function Home() {
             <ArrowRight size={16} />
           </Link>
         </div>
+        <div className="cta-block cta-block--circuits">
+          <Link to="/circuits">
+            <span>Composez votre circuit</span>
+            <ArrowRight size={16} />
+          </Link>
+        </div>
       </section>
 
       {/* ── SITES TOURISTIQUES ── */}

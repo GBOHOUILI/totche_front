@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { Eye, EyeOff, User } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import toast from 'react-hot-toast'
@@ -10,11 +10,12 @@ export function Login() {
   const [showPwd, setShowPwd] = useState(false)
   const { login, loading } = useAuth()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     const res = await login(form)
-    if (res.success) { toast.success('Bienvenue !'); navigate('/') }
+    if (res.success) { toast.success('Bienvenue !'); navigate(searchParams.get('redirect') || '/') }
     else toast.error(res.message)
   }
 
@@ -43,7 +44,10 @@ export function Login() {
             {loading ? 'Connexion...' : 'CONNEXION'}
           </button>
         </form>
-        <p className="auth-card__switch">Pas encore de compte ? <Link to="/inscription">Inscription</Link></p>
+        <p className="auth-card__switch">
+          Pas encore de compte ?{' '}
+          <Link to={`/inscription${searchParams.get('redirect') ? `?redirect=${encodeURIComponent(searchParams.get('redirect'))}` : ''}`}>Inscription</Link>
+        </p>
       </div>
     </div>
   )
@@ -57,11 +61,12 @@ export function Register() {
   const [showPwd, setShowPwd] = useState(false)
   const { register, loading } = useAuth()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     const res = await register(form)
-    if (res.success) { toast.success('Compte créé !'); navigate('/') }
+    if (res.success) { toast.success('Compte créé !'); navigate(searchParams.get('redirect') || '/') }
     else { toast.error(res.message); if (res.errors) setErrors(res.errors) }
   }
 
@@ -103,7 +108,10 @@ export function Register() {
             {loading ? 'Inscription...' : 'INSCRIPTION'}
           </button>
         </form>
-        <p className="auth-card__switch">Déjà un compte ? <Link to="/connexion">Connexion</Link></p>
+        <p className="auth-card__switch">
+          Déjà un compte ?{' '}
+          <Link to={`/connexion${searchParams.get('redirect') ? `?redirect=${encodeURIComponent(searchParams.get('redirect'))}` : ''}`}>Connexion</Link>
+        </p>
       </div>
     </div>
   )
