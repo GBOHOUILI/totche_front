@@ -136,6 +136,31 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── IMMERSIF — deux photos en chevauchement + carte de contenu ── */}
+      <section className="home__overlap">
+        <div className="container home__overlap-inner">
+          <div className="home__overlap-images">
+            <img
+              className="home__overlap-img home__overlap-img--back"
+              src="https://commons.wikimedia.org/wiki/Special:FilePath/The%20village%20of%20Ganvi%C3%A9%20on%20Lake%20Nokou%C3%A9.jpg?width=700"
+              alt="Cité lacustre de Ganvié"
+            />
+            <img
+              className="home__overlap-img home__overlap-img--front"
+              src="https://commons.wikimedia.org/wiki/Special:FilePath/Plage%20de%20Grand-Popo%20(2).jpg?width=700"
+              alt="Plage de Grand-Popo"
+            />
+          </div>
+          <div className="home__overlap-card">
+            <h2>Deux visages du Bénin</h2>
+            <p>Des cases sur pilotis du lac Nokoué aux plages de sable fin bordées de cocotiers, chaque site raconte une facette différente du pays.</p>
+            <Link to="/sites" className="btn btn--primary">
+              Explorer les sites <ArrowRight size={16} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* ── FEATURED SITE (Temple des Pythons style) ── */}
       {sites[0] && (
         <section className="home__featured">
