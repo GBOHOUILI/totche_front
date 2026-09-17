@@ -68,10 +68,10 @@ export default function Dashboard() {
 
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
-        <StatCard icon={MapPin}   label="Sites touristiques" value={stats?.sites}   color="#3D6B4F" />
-        <StatCard icon={Calendar} label="Événements"          value={stats?.events}  color="#B8432E" />
-        <StatCard icon={Users}    label="Utilisateurs"        value={stats?.users}   color="#202C46" />
-        <StatCard icon={Star}     label="Avis reçus"          value={stats?.avis}    color="#CC9A3A" sub={stats?.pending > 0 ? `${stats.pending} en attente` : 'Aucun en attente'} />
+        <StatCard icon={MapPin}   label="Sites touristiques" value={stats?.sites}   color="var(--success)" />
+        <StatCard icon={Calendar} label="Événements"          value={stats?.events}  color="var(--red)" />
+        <StatCard icon={Users}    label="Utilisateurs"        value={stats?.users}   color="var(--gray-900)" />
+        <StatCard icon={Star}     label="Avis reçus"          value={stats?.avis}    color="var(--warning)" sub={stats?.pending > 0 ? `${stats.pending} en attente` : 'Aucun en attente'} />
       </div>
 
       {/* Grille : sites récents + événements récents + avis en attente */}
@@ -80,7 +80,7 @@ export default function Dashboard() {
         {/* Sites récents */}
         <div className="admin-section">
           <h2 style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <MapPin size={16} color="#3D6B4F" /> Sites récents
+            <MapPin size={16} color="var(--success)" /> Sites récents
           </h2>
           {recentSites.length === 0
             ? <p style={{ color: 'var(--gray-500)', textAlign: 'center', padding: '1.5rem 0' }}>Aucun site</p>
@@ -101,7 +101,7 @@ export default function Dashboard() {
         {/* Événements récents */}
         <div className="admin-section">
           <h2 style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Calendar size={16} color="#B8432E" /> Événements récents
+            <Calendar size={16} color="var(--red)" /> Événements récents
           </h2>
           {recentEvents.length === 0
             ? <p style={{ color: 'var(--gray-500)', textAlign: 'center', padding: '1.5rem 0' }}>Aucun événement</p>
@@ -127,12 +127,12 @@ export default function Dashboard() {
         {pendingAvis.length > 0 && (
           <div className="admin-section" style={{ gridColumn: '1 / -1' }}>
             <h2 style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Clock size={16} color="#CC9A3A" /> Avis en attente de modération
+              <Clock size={16} color="var(--warning)" /> Avis en attente de modération
               <span style={{ marginLeft: 'auto', background: 'color-mix(in srgb, var(--red) 14%, var(--white))', color: 'var(--red-dark)', fontSize: '0.75rem', fontWeight: 700, padding: '2px 8px', borderRadius: 'var(--radius)' }}>{pendingAvis.length}</span>
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
               {pendingAvis.map(a => (
-                <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem', background: 'color-mix(in srgb, var(--gold) 12%, var(--white))', borderRadius: 'var(--radius)', border: '1px solid var(--gray-300)' }}>
+                <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem', background: 'color-mix(in srgb, var(--warning) 10%, var(--white))', borderRadius: 'var(--radius)', border: '1px solid var(--gray-300)' }}>
                   <div>
                     <p style={{ fontWeight: 600, fontSize: '0.875rem' }}>{a.user?.nom || 'Utilisateur'} — <span style={{ fontWeight: 400, color: 'var(--gray-700)' }}>{a.contenu?.slice(0, 80)}{a.contenu?.length > 80 ? '…' : ''}</span></p>
                     <p style={{ color: 'var(--gray-500)', fontSize: '0.78rem' }}>Note : {'⭐'.repeat(a.note || 0)} · {a.site?.libelle || a.evenement?.libelle || '—'}</p>

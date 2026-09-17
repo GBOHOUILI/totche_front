@@ -157,7 +157,7 @@ export default function AdminTickets() {
           </div>
         )}
         {searchResult && searchResult !== 'loading' && searchResult !== 'not_found' && (
-          <div style={{ marginTop: '1rem', padding: '1rem', background: estUtilise(searchResult) ? 'color-mix(in srgb, var(--palm) 10%, var(--white))' : 'color-mix(in srgb, var(--gold) 12%, var(--white))', border: `1px solid ${estUtilise(searchResult) ? 'var(--palm)' : 'var(--gold)'}`, borderRadius: 'var(--radius-lg)' }}>
+          <div style={{ marginTop: '1rem', padding: '1rem', background: estUtilise(searchResult) ? 'color-mix(in srgb, var(--success) 10%, var(--white))' : 'color-mix(in srgb, var(--warning) 10%, var(--white))', border: `1px solid ${estUtilise(searchResult) ? 'var(--success)' : 'var(--warning)'}`, borderRadius: 'var(--radius)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
               <div>
                 <p style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: '1.1rem', marginBottom: '0.4rem' }}>{searchResult.numero}</p>
@@ -172,7 +172,7 @@ export default function AdminTickets() {
               {!estUtilise(searchResult) && (
                 <button className="btn btn--primary"
                   onClick={() => handleValidate(searchResult)}
-                  style={{ background: 'var(--palm)', borderColor: 'var(--palm)' }}>
+                  style={{ background: 'var(--success)', borderColor: 'var(--success)' }}>
                   <CheckCircle size={16} /> Valider l'entrée
                 </button>
               )}
@@ -241,8 +241,8 @@ export default function AdminTickets() {
               <button onClick={() => setSelected(null)}><X size={20} /></button>
             </div>
             <div style={{ padding: '0 0 1rem' }}>
-              <div style={{ textAlign: 'center', padding: '1.5rem', background: 'var(--gray-100)', borderRadius: '10px', marginBottom: '1rem' }}>
-                <TicketIcon size={36} color="var(--primary)" style={{ marginBottom: '0.5rem' }} />
+              <div style={{ textAlign: 'center', padding: '1.5rem', background: 'var(--gray-100)', borderRadius: 'var(--radius)', marginBottom: '1rem' }}>
+                <TicketIcon size={36} color="var(--red)" style={{ marginBottom: '0.5rem' }} />
                 <p style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: '1.2rem', letterSpacing: '0.1em' }}>{selected.numero}</p>
                 <div style={{ marginTop: '0.75rem' }}><StatusBadge utilise={estUtilise(selected)} /></div>
               </div>
@@ -274,7 +274,7 @@ export default function AdminTickets() {
             {!estUtilise(selected) && (
               <div className="admin-form__footer">
                 <button className="btn btn--ghost" onClick={() => setSelected(null)}>Fermer</button>
-                <button className="btn btn--primary" style={{ background: 'var(--palm)', borderColor: 'var(--palm)' }}
+                <button className="btn btn--primary" style={{ background: 'var(--success)', borderColor: 'var(--success)' }}
                   onClick={() => handleValidate(selected)}>
                   <CheckCircle size={15} /> Valider l'entrée
                 </button>

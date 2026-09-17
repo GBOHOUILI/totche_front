@@ -14,10 +14,10 @@ export default function App() {
           style: {
             fontFamily: 'Karla, sans-serif',
             fontSize: '0.875rem',
-            borderRadius: '4px',
-            boxShadow: '0 6px 24px rgba(32,44,70,.14)',
+            borderRadius: 'var(--radius)',
+            boxShadow: 'var(--shadow-lg)',
           },
-          success: { iconTheme: { primary: '#3D6B4F', secondary: '#FFFCF6' } },
+          success: { iconTheme: { primary: 'var(--success)', secondary: 'var(--white)' } },
         }}
       />
     </AuthProvider>

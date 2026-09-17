@@ -110,8 +110,8 @@ export default function AdminAvis() {
             onClick={() => { setFilter(f.key); setPage(1) }}
             style={{
               padding: '0.4rem 1rem', borderRadius: '20px', border: '1.5px solid',
-              borderColor: filter === f.key ? 'var(--primary)' : 'var(--gray-300)',
-              background:  filter === f.key ? 'var(--primary)' : 'white',
+              borderColor: filter === f.key ? 'var(--red)' : 'var(--gray-300)',
+              background:  filter === f.key ? 'var(--red)' : 'white',
               color:       filter === f.key ? 'white' : 'var(--gray-700)',
               fontWeight: 500, fontSize: '0.85rem', cursor: 'pointer',
             }}>
@@ -152,7 +152,7 @@ export default function AdminAvis() {
                       <button className="admin-icon-btn" title="Voir" onClick={() => setSelected(a)}><Eye size={15} /></button>
                       {(a.status || a.statut) !== 'approuve' && (
                         <button className="admin-icon-btn" title="Approuver"
-                          style={{ color: 'var(--palm)' }}
+                          style={{ color: 'var(--success)' }}
                           disabled={actionLoading === a.id + '_approve'}
                           onClick={() => handleApprove(a.id)}>
                           <CheckCircle size={15} />
