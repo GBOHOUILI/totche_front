@@ -117,6 +117,7 @@ export function AuthProvider({ children }) {
     try {
       if (isPrestataire) await prestatairesApi.logout()
       else if (isResponsable) await responsablesApi.logout()
+      else if (isAdmin) await authApi.logoutAdmin()
       else await authApi.logout()
     } catch {}
     localStorage.removeItem('token')
