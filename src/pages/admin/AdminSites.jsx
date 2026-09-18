@@ -31,7 +31,7 @@ export default function AdminSites() {
 
   const load = () => {
     setLoading(true)
-    sitesApi.list().then(r => setSites(r.data?.data || r.data || [])).finally(() => setLoading(false))
+    sitesApi.adminList().then(r => setSites(r.data?.data || r.data || [])).finally(() => setLoading(false))
   }
 
   const loadCats = () => {

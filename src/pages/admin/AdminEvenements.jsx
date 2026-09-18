@@ -28,7 +28,7 @@ export default function AdminEvenements() {
 
   const load = () => {
     setLoading(true)
-    evenementsApi.list().then(r => setEvents(r.data?.data || r.data || [])).finally(() => setLoading(false))
+    evenementsApi.adminList().then(r => setEvents(r.data?.data || r.data || [])).finally(() => setLoading(false))
   }
 
   const openCreate = () => { setForm(emptyForm); setModal('create') }
