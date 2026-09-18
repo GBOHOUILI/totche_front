@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { MapPin, Calendar, Ticket, TrendingUp } from 'lucide-react'
-import { prestatairesApi } from '../../api/services'
+import { Link } from 'react-router-dom'
+import { MapPin, Calendar, Ticket, TrendingUp, AlertTriangle } from 'lucide-react'
+import { prestatairesApi, abonnementsApi } from '../../api/services'
 import { Spinner } from '../../components/ui/index'
 
 const StatCard = ({ icon: Icon, label, value, color, sub }) => (
@@ -20,10 +21,16 @@ const StatCard = ({ icon: Icon, label, value, color, sub }) => (
 
 export default function PrestataireDashboard() {
   const [stats, setStats] = useState(null)
+  const [abonnementActif, setAbonnementActif] = useState(true)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    prestatairesApi.dashboard().then(r => setStats(r.data)).finally(() => setLoading(false))
+    Promise.all([
+      prestatairesApi.dashboard(),
+      abonnementsApi.statut(),
+    ])
+      .then(([d, a]) => { setStats(d.data); setAbonnementActif(a.data.actif) })
+      .finally(() => setLoading(false))
   }, [])
 
   if (loading) return <div className="center-spinner"><Spinner /></div>
@@ -38,6 +45,19 @@ export default function PrestataireDashboard() {
           </p>
         </div>
       </div>
+
+      {!abonnementActif && (
+        <div className="admin-section" style={{
+          display: 'flex', alignItems: 'center', gap: '0.75rem',
+          borderLeft: '3px solid var(--warning)', marginBottom: '1.5rem',
+        }}>
+          <AlertTriangle size={20} style={{ color: 'var(--warning)', flexShrink: 0 }} />
+          <p style={{ fontSize: '0.875rem', color: 'var(--gray-700)', flex: 1 }}>
+            Vous n'avez pas d'abonnement actif : la création de nouvelles fiches est bloquée.
+          </p>
+          <Link to="/prestataire/abonnement" className="btn btn--primary btn--sm">Souscrire</Link>
+        </div>
+      )}
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
         <StatCard icon={MapPin} label="Mes sites" value={stats?.nombre_sites} color="var(--success)" />

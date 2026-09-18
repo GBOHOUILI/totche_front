@@ -583,3 +583,26 @@ export const fonctionnalitesApi = {
   assignerAdmin: (id, data) => api.post(`/admin/fonctionnalites/${id}/assigner-admin`, data),
   assignerUser: (id, data) => api.post(`/admin/fonctionnalites/${id}/assigner-user`, data),
 }
+
+// ─── PLANS D'ABONNEMENT SaaS (module Prestataire, étape 3) ─────
+// GET  /api/plans              (public)
+// POST/PUT/DELETE /api/admin/plans (admin)
+export const plansApi = {
+  list: () => api.get('/plans'),
+  create: (data) => api.post('/admin/plans', data),
+  update: (id, data) => api.put(`/admin/plans/${id}`, data),
+  delete: (id) => api.delete(`/admin/plans/${id}`),
+}
+
+// ─── ABONNEMENTS (Kkiapay, mêmes mécanismes que commandesApi/paiementsApi) ─
+// GET   /api/prestataire/abonnement                                    { abonnement, actif }
+// POST  /api/prestataire/abonnements                { id_plan }        crée/réutilise l'abonnement en_attente + une facture à payer
+// PATCH /api/prestataire/factures-abonnement/{id}/verifier { transaction_id }
+// GET   /api/admin/abonnements (admin)
+export const abonnementsApi = {
+  statut: () => api.get('/prestataire/abonnement'),
+  souscrire: (idPlan) => api.post('/prestataire/abonnements', { id_plan: idPlan }),
+  verifierFacture: (factureId, transactionId) =>
+    api.patch(`/prestataire/factures-abonnement/${factureId}/verifier`, { transaction_id: transactionId }),
+  adminList: () => api.get('/admin/abonnements'),
+}

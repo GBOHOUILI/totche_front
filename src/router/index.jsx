@@ -41,6 +41,8 @@ const AdminAdmins = lazy(() => import('../pages/admin/AdminAdmins'))
 const AdminTickets = lazy(() => import('../pages/admin/AdminTickets'))
 const AdminTarifs = lazy(() => import('../pages/admin/AdminPrix'))
 const AdminResponsables = lazy(() => import('../pages/admin/AdminResponsables'))
+const AdminPlans = lazy(() => import('../pages/admin/AdminPlans'))
+const AdminAbonnements = lazy(() => import('../pages/admin/AdminAbonnements'))
 
 const ResponsableLayout = lazy(() => import('../pages/responsable/ResponsableLayout'))
 const ResponsableAValider = lazy(() => import('../pages/responsable/ResponsableAValider'))
@@ -58,6 +60,7 @@ const PrestataireHotels = lazy(() => import('../pages/prestataire/PrestataireHot
 const PrestataireRestaurants = lazy(() => import('../pages/prestataire/PrestataireRestaurants'))
 const PrestataireTransports = lazy(() => import('../pages/prestataire/PrestataireTransports'))
 const PrestataireProfil = lazy(() => import('../pages/prestataire/PrestataireProfil'))
+const PrestataireAbonnement = lazy(() => import('../pages/prestataire/PrestataireAbonnement'))
 
 function RequireAuth() {
   const { isAuthenticated } = useAuth()
@@ -163,6 +166,7 @@ const router = createBrowserRouter([
           { path: 'hotels', element: <PrestataireHotels /> },
           { path: 'restaurants', element: <PrestataireRestaurants /> },
           { path: 'transports', element: <PrestataireTransports /> },
+          { path: 'abonnement', element: <PrestataireAbonnement /> },
           { path: 'profil', element: <PrestataireProfil /> },
         ]
       }
@@ -190,6 +194,8 @@ const router = createBrowserRouter([
         { path: 'tickets', element: <AdminTickets /> },
         { path: 'admins', element: <AdminAdmins /> },
         { path: 'responsables', element: <AdminResponsables /> },
+        { path: 'plans', element: <AdminPlans /> },
+        { path: 'abonnements', element: <AdminAbonnements /> },
       ]
     }
   ]
