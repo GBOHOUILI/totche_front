@@ -1,45 +1,50 @@
 import { useState, useEffect } from 'react'
-import { MapPin, Calendar, CheckCircle, XCircle } from 'lucide-react'
+import { MapPin, Calendar, Hotel, UtensilsCrossed, Bus, CheckCircle, XCircle } from 'lucide-react'
 import { responsablesApi } from '../../api/services'
 import { Spinner } from '../../components/ui/index'
 import { useAuth } from '../../context/AuthContext'
 import toast from 'react-hot-toast'
 
+const SECTIONS = [
+  { key: 'sites', label: 'Sites', icon: MapPin, color: 'var(--success)', valider: 'validerSite', rejeter: 'rejeterSite' },
+  { key: 'evenements', label: 'Événements', icon: Calendar, color: 'var(--red)', valider: 'validerEvenement', rejeter: 'rejeterEvenement' },
+  { key: 'hotels', label: 'Hôtels', icon: Hotel, color: 'var(--success)', valider: 'validerHotel', rejeter: 'rejeterHotel' },
+  { key: 'restaurants', label: 'Restaurants', icon: UtensilsCrossed, color: 'var(--red)', valider: 'validerRestaurant', rejeter: 'rejeterRestaurant' },
+  { key: 'transports', label: 'Transports', icon: Bus, color: 'var(--success)', valider: 'validerTransport', rejeter: 'rejeterTransport' },
+]
+
 export default function ResponsableAValider() {
   const { user } = useAuth()
-  const [sites, setSites] = useState([])
-  const [evenements, setEvenements] = useState([])
+  const [data, setData] = useState({ sites: [], evenements: [], hotels: [], restaurants: [], transports: [] })
   const [loading, setLoading] = useState(true)
 
   const load = () => {
     setLoading(true)
     responsablesApi.aValider()
-      .then(r => { setSites(r.data?.sites || []); setEvenements(r.data?.evenements || []) })
+      .then(r => setData({
+        sites: r.data?.sites || [],
+        evenements: r.data?.evenements || [],
+        hotels: r.data?.hotels || [],
+        restaurants: r.data?.restaurants || [],
+        transports: r.data?.transports || [],
+      }))
       .finally(() => setLoading(false))
   }
 
   useEffect(() => { load() }, [])
 
-  const validerSite = async (id) => {
-    try { await responsablesApi.validerSite(id); toast.success('Site validé'); load() }
+  const valider = async (section, id) => {
+    try { await responsablesApi[section.valider](id); toast.success(`${section.label.slice(0, -1)} validé(e)`); load() }
     catch (err) { toast.error(err.response?.data?.message || 'Erreur') }
   }
-  const rejeterSite = async (id) => {
-    try { await responsablesApi.rejeterSite(id); toast.success('Site rejeté'); load() }
-    catch (err) { toast.error(err.response?.data?.message || 'Erreur') }
-  }
-  const validerEvenement = async (id) => {
-    try { await responsablesApi.validerEvenement(id); toast.success('Événement validé'); load() }
-    catch (err) { toast.error(err.response?.data?.message || 'Erreur') }
-  }
-  const rejeterEvenement = async (id) => {
-    try { await responsablesApi.rejeterEvenement(id); toast.success('Événement rejeté'); load() }
+  const rejeter = async (section, id) => {
+    try { await responsablesApi[section.rejeter](id); toast.success(`${section.label.slice(0, -1)} rejeté(e)`); load() }
     catch (err) { toast.error(err.response?.data?.message || 'Erreur') }
   }
 
   if (loading) return <div className="center-spinner"><Spinner /></div>
 
-  const total = sites.length + evenements.length
+  const total = SECTIONS.reduce((sum, s) => sum + data[s.key].length, 0)
 
   return (
     <div className="admin-page">
@@ -59,25 +64,27 @@ export default function ResponsableAValider() {
           Rien à valider pour l'instant.
         </p>
       ) : (
-        <>
-          {sites.length > 0 && (
-            <div className="admin-section" style={{ marginBottom: '1.5rem' }}>
+        SECTIONS.map(section => {
+          const items = data[section.key]
+          if (items.length === 0) return null
+          const Icon = section.icon
+          return (
+            <div key={section.key} className="admin-section" style={{ marginBottom: '1.5rem' }}>
               <h2 style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <MapPin size={16} color="var(--success)" /> Sites ({sites.length})
+                <Icon size={16} color={section.color} /> {section.label} ({items.length})
               </h2>
               <table className="admin-table">
-                <thead><tr><th>Nom</th><th>Région</th><th>Catégorie</th><th>Prestataire</th><th>Actions</th></tr></thead>
+                <thead><tr><th>Nom</th><th>Région</th><th>Prestataire</th><th>Actions</th></tr></thead>
                 <tbody>
-                  {sites.map(s => (
-                    <tr key={s.id}>
-                      <td>{s.libelle}</td>
-                      <td>{s.region?.nom || '—'}</td>
-                      <td>{s.categorie?.libelle || '—'}</td>
-                      <td>{s.prestataire?.nom_entreprise || s.admin?.nom || '—'}</td>
+                  {items.map(item => (
+                    <tr key={item.id}>
+                      <td>{item.libelle}</td>
+                      <td>{item.region?.nom || '—'}</td>
+                      <td>{item.prestataire?.nom_entreprise || item.admin?.nom || '—'}</td>
                       <td>
                         <div className="admin-table__actions">
-                          <button className="admin-icon-btn admin-icon-btn--success" title="Valider" onClick={() => validerSite(s.id)}><CheckCircle size={15} /></button>
-                          <button className="admin-icon-btn admin-icon-btn--danger" title="Rejeter" onClick={() => rejeterSite(s.id)}><XCircle size={15} /></button>
+                          <button className="admin-icon-btn admin-icon-btn--success" title="Valider" onClick={() => valider(section, item.id)}><CheckCircle size={15} /></button>
+                          <button className="admin-icon-btn admin-icon-btn--danger" title="Rejeter" onClick={() => rejeter(section, item.id)}><XCircle size={15} /></button>
                         </div>
                       </td>
                     </tr>
@@ -85,35 +92,8 @@ export default function ResponsableAValider() {
                 </tbody>
               </table>
             </div>
-          )}
-
-          {evenements.length > 0 && (
-            <div className="admin-section">
-              <h2 style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <Calendar size={16} color="var(--red)" /> Événements ({evenements.length})
-              </h2>
-              <table className="admin-table">
-                <thead><tr><th>Nom</th><th>Région</th><th>Catégorie</th><th>Prestataire</th><th>Actions</th></tr></thead>
-                <tbody>
-                  {evenements.map(ev => (
-                    <tr key={ev.id}>
-                      <td>{ev.libelle}</td>
-                      <td>{ev.region?.nom || '—'}</td>
-                      <td>{ev.categorie?.libelle || '—'}</td>
-                      <td>{ev.prestataire?.nom_entreprise || ev.admin?.nom || '—'}</td>
-                      <td>
-                        <div className="admin-table__actions">
-                          <button className="admin-icon-btn admin-icon-btn--success" title="Valider" onClick={() => validerEvenement(ev.id)}><CheckCircle size={15} /></button>
-                          <button className="admin-icon-btn admin-icon-btn--danger" title="Rejeter" onClick={() => rejeterEvenement(ev.id)}><XCircle size={15} /></button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </>
+          )
+        })
       )}
     </div>
   )

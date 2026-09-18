@@ -49,9 +49,36 @@ export const prestatairesApi = {
   updateEvenement: (id, data) => api.put(`/prestataire/evenements/${id}`, data),
   deleteEvenement: (id) => api.delete(`/prestataire/evenements/${id}`),
 
+  mesHotels: () => api.get('/prestataire/hotels'),
+  createHotel: (data) => api.post('/prestataire/hotels', data),
+  updateHotel: (id, data) => api.put(`/prestataire/hotels/${id}`, data),
+  deleteHotel: (id) => api.delete(`/prestataire/hotels/${id}`),
+
+  mesRestaurants: () => api.get('/prestataire/restaurants'),
+  createRestaurant: (data) => api.post('/prestataire/restaurants', data),
+  updateRestaurant: (id, data) => api.put(`/prestataire/restaurants/${id}`, data),
+  deleteRestaurant: (id) => api.delete(`/prestataire/restaurants/${id}`),
+
+  mesTransports: () => api.get('/prestataire/transports'),
+  createTransport: (data) => api.post('/prestataire/transports', data),
+  updateTransport: (id, data) => api.put(`/prestataire/transports/${id}`, data),
+  deleteTransport: (id) => api.delete(`/prestataire/transports/${id}`),
+
   createPrix: (data) => api.post('/prestataire/prix', data),
   updatePrix: (id, data) => api.put(`/prestataire/prix/${id}`, data),
   deletePrix: (id) => api.delete(`/prestataire/prix/${id}`),
+
+  createChambre: (data) => api.post('/prestataire/chambres', data),
+  updateChambre: (id, data) => api.put(`/prestataire/chambres/${id}`, data),
+  deleteChambre: (id) => api.delete(`/prestataire/chambres/${id}`),
+
+  createPlat: (data) => api.post('/prestataire/plats', data),
+  updatePlat: (id, data) => api.put(`/prestataire/plats/${id}`, data),
+  deletePlat: (id) => api.delete(`/prestataire/plats/${id}`),
+
+  createTrajet: (data) => api.post('/prestataire/trajets', data),
+  updateTrajet: (id, data) => api.put(`/prestataire/trajets/${id}`, data),
+  deleteTrajet: (id) => api.delete(`/prestataire/trajets/${id}`),
 
   createGalerieSite: (formData) => api.post('/prestataire/galeries/sites', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
@@ -61,6 +88,18 @@ export const prestatairesApi = {
     headers: { 'Content-Type': 'multipart/form-data' }
   }),
   deleteGalerieEvenement: (id) => api.delete(`/prestataire/galeries/evenements/${id}`),
+  createGalerieHotel: (formData) => api.post('/prestataire/galeries/hotels', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  deleteGalerieHotel: (id) => api.delete(`/prestataire/galeries/hotels/${id}`),
+  createGalerieRestaurant: (formData) => api.post('/prestataire/galeries/restaurants', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  deleteGalerieRestaurant: (id) => api.delete(`/prestataire/galeries/restaurants/${id}`),
+  createGalerieTransport: (formData) => api.post('/prestataire/galeries/transports', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  deleteGalerieTransport: (id) => api.delete(`/prestataire/galeries/transports/${id}`),
 }
 
 // ─── SITES ───────────────────────────────────────────────────
@@ -99,6 +138,89 @@ export const evenementsApi = {
   delete: (id) => api.delete(`/admin/evenements/${id}`),
   valider: (id) => api.patch(`/admin/evenements/${id}/valider`),
   rejeter: (id) => api.patch(`/admin/evenements/${id}/rejeter`),
+}
+
+// ─── HÔTELS ──────────────────────────────────────────────────
+// GET   /api/hotels
+// GET   /api/hotels/{hotel}
+// POST  /api/admin/hotels                  (admin)
+// PUT   /api/admin/hotels/{id}             (admin)
+// DEL   /api/admin/hotels/{id}             (admin)
+// PATCH /api/admin/hotels/{id}/valider     (admin)
+// PATCH /api/admin/hotels/{id}/rejeter     (admin)
+export const hotelsApi = {
+  list: (params) => api.get('/hotels', { params }),
+  adminList: (params) => api.get('/admin/hotels', { params }),
+  get: (id) => api.get(`/hotels/${id}`),
+  create: (data) => api.post('/admin/hotels', data),
+  update: (id, data) => api.put(`/admin/hotels/${id}`, data),
+  delete: (id) => api.delete(`/admin/hotels/${id}`),
+  valider: (id) => api.patch(`/admin/hotels/${id}/valider`),
+  rejeter: (id) => api.patch(`/admin/hotels/${id}/rejeter`),
+}
+
+// ─── RESTAURANTS ─────────────────────────────────────────────
+export const restaurantsApi = {
+  list: (params) => api.get('/restaurants', { params }),
+  adminList: (params) => api.get('/admin/restaurants', { params }),
+  get: (id) => api.get(`/restaurants/${id}`),
+  create: (data) => api.post('/admin/restaurants', data),
+  update: (id, data) => api.put(`/admin/restaurants/${id}`, data),
+  delete: (id) => api.delete(`/admin/restaurants/${id}`),
+  valider: (id) => api.patch(`/admin/restaurants/${id}/valider`),
+  rejeter: (id) => api.patch(`/admin/restaurants/${id}/rejeter`),
+}
+
+// ─── TRANSPORTS ──────────────────────────────────────────────
+export const transportsApi = {
+  list: (params) => api.get('/transports', { params }),
+  adminList: (params) => api.get('/admin/transports', { params }),
+  get: (id) => api.get(`/transports/${id}`),
+  create: (data) => api.post('/admin/transports', data),
+  update: (id, data) => api.put(`/admin/transports/${id}`, data),
+  delete: (id) => api.delete(`/admin/transports/${id}`),
+  valider: (id) => api.patch(`/admin/transports/${id}/valider`),
+  rejeter: (id) => api.patch(`/admin/transports/${id}/rejeter`),
+}
+
+// ─── VILLES ──────────────────────────────────────────────────
+// GET /api/villes — liste ouverte (contrairement aux régions, fixe/seedée)
+export const villesApi = {
+  list: () => api.get('/villes'),
+  get: (id) => api.get(`/villes/${id}`),
+  create: (data) => api.post('/admin/villes', data),
+  update: (id, data) => api.put(`/admin/villes/${id}`, data),
+  delete: (id) => api.delete(`/admin/villes/${id}`),
+}
+
+// ─── CHAMBRES (sous-entité Hôtel) ──────────────────────────────
+// GET /api/chambres ?id_hotel=
+export const chambresApi = {
+  list: (params) => api.get('/chambres', { params }),
+  get: (id) => api.get(`/chambres/${id}`),
+  create: (data) => api.post('/admin/chambres', data),
+  update: (id, data) => api.put(`/admin/chambres/${id}`, data),
+  delete: (id) => api.delete(`/admin/chambres/${id}`),
+}
+
+// ─── PLATS (sous-entité Restaurant) ────────────────────────────
+// GET /api/plats ?id_restaurant=
+export const platsApi = {
+  list: (params) => api.get('/plats', { params }),
+  get: (id) => api.get(`/plats/${id}`),
+  create: (data) => api.post('/admin/plats', data),
+  update: (id, data) => api.put(`/admin/plats/${id}`, data),
+  delete: (id) => api.delete(`/admin/plats/${id}`),
+}
+
+// ─── TRAJETS (sous-entité Transport) ───────────────────────────
+// GET /api/trajets ?id_transport=&id_ville_depart=&id_ville_arrivee=
+export const trajetsApi = {
+  list: (params) => api.get('/trajets', { params }),
+  get: (id) => api.get(`/trajets/${id}`),
+  create: (data) => api.post('/admin/trajets', data),
+  update: (id, data) => api.put(`/admin/trajets/${id}`, data),
+  delete: (id) => api.delete(`/admin/trajets/${id}`),
 }
 
 // ─── CATÉGORIES SITES ────────────────────────────────────────
@@ -155,6 +277,33 @@ export const galeriesApi = {
   }),
   updateEvenement: (id, data) => api.put(`/admin/galeries/evenements/${id}`, data),
   deleteEvenement: (id) => api.delete(`/admin/galeries/evenements/${id}`),
+
+  // ─── GALERIES HÔTELS ─────────────────────────────────────
+  hotels: (params) => api.get('/galeries/hotels', { params }),
+  hotel: (id) => api.get(`/galeries/hotels/${id}`),
+  createHotel: (formData) => api.post('/admin/galeries/hotels', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  updateHotel: (id, data) => api.put(`/admin/galeries/hotels/${id}`, data),
+  deleteHotel: (id) => api.delete(`/admin/galeries/hotels/${id}`),
+
+  // ─── GALERIES RESTAURANTS ────────────────────────────────
+  restaurants: (params) => api.get('/galeries/restaurants', { params }),
+  restaurant: (id) => api.get(`/galeries/restaurants/${id}`),
+  createRestaurant: (formData) => api.post('/admin/galeries/restaurants', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  updateRestaurant: (id, data) => api.put(`/admin/galeries/restaurants/${id}`, data),
+  deleteRestaurant: (id) => api.delete(`/admin/galeries/restaurants/${id}`),
+
+  // ─── GALERIES TRANSPORTS ─────────────────────────────────
+  transports: (params) => api.get('/galeries/transports', { params }),
+  transport: (id) => api.get(`/galeries/transports/${id}`),
+  createTransport: (formData) => api.post('/admin/galeries/transports', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  updateTransport: (id, data) => api.put(`/admin/galeries/transports/${id}`, data),
+  deleteTransport: (id) => api.delete(`/admin/galeries/transports/${id}`),
 }
 
 // ─── PRIX ────────────────────────────────────────────────────
@@ -345,6 +494,13 @@ export const responsablesApi = {
   validerEvenement: (id) => api.patch(`/responsable/evenements/${id}/valider`),
   rejeterEvenement: (id) => api.patch(`/responsable/evenements/${id}/rejeter`),
 
+  validerHotel: (id) => api.patch(`/responsable/hotels/${id}/valider`),
+  rejeterHotel: (id) => api.patch(`/responsable/hotels/${id}/rejeter`),
+  validerRestaurant: (id) => api.patch(`/responsable/restaurants/${id}/valider`),
+  rejeterRestaurant: (id) => api.patch(`/responsable/restaurants/${id}/rejeter`),
+  validerTransport: (id) => api.patch(`/responsable/transports/${id}/valider`),
+  rejeterTransport: (id) => api.patch(`/responsable/transports/${id}/rejeter`),
+
   // Mes propres fiches (un responsable connaît son territoire) — jamais
   // auto-validées, seul un admin les valide.
   mesSites: () => api.get('/responsable/sites'),
@@ -357,9 +513,36 @@ export const responsablesApi = {
   updateEvenement: (id, data) => api.put(`/responsable/evenements/${id}`, data),
   deleteEvenement: (id) => api.delete(`/responsable/evenements/${id}`),
 
+  mesHotels: () => api.get('/responsable/hotels'),
+  createHotel: (data) => api.post('/responsable/hotels', data),
+  updateHotel: (id, data) => api.put(`/responsable/hotels/${id}`, data),
+  deleteHotel: (id) => api.delete(`/responsable/hotels/${id}`),
+
+  mesRestaurants: () => api.get('/responsable/restaurants'),
+  createRestaurant: (data) => api.post('/responsable/restaurants', data),
+  updateRestaurant: (id, data) => api.put(`/responsable/restaurants/${id}`, data),
+  deleteRestaurant: (id) => api.delete(`/responsable/restaurants/${id}`),
+
+  mesTransports: () => api.get('/responsable/transports'),
+  createTransport: (data) => api.post('/responsable/transports', data),
+  updateTransport: (id, data) => api.put(`/responsable/transports/${id}`, data),
+  deleteTransport: (id) => api.delete(`/responsable/transports/${id}`),
+
   createPrix: (data) => api.post('/responsable/prix', data),
   updatePrix: (id, data) => api.put(`/responsable/prix/${id}`, data),
   deletePrix: (id) => api.delete(`/responsable/prix/${id}`),
+
+  createChambre: (data) => api.post('/responsable/chambres', data),
+  updateChambre: (id, data) => api.put(`/responsable/chambres/${id}`, data),
+  deleteChambre: (id) => api.delete(`/responsable/chambres/${id}`),
+
+  createPlat: (data) => api.post('/responsable/plats', data),
+  updatePlat: (id, data) => api.put(`/responsable/plats/${id}`, data),
+  deletePlat: (id) => api.delete(`/responsable/plats/${id}`),
+
+  createTrajet: (data) => api.post('/responsable/trajets', data),
+  updateTrajet: (id, data) => api.put(`/responsable/trajets/${id}`, data),
+  deleteTrajet: (id) => api.delete(`/responsable/trajets/${id}`),
 
   createGalerieSite: (formData) => api.post('/responsable/galeries/sites', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
@@ -369,6 +552,18 @@ export const responsablesApi = {
     headers: { 'Content-Type': 'multipart/form-data' }
   }),
   deleteGalerieEvenement: (id) => api.delete(`/responsable/galeries/evenements/${id}`),
+  createGalerieHotel: (formData) => api.post('/responsable/galeries/hotels', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  deleteGalerieHotel: (id) => api.delete(`/responsable/galeries/hotels/${id}`),
+  createGalerieRestaurant: (formData) => api.post('/responsable/galeries/restaurants', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  deleteGalerieRestaurant: (id) => api.delete(`/responsable/galeries/restaurants/${id}`),
+  createGalerieTransport: (formData) => api.post('/responsable/galeries/transports', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  deleteGalerieTransport: (id) => api.delete(`/responsable/galeries/transports/${id}`),
 }
 
 // ─── FONCTIONNALITÉS ─────────────────────────────────────────

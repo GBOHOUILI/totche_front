@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { ClipboardCheck, ShieldCheck, MapPin, Calendar, LogOut } from 'lucide-react'
+import { ClipboardCheck, ShieldCheck, MapPin, Calendar, LogOut, Hotel, UtensilsCrossed, Bus } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import toast from 'react-hot-toast'
 
@@ -7,6 +7,9 @@ const NAV_ITEMS = [
   { to: '/responsable', label: 'À valider', icon: ClipboardCheck, end: true },
   { to: '/responsable/sites', label: 'Mes Sites', icon: MapPin },
   { to: '/responsable/evenements', label: 'Mes Événements', icon: Calendar },
+  { to: '/responsable/hotels', label: 'Mes Hôtels', icon: Hotel },
+  { to: '/responsable/restaurants', label: 'Mes Restaurants', icon: UtensilsCrossed },
+  { to: '/responsable/transports', label: 'Mes Transports', icon: Bus },
 ]
 
 export default function ResponsableLayout() {
