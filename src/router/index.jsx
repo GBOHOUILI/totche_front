@@ -11,6 +11,7 @@ import { Login, Register } from '../pages/auth/Auth'
 import AdminLogin from '../pages/admin/AdminLogin'
 import PrestataireLogin from '../pages/prestataire/PrestataireLogin'
 import PrestataireRegister from '../pages/prestataire/PrestataireRegister'
+import ResponsableLogin from '../pages/responsable/ResponsableLogin'
 import { APropos, Contact } from '../pages/public/AProposContact'
 import Profil from '../pages/user/Profil'
 import MesReservations from '../pages/user/MesReservations'
@@ -30,6 +31,10 @@ const AdminAvis = lazy(() => import('../pages/admin/AdminAvis'))
 const AdminAdmins = lazy(() => import('../pages/admin/AdminAdmins'))
 const AdminTickets = lazy(() => import('../pages/admin/AdminTickets'))
 const AdminTarifs = lazy(() => import('../pages/admin/AdminPrix'))
+const AdminResponsables = lazy(() => import('../pages/admin/AdminResponsables'))
+
+const ResponsableLayout = lazy(() => import('../pages/responsable/ResponsableLayout'))
+const ResponsableAValider = lazy(() => import('../pages/responsable/ResponsableAValider'))
 
 const PrestataireLayout = lazy(() => import('../pages/prestataire/PrestataireLayout'))
 const PrestataireDashboard = lazy(() => import('../pages/prestataire/PrestataireDashboard'))
@@ -65,6 +70,17 @@ function RequirePrestataire() {
   )
 }
 
+function RequireResponsable() {
+  const { isResponsable, isAuthenticated } = useAuth()
+  if (!isAuthenticated) return <Navigate to="/responsable/login" replace />
+  if (!isResponsable) return <Navigate to="/" replace />
+  return (
+    <Suspense fallback={<div className="page-loading"><Spinner size="lg" /></div>}>
+      <Outlet />
+    </Suspense>
+  )
+}
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -93,6 +109,19 @@ const router = createBrowserRouter([
   { path: '/admin/login', element: <AdminLogin /> },
   { path: '/prestataire/login', element: <PrestataireLogin /> },
   { path: '/prestataire/inscription', element: <PrestataireRegister /> },
+  { path: '/responsable/login', element: <ResponsableLogin /> },
+  {
+    path: '/responsable',
+    element: <RequireResponsable />,
+    children: [
+      {
+        element: <ResponsableLayout />,
+        children: [
+          { index: true, element: <ResponsableAValider /> },
+        ]
+      }
+    ]
+  },
   {
     path: '/prestataire',
     element: <RequirePrestataire />,
@@ -126,6 +155,7 @@ const router = createBrowserRouter([
         { path: 'avis', element: <AdminAvis /> },
         { path: 'tickets', element: <AdminTickets /> },
         { path: 'admins', element: <AdminAdmins /> },
+        { path: 'responsables', element: <AdminResponsables /> },
       ]
     }
   ]

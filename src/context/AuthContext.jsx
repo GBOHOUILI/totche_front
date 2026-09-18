@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from 'react'
-import { authApi, prestatairesApi } from '../api/services'
+import { authApi, prestatairesApi, responsablesApi } from '../api/services'
 
 const AuthContext = createContext(null)
 
@@ -12,6 +12,7 @@ export function AuthProvider({ children }) {
 
   const isAdmin = user?.role === 'admin'
   const isPrestataire = user?.role === 'prestataire'
+  const isResponsable = user?.role === 'responsable'
 
   const _save = (token, user) => {
     localStorage.setItem('token', token)
@@ -62,6 +63,20 @@ export function AuthProvider({ children }) {
     } finally { setLoading(false) }
   }
 
+  // Login responsable régional: { tel, password }
+  const loginResponsable = async (credentials) => {
+    setLoading(true)
+    try {
+      const res = await responsablesApi.login(credentials)
+      const token = res.data?.token || res.data?.access_token
+      const responsable = res.data?.responsable || res.data?.data
+      _save(token, { ...responsable, role: 'responsable' })
+      return { success: true }
+    } catch (err) {
+      return { success: false, message: err.response?.data?.message || 'Identifiants incorrects' }
+    } finally { setLoading(false) }
+  }
+
   // Register prestataire: { nom_entreprise, type_prestataire, email, tel, password, password_confirmation }
   const registerPrestataire = async (data) => {
     setLoading(true)
@@ -101,6 +116,7 @@ export function AuthProvider({ children }) {
   const logout = async () => {
     try {
       if (isPrestataire) await prestatairesApi.logout()
+      else if (isResponsable) await responsablesApi.logout()
       else await authApi.logout()
     } catch {}
     localStorage.removeItem('token')
@@ -111,9 +127,9 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider value={{
-      user, token, loading, isAdmin, isPrestataire,
+      user, token, loading, isAdmin, isPrestataire, isResponsable,
       isAuthenticated: !!token,
-      login, loginAdmin, loginPrestataire, register, registerPrestataire, logout
+      login, loginAdmin, loginPrestataire, loginResponsable, register, registerPrestataire, logout
     }}>
       {children}
     </AuthContext.Provider>
