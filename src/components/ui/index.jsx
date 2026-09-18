@@ -88,6 +88,66 @@ export function EventCard({ event, index = 0 }) {
   )
 }
 
+// ─── Hotel Card ────────────────────────────────────────────
+export function HotelCard({ hotel, index = 0 }) {
+  const cover = hotel.galeries?.[0]?.url_fichier || hotel.galeries?.[0]?.url
+  const locLine = [hotel.adresse, typeof hotel.distance_km === 'number' ? `${hotel.distance_km.toFixed(1)} km` : null].filter(Boolean).join(' · ')
+  return (
+    <Link to={`/hotels/${hotel.id}`} className="card card--site" style={{ animationDelay: `${index * 60}ms` }}>
+      <div className="card__img-wrap">
+        {cover ? <img src={cover} alt={hotel.libelle} loading="lazy" /> : <div className="card__img-placeholder" />}
+      </div>
+      <div className="card__body">
+        {hotel.nombre_etoiles && <div className="card__eyebrow"><Stars value={hotel.nombre_etoiles} size={12} /></div>}
+        <h3 className="card__title">{hotel.libelle}</h3>
+        {locLine && <p className="card__location">{locLine}</p>}
+        {hotel.description && <p className="card__desc">{hotel.description}</p>}
+        <span className="card__link">Découvrir <ArrowRight size={13} /></span>
+      </div>
+    </Link>
+  )
+}
+
+// ─── Restaurant Card ─────────────────────────────────────────
+export function RestaurantCard({ restaurant, index = 0 }) {
+  const cover = restaurant.galeries?.[0]?.url_fichier || restaurant.galeries?.[0]?.url
+  const locLine = [restaurant.adresse, typeof restaurant.distance_km === 'number' ? `${restaurant.distance_km.toFixed(1)} km` : null].filter(Boolean).join(' · ')
+  return (
+    <Link to={`/restaurants/${restaurant.id}`} className="card card--site" style={{ animationDelay: `${index * 60}ms` }}>
+      <div className="card__img-wrap">
+        {cover ? <img src={cover} alt={restaurant.libelle} loading="lazy" /> : <div className="card__img-placeholder" />}
+      </div>
+      <div className="card__body">
+        {restaurant.type_cuisine && <p className="card__eyebrow">{restaurant.type_cuisine}</p>}
+        <h3 className="card__title">{restaurant.libelle}</h3>
+        {locLine && <p className="card__location">{locLine}</p>}
+        {restaurant.description && <p className="card__desc">{restaurant.description}</p>}
+        <span className="card__link">Découvrir <ArrowRight size={13} /></span>
+      </div>
+    </Link>
+  )
+}
+
+// ─── Transport Card ──────────────────────────────────────────
+export function TransportCard({ transport, index = 0 }) {
+  const cover = transport.galeries?.[0]?.url_fichier || transport.galeries?.[0]?.url
+  const locLine = [transport.adresse, typeof transport.distance_km === 'number' ? `${transport.distance_km.toFixed(1)} km` : null].filter(Boolean).join(' · ')
+  return (
+    <Link to={`/transports/${transport.id}`} className="card card--site" style={{ animationDelay: `${index * 60}ms` }}>
+      <div className="card__img-wrap">
+        {cover ? <img src={cover} alt={transport.libelle} loading="lazy" /> : <div className="card__img-placeholder" />}
+      </div>
+      <div className="card__body">
+        {transport.type_transport && <p className="card__eyebrow">{transport.type_transport}</p>}
+        <h3 className="card__title">{transport.libelle}</h3>
+        {locLine && <p className="card__location">{locLine}</p>}
+        {transport.description && <p className="card__desc">{transport.description}</p>}
+        <span className="card__link">Découvrir <ArrowRight size={13} /></span>
+      </div>
+    </Link>
+  )
+}
+
 // ─── Empty State ─────────────────────────────────────────
 export function EmptyState({ message = 'Aucun résultat trouvé', icon: Icon }) {
   return (

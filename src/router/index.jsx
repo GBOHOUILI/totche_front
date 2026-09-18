@@ -7,6 +7,12 @@ import Sites from '../pages/public/Sites'
 import SiteDetail from '../pages/public/SiteDetail'
 import Evenements from '../pages/public/Evenements'
 import EvenementDetail from '../pages/public/EvenementDetail'
+import Hotels from '../pages/public/Hotels'
+import HotelDetail from '../pages/public/HotelDetail'
+import Restaurants from '../pages/public/Restaurants'
+import RestaurantDetail from '../pages/public/RestaurantDetail'
+import Transports from '../pages/public/Transports'
+import TransportDetail from '../pages/public/TransportDetail'
 import { Login, Register } from '../pages/auth/Auth'
 import AdminLogin from '../pages/admin/AdminLogin'
 import PrestataireLogin from '../pages/prestataire/PrestataireLogin'
@@ -24,6 +30,9 @@ const AdminLayout = lazy(() => import('../pages/admin/AdminLayout'))
 const AdminDashboard = lazy(() => import('../pages/admin/Dashboard'))
 const AdminSites = lazy(() => import('../pages/admin/AdminSites'))
 const AdminEvenements = lazy(() => import('../pages/admin/AdminEvenements'))
+const AdminHotels = lazy(() => import('../pages/admin/AdminHotels'))
+const AdminRestaurants = lazy(() => import('../pages/admin/AdminRestaurants'))
+const AdminTransports = lazy(() => import('../pages/admin/AdminTransports'))
 const AdminUsers = lazy(() => import('../pages/admin/AdminUsers'))
 const AdminCategories = lazy(() => import('../pages/admin/AdminCategories'))
 const AdminPrix = lazy(() => import('../pages/admin/AdminPrix'))
@@ -37,11 +46,17 @@ const ResponsableLayout = lazy(() => import('../pages/responsable/ResponsableLay
 const ResponsableAValider = lazy(() => import('../pages/responsable/ResponsableAValider'))
 const ResponsableSites = lazy(() => import('../pages/responsable/ResponsableSites'))
 const ResponsableEvenements = lazy(() => import('../pages/responsable/ResponsableEvenements'))
+const ResponsableHotels = lazy(() => import('../pages/responsable/ResponsableHotels'))
+const ResponsableRestaurants = lazy(() => import('../pages/responsable/ResponsableRestaurants'))
+const ResponsableTransports = lazy(() => import('../pages/responsable/ResponsableTransports'))
 
 const PrestataireLayout = lazy(() => import('../pages/prestataire/PrestataireLayout'))
 const PrestataireDashboard = lazy(() => import('../pages/prestataire/PrestataireDashboard'))
 const PrestataireSites = lazy(() => import('../pages/prestataire/PrestataireSites'))
 const PrestataireEvenements = lazy(() => import('../pages/prestataire/PrestataireEvenements'))
+const PrestataireHotels = lazy(() => import('../pages/prestataire/PrestataireHotels'))
+const PrestataireRestaurants = lazy(() => import('../pages/prestataire/PrestataireRestaurants'))
+const PrestataireTransports = lazy(() => import('../pages/prestataire/PrestataireTransports'))
 const PrestataireProfil = lazy(() => import('../pages/prestataire/PrestataireProfil'))
 
 function RequireAuth() {
@@ -93,6 +108,12 @@ const router = createBrowserRouter([
       { path: 'sites/:id', element: <SiteDetail /> },
       { path: 'evenements', element: <Evenements /> },
       { path: 'evenements/:id', element: <EvenementDetail /> },
+      { path: 'hotels', element: <Hotels /> },
+      { path: 'hotels/:id', element: <HotelDetail /> },
+      { path: 'restaurants', element: <Restaurants /> },
+      { path: 'restaurants/:id', element: <RestaurantDetail /> },
+      { path: 'transports', element: <Transports /> },
+      { path: 'transports/:id', element: <TransportDetail /> },
       { path: 'connexion', element: <Login /> },
       { path: 'inscription', element: <Register /> },
       { path: 'a-propos', element: <APropos /> },
@@ -122,6 +143,9 @@ const router = createBrowserRouter([
           { index: true, element: <ResponsableAValider /> },
           { path: 'sites', element: <ResponsableSites /> },
           { path: 'evenements', element: <ResponsableEvenements /> },
+          { path: 'hotels', element: <ResponsableHotels /> },
+          { path: 'restaurants', element: <ResponsableRestaurants /> },
+          { path: 'transports', element: <ResponsableTransports /> },
         ]
       }
     ]
@@ -136,6 +160,9 @@ const router = createBrowserRouter([
           { index: true, element: <PrestataireDashboard /> },
           { path: 'sites', element: <PrestataireSites /> },
           { path: 'evenements', element: <PrestataireEvenements /> },
+          { path: 'hotels', element: <PrestataireHotels /> },
+          { path: 'restaurants', element: <PrestataireRestaurants /> },
+          { path: 'transports', element: <PrestataireTransports /> },
           { path: 'profil', element: <PrestataireProfil /> },
         ]
       }
@@ -152,6 +179,9 @@ const router = createBrowserRouter([
 
         { path: 'sites', element: <AdminSites /> },
         { path: 'evenements', element: <AdminEvenements /> },
+        { path: 'hotels', element: <AdminHotels /> },
+        { path: 'restaurants', element: <AdminRestaurants /> },
+        { path: 'transports', element: <AdminTransports /> },
         { path: 'categories', element: <AdminCategories /> },
         { path: 'utilisateurs', element: <AdminUsers /> },
 
