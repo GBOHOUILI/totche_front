@@ -104,17 +104,11 @@ export default function AdminAvis() {
       </div>
 
       {/* Filtres */}
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+      <div className="filters__cats" style={{ marginBottom: '1.5rem' }}>
         {filters.map(f => (
           <button key={f.key}
-            onClick={() => { setFilter(f.key); setPage(1) }}
-            style={{
-              padding: '0.4rem 1rem', borderRadius: '20px', border: '1.5px solid',
-              borderColor: filter === f.key ? 'var(--red)' : 'var(--gray-300)',
-              background:  filter === f.key ? 'var(--red)' : 'white',
-              color:       filter === f.key ? 'white' : 'var(--gray-700)',
-              fontWeight: 500, fontSize: '0.85rem', cursor: 'pointer',
-            }}>
+            className={`filters__cat ${filter === f.key ? 'filters__cat--active' : ''}`}
+            onClick={() => { setFilter(f.key); setPage(1) }}>
             {f.label}
           </button>
         ))}
