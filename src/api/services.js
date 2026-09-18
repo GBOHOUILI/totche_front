@@ -19,6 +19,50 @@ export const authApi = {
   updatePassword: (data) => api.post('/update-password', data),
 }
 
+// ─── PRESTATAIRES (portail SaaS) ───────────────────────────────
+// POST /api/prestataire/register   { nom_entreprise, type_prestataire, email, tel?, password, password_confirmation }
+// POST /api/prestataire/login      { email, password }
+// GET  /api/prestataire/me
+// POST /api/prestataire/logout
+// POST /api/prestataire/update-password
+// PUT  /api/prestataire/profil
+// GET  /api/prestataire/dashboard
+// GET/POST/PUT/DELETE /api/prestataire/sites, /api/prestataire/evenements
+// POST/PUT/DELETE     /api/prestataire/prix
+// POST/PUT/DELETE     /api/prestataire/galeries/sites, /api/prestataire/galeries/evenements
+export const prestatairesApi = {
+  register: (data) => api.post('/prestataire/register', data),
+  login: (data) => api.post('/prestataire/login', data),
+  logout: () => api.post('/prestataire/logout'),
+  me: () => api.get('/prestataire/me'),
+  updatePassword: (data) => api.post('/prestataire/update-password', data),
+  updateProfil: (data) => api.put('/prestataire/profil', data),
+  dashboard: () => api.get('/prestataire/dashboard'),
+
+  mesSites: () => api.get('/prestataire/sites'),
+  createSite: (data) => api.post('/prestataire/sites', data),
+  updateSite: (id, data) => api.put(`/prestataire/sites/${id}`, data),
+  deleteSite: (id) => api.delete(`/prestataire/sites/${id}`),
+
+  mesEvenements: () => api.get('/prestataire/evenements'),
+  createEvenement: (data) => api.post('/prestataire/evenements', data),
+  updateEvenement: (id, data) => api.put(`/prestataire/evenements/${id}`, data),
+  deleteEvenement: (id) => api.delete(`/prestataire/evenements/${id}`),
+
+  createPrix: (data) => api.post('/prestataire/prix', data),
+  updatePrix: (id, data) => api.put(`/prestataire/prix/${id}`, data),
+  deletePrix: (id) => api.delete(`/prestataire/prix/${id}`),
+
+  createGalerieSite: (formData) => api.post('/prestataire/galeries/sites', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  deleteGalerieSite: (id) => api.delete(`/prestataire/galeries/sites/${id}`),
+  createGalerieEvenement: (formData) => api.post('/prestataire/galeries/evenements', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  deleteGalerieEvenement: (id) => api.delete(`/prestataire/galeries/evenements/${id}`),
+}
+
 // ─── SITES ───────────────────────────────────────────────────
 // GET  /api/sites
 // GET  /api/sites/{site}
