@@ -650,6 +650,15 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .circuit-map__marker.leaflet-div-icon { background: transparent; border: none; }
 .circuit-map__marker span { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--white); color: var(--white); font-size: 0.75rem; font-weight: 700; box-shadow: 0 2px 6px rgba(0,0,0,.35); }
 
+/* LocationPicker */
+.location-picker__link { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; }
+.location-picker__link input { flex: 1; border: 1px solid var(--gray-300); padding: 0.65rem 0.875rem; font-size: 0.875rem; }
+.location-picker__map { height: 240px; border: 1px solid var(--gray-300); overflow: hidden; margin-bottom: 0.75rem; }
+.location-picker__map .leaflet-container { background: var(--gray-100); font-family: var(--font-body); }
+.location-picker__marker.leaflet-div-icon { background: transparent; border: none; }
+.location-picker__marker span { display: block; width: 20px; height: 20px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--red); border: 2px solid var(--white); box-shadow: 0 2px 6px rgba(0,0,0,.35); }
+.location-picker__coords { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
 /* ═══════════════════════════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════════════════════════ */
