@@ -9,6 +9,8 @@ import Evenements from '../pages/public/Evenements'
 import EvenementDetail from '../pages/public/EvenementDetail'
 import { Login, Register } from '../pages/auth/Auth'
 import AdminLogin from '../pages/admin/AdminLogin'
+import PrestataireLogin from '../pages/prestataire/PrestataireLogin'
+import PrestataireRegister from '../pages/prestataire/PrestataireRegister'
 import { APropos, Contact } from '../pages/public/AProposContact'
 import Profil from '../pages/user/Profil'
 import MesReservations from '../pages/user/MesReservations'
@@ -29,6 +31,12 @@ const AdminAdmins = lazy(() => import('../pages/admin/AdminAdmins'))
 const AdminTickets = lazy(() => import('../pages/admin/AdminTickets'))
 const AdminTarifs = lazy(() => import('../pages/admin/AdminPrix'))
 
+const PrestataireLayout = lazy(() => import('../pages/prestataire/PrestataireLayout'))
+const PrestataireDashboard = lazy(() => import('../pages/prestataire/PrestataireDashboard'))
+const PrestataireSites = lazy(() => import('../pages/prestataire/PrestataireSites'))
+const PrestataireEvenements = lazy(() => import('../pages/prestataire/PrestataireEvenements'))
+const PrestataireProfil = lazy(() => import('../pages/prestataire/PrestataireProfil'))
+
 function RequireAuth() {
   const { isAuthenticated } = useAuth()
   if (!isAuthenticated) return <Navigate to="/connexion" replace />
@@ -39,6 +47,17 @@ function RequireAdmin() {
   const { isAdmin, isAuthenticated } = useAuth()
   if (!isAuthenticated) return <Navigate to="/admin/login" replace />
   if (!isAdmin) return <Navigate to="/" replace />
+  return (
+    <Suspense fallback={<div className="page-loading"><Spinner size="lg" /></div>}>
+      <Outlet />
+    </Suspense>
+  )
+}
+
+function RequirePrestataire() {
+  const { isPrestataire, isAuthenticated } = useAuth()
+  if (!isAuthenticated) return <Navigate to="/prestataire/login" replace />
+  if (!isPrestataire) return <Navigate to="/" replace />
   return (
     <Suspense fallback={<div className="page-loading"><Spinner size="lg" /></div>}>
       <Outlet />
@@ -72,6 +91,23 @@ const router = createBrowserRouter([
     ]
   },
   { path: '/admin/login', element: <AdminLogin /> },
+  { path: '/prestataire/login', element: <PrestataireLogin /> },
+  { path: '/prestataire/inscription', element: <PrestataireRegister /> },
+  {
+    path: '/prestataire',
+    element: <RequirePrestataire />,
+    children: [
+      {
+        element: <PrestataireLayout />,
+        children: [
+          { index: true, element: <PrestataireDashboard /> },
+          { path: 'sites', element: <PrestataireSites /> },
+          { path: 'evenements', element: <PrestataireEvenements /> },
+          { path: 'profil', element: <PrestataireProfil /> },
+        ]
+      }
+    ]
+  },
 {
   path: '/admin',
   element: <RequireAdmin />,

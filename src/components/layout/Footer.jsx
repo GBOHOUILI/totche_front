@@ -36,6 +36,7 @@ export default function Footer() {
             <ul>
               <li><Link to="/inscription">Créer un compte</Link></li>
               <li><Link to="/connexion">Se connecter</Link></li>
+              <li><Link to="/prestataire/inscription">Espace Prestataire</Link></li>
               <li><Link to="/contacts">Nous contacter</Link></li>
             </ul>
           </div>
