@@ -25,9 +25,10 @@ const SERVICES_LINKS = [
   { to: '/transports', label: 'Transports', icon: Bus, tagline: 'Se déplacer entre les villes' },
 ]
 
-function ServicesMenu() {
+function ServicesMenu({ onMouseEnter, onMouseLeave }) {
   return (
-    <div className="mega-menu mega-menu--sm" onMouseDown={e => e.stopPropagation()}>
+    <div className="mega-menu mega-menu--sm" onMouseDown={e => e.stopPropagation()}
+      onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       <div className="mega-menu__grid mega-menu__grid--1col">
         {SERVICES_LINKS.map(({ to, label, icon: Icon, tagline }) => (
           <Link key={to} to={to} className="mega-menu__item">
@@ -43,9 +44,10 @@ function ServicesMenu() {
   )
 }
 
-function CatMegaMenu({ categories, meta, basePath, featured }) {
+function CatMegaMenu({ categories, meta, basePath, featured, onMouseEnter, onMouseLeave }) {
   return (
-    <div className="mega-menu" onMouseDown={e => e.stopPropagation()}>
+    <div className="mega-menu" onMouseDown={e => e.stopPropagation()}
+      onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       <div className="mega-menu__grid">
         {categories.map(cat => {
           const info = meta[cat.libelle] || { icon: Tag, tagline: 'Explorez cette catégorie' }
@@ -87,12 +89,30 @@ export default function Navbar() {
   const { isAuthenticated, isAdmin, user, logout } = useAuth()
   const navigate = useNavigate()
   const searchInputRef = useRef(null)
+  const megaCloseTimer = useRef(null)
+
+  // Le panneau (.mega-menu) est en position: fixed et centré sur la page,
+  // donc géométriquement déconnecté du <li> déclencheur (souvent aligné à
+  // droite de la nav) : bouger la souris tout droit vers le bas traverse une
+  // zone morte et déclenche onMouseLeave avant d'atteindre le panneau. Un
+  // court délai (hover-intent) laisse le temps d'y arriver ; annulé si la
+  // souris rentre sur le déclencheur OU sur le panneau lui-même.
+  const openMegaNow = (key) => {
+    clearTimeout(megaCloseTimer.current)
+    setOpenMega(key)
+  }
+  const scheduleCloseMega = () => {
+    clearTimeout(megaCloseTimer.current)
+    megaCloseTimer.current = setTimeout(() => setOpenMega(null), 250)
+  }
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  useEffect(() => () => clearTimeout(megaCloseTimer.current), [])
 
   useEffect(() => {
     categoriesApi.sites().then(r => setSiteCats(r.data?.data || r.data || [])).catch(() => {})
@@ -150,8 +170,8 @@ export default function Navbar() {
             <li
               key={to}
               className="navbar__item"
-              onMouseEnter={() => mega && setOpenMega(mega)}
-              onMouseLeave={() => mega && setOpenMega(null)}
+              onMouseEnter={() => mega && openMegaNow(mega)}
+              onMouseLeave={() => mega && scheduleCloseMega()}
             >
               <NavLink to={to} end={to === '/'}
                 className={({ isActive }) => `navbar__link${isActive ? ' navbar__link--active' : ''}${mega ? ' navbar__link--mega' : ''}`}>
@@ -168,6 +188,8 @@ export default function Navbar() {
                     title: 'Palais Royal d’Abomey',
                     text: 'Ancienne résidence des rois du Dahomey, classée au patrimoine mondial de l’UNESCO.',
                   }}
+                  onMouseEnter={() => openMegaNow('sites')}
+                  onMouseLeave={scheduleCloseMega}
                 />
               )}
               {mega === 'evenements' && openMega === 'evenements' && eventCats.length > 0 && (
@@ -180,9 +202,13 @@ export default function Navbar() {
                     title: 'Festival Vodun Days',
                     text: 'Célébration annuelle des traditions vodun à Ouidah, cérémonies, danses et musiques rituelles.',
                   }}
+                  onMouseEnter={() => openMegaNow('evenements')}
+                  onMouseLeave={scheduleCloseMega}
                 />
               )}
-              {mega === 'services' && openMega === 'services' && <ServicesMenu />}
+              {mega === 'services' && openMega === 'services' && (
+                <ServicesMenu onMouseEnter={() => openMegaNow('services')} onMouseLeave={scheduleCloseMega} />
+              )}
             </li>
           ))}
         </ul>
