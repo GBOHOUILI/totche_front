@@ -1,18 +1,22 @@
 import { useState, useEffect } from 'react'
-import { Plus, Pencil, Trash2, X, Image } from 'lucide-react'
-import { sitesApi, categoriesApi, galeriesApi } from '../../api/services'
+import { Plus, Pencil, Trash2, X, Image, CheckCircle, XCircle } from 'lucide-react'
+import { sitesApi, categoriesApi, galeriesApi, regionsApi } from '../../api/services'
 import { Spinner } from '../../components/ui/index'
 import toast from 'react-hot-toast'
 
 const emptyForm = {
   libelle: '', adresse: '', description: '',
   id_cat_site: '', latitude: '', longitude: '',
-  ouverture: '', fermeture: '', status: true
+  ouverture: '', fermeture: '', status: 'en_attente', id_region: ''
 }
+
+const statusColor = (s) => ({ valide: 'success', rejete: 'danger', en_attente: 'warning', suspendu: 'danger' })[s] || 'warning'
+const statusLabel = (s) => ({ valide: 'Validé', rejete: 'Rejeté', en_attente: 'En attente', suspendu: 'Suspendu' })[s] || s
 
 export default function AdminSites() {
   const [sites, setSites] = useState([])
   const [cats, setCats] = useState([])
+  const [regions, setRegions] = useState([])
   const [loading, setLoading] = useState(true)
   const [modal, setModal] = useState(null) // null | 'create' | site object
   const [form, setForm] = useState(emptyForm)
@@ -20,7 +24,10 @@ export default function AdminSites() {
   const [galFile, setGalFile] = useState(null)
   const [galLibelle, setGalLibelle] = useState('')
 
-  useEffect(() => { load(); loadCats() }, [])
+  useEffect(() => {
+    load(); loadCats()
+    regionsApi.list().then(r => setRegions(r.data || []))
+  }, [])
 
   const load = () => {
     setLoading(true)
@@ -38,7 +45,7 @@ export default function AdminSites() {
       description: site.description || '', id_cat_site: site.id_cat_site || '',
       latitude: site.latitude || '', longitude: site.longitude || '',
       ouverture: site.ouverture || '', fermeture: site.fermeture || '',
-      status: site.status ?? true
+      status: site.status || 'en_attente', id_region: site.id_region || ''
     })
     setModal(site)
   }
@@ -50,7 +57,7 @@ export default function AdminSites() {
       latitude: form.latitude ? parseFloat(form.latitude) : undefined,
       longitude: form.longitude ? parseFloat(form.longitude) : undefined,
       id_cat_site: form.id_cat_site ? parseInt(form.id_cat_site) : undefined,
-      status: form.status === true || form.status === 'true' || form.status === 1,
+      id_region: form.id_region ? parseInt(form.id_region) : undefined,
     }
     try {
       if (modal === 'create') { await sitesApi.create(payload); toast.success('Site créé !') }
@@ -61,6 +68,16 @@ export default function AdminSites() {
       if (errors) toast.error(Object.values(errors).flat().join(' | '))
       else toast.error(err.response?.data?.message || 'Erreur')
     }
+  }
+
+  const handleValider = async (id) => {
+    try { await sitesApi.valider(id); toast.success('Validé !'); load() }
+    catch { toast.error('Erreur') }
+  }
+
+  const handleRejeter = async (id) => {
+    try { await sitesApi.rejeter(id); toast.success('Rejeté'); load() }
+    catch { toast.error('Erreur') }
   }
 
   const handleDelete = async (id) => {
@@ -95,16 +112,19 @@ export default function AdminSites() {
 
       {loading ? <div className="center-spinner"><Spinner /></div> : (
         <table className="admin-table">
-          <thead><tr><th>Nom</th><th>Adresse</th><th>Catégorie</th><th>Status</th><th>Actions</th></tr></thead>
+          <thead><tr><th>Nom</th><th>Adresse</th><th>Catégorie</th><th>Région</th><th>Statut</th><th>Actions</th></tr></thead>
           <tbody>
             {sites.map(site => (
               <tr key={site.id}>
                 <td>{site.libelle}</td>
                 <td>{site.adresse}</td>
                 <td>{site.categorie?.libelle || '—'}</td>
-                <td><span className={`status-badge status-badge--${site.status ? 'success' : 'warning'}`}>{site.status ? 'Actif' : 'Inactif'}</span></td>
+                <td>{site.region?.nom || '—'}</td>
+                <td><span className={`status-badge status-badge--${statusColor(site.status)}`}>{statusLabel(site.status)}</span></td>
                 <td>
                   <div className="admin-table__actions">
+                    {site.status !== 'valide' && <button className="admin-icon-btn admin-icon-btn--success" title="Valider" onClick={() => handleValider(site.id)}><CheckCircle size={15} /></button>}
+                    {site.status !== 'rejete' && <button className="admin-icon-btn admin-icon-btn--danger" title="Rejeter" onClick={() => handleRejeter(site.id)}><XCircle size={15} /></button>}
                     <button className="admin-icon-btn" title="Galerie" onClick={() => setGalModal(site)}><Image size={15} /></button>
                     <button className="admin-icon-btn" title="Modifier" onClick={() => openEdit(site)}><Pencil size={15} /></button>
                     <button className="admin-icon-btn admin-icon-btn--danger" title="Supprimer" onClick={() => handleDelete(site.id)}><Trash2 size={15} /></button>
@@ -129,11 +149,18 @@ export default function AdminSites() {
                 <input value={form.libelle} onChange={e => setForm(f => ({ ...f, libelle: e.target.value }))} required /></div>
               <div className="admin-form__field"><label>Adresse *</label>
                 <input value={form.adresse} onChange={e => setForm(f => ({ ...f, adresse: e.target.value }))} required /></div>
-              <div className="admin-form__field"><label>Catégorie *</label>
-                <select value={form.id_cat_site} onChange={e => setForm(f => ({ ...f, id_cat_site: e.target.value }))} required>
-                  <option value="">Sélectionner...</option>
-                  {cats.map(c => <option key={c.id} value={c.id}>{c.libelle}</option>)}
-                </select></div>
+              <div className="admin-form__row">
+                <div className="admin-form__field"><label>Catégorie *</label>
+                  <select value={form.id_cat_site} onChange={e => setForm(f => ({ ...f, id_cat_site: e.target.value }))} required>
+                    <option value="">Sélectionner...</option>
+                    {cats.map(c => <option key={c.id} value={c.id}>{c.libelle}</option>)}
+                  </select></div>
+                <div className="admin-form__field"><label>Région</label>
+                  <select value={form.id_region} onChange={e => setForm(f => ({ ...f, id_region: e.target.value }))}>
+                    <option value="">Aucune</option>
+                    {regions.map(r => <option key={r.id} value={r.id}>{r.nom}</option>)}
+                  </select></div>
+              </div>
               <div className="admin-form__row">
                 <div className="admin-form__field"><label>Latitude *</label>
                   <input type="number" step="any" value={form.latitude} onChange={e => setForm(f => ({ ...f, latitude: e.target.value }))} required /></div>
@@ -146,10 +173,12 @@ export default function AdminSites() {
                 <div className="admin-form__field"><label>Fermeture (HH:MM)</label>
                   <input type="time" value={form.fermeture} onChange={e => setForm(f => ({ ...f, fermeture: e.target.value }))} /></div>
               </div>
-              <div className="admin-form__field"><label>Status</label>
-                <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value === 'true' }))}>
-                  <option value="true">Actif</option>
-                  <option value="false">Inactif</option>
+              <div className="admin-form__field"><label>Statut</label>
+                <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}>
+                  <option value="en_attente">En attente</option>
+                  <option value="valide">Validé</option>
+                  <option value="rejete">Rejeté</option>
+                  <option value="suspendu">Suspendu</option>
                 </select></div>
               <div className="admin-form__field"><label>Description</label>
                 <textarea rows={4} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>

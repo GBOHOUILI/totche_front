@@ -1,19 +1,23 @@
 import { useState, useEffect } from 'react'
 import { Plus, Pencil, Trash2, X, Image, Tag } from 'lucide-react'
-import { prestatairesApi, categoriesApi } from '../../api/services'
+import { prestatairesApi, categoriesApi, regionsApi } from '../../api/services'
 import { Spinner } from '../../components/ui/index'
 import toast from 'react-hot-toast'
 
 const emptyForm = {
   libelle: '', adresse: '', description: '',
   id_cat_site: '', latitude: '', longitude: '',
-  ouverture: '', fermeture: '',
+  ouverture: '', fermeture: '', id_region: '',
 }
 const emptyPrixForm = { libelle: '', montant: '' }
+
+const statusColor = (s) => ({ valide: 'success', rejete: 'danger', en_attente: 'warning', suspendu: 'danger' })[s] || 'warning'
+const statusLabel = (s) => ({ valide: 'Validé', rejete: 'Rejeté', en_attente: 'En attente', suspendu: 'Suspendu' })[s] || s
 
 export default function PrestataireSites() {
   const [sites, setSites] = useState([])
   const [cats, setCats] = useState([])
+  const [regions, setRegions] = useState([])
   const [loading, setLoading] = useState(true)
   const [modal, setModal] = useState(null) // null | 'create' | site object
   const [form, setForm] = useState(emptyForm)
@@ -23,7 +27,10 @@ export default function PrestataireSites() {
   const [prixModal, setPrixModal] = useState(null) // site object
   const [prixForm, setPrixForm] = useState(emptyPrixForm)
 
-  useEffect(() => { load(); categoriesApi.sites().then(r => setCats(r.data?.data || r.data || [])) }, [])
+  useEffect(() => {
+    load(); categoriesApi.sites().then(r => setCats(r.data?.data || r.data || []))
+    regionsApi.list().then(r => setRegions(r.data || []))
+  }, [])
 
   const load = async () => {
     setLoading(true)
@@ -42,6 +49,7 @@ export default function PrestataireSites() {
       description: site.description || '', id_cat_site: site.id_cat_site || '',
       latitude: site.latitude || '', longitude: site.longitude || '',
       ouverture: site.ouverture || '', fermeture: site.fermeture || '',
+      id_region: site.id_region || '',
     })
     setModal(site)
   }
@@ -53,6 +61,7 @@ export default function PrestataireSites() {
       latitude: form.latitude ? parseFloat(form.latitude) : undefined,
       longitude: form.longitude ? parseFloat(form.longitude) : undefined,
       id_cat_site: form.id_cat_site ? parseInt(form.id_cat_site) : undefined,
+      id_region: form.id_region ? parseInt(form.id_region) : undefined,
     }
     try {
       if (modal === 'create') { await prestatairesApi.createSite(payload); toast.success('Site créé — en attente de validation') }
@@ -120,14 +129,15 @@ export default function PrestataireSites() {
         </p>
       ) : (
         <table className="admin-table">
-          <thead><tr><th>Nom</th><th>Adresse</th><th>Catégorie</th><th>Status</th><th>Actions</th></tr></thead>
+          <thead><tr><th>Nom</th><th>Adresse</th><th>Catégorie</th><th>Région</th><th>Status</th><th>Actions</th></tr></thead>
           <tbody>
             {sites.map(site => (
               <tr key={site.id}>
                 <td>{site.libelle}</td>
                 <td>{site.adresse}</td>
                 <td>{site.categorie?.libelle || '—'}</td>
-                <td><span className={`status-badge status-badge--${site.status ? 'success' : 'warning'}`}>{site.status ? 'Actif' : 'En attente'}</span></td>
+                <td>{site.region?.nom || '—'}</td>
+                <td><span className={`status-badge status-badge--${statusColor(site.status)}`}>{statusLabel(site.status)}</span></td>
                 <td>
                   <div className="admin-table__actions">
                     <button className="admin-icon-btn" title="Tarifs" onClick={() => setPrixModal(site)}><Tag size={15} /></button>
@@ -155,11 +165,18 @@ export default function PrestataireSites() {
                 <input value={form.libelle} onChange={e => setForm(f => ({ ...f, libelle: e.target.value }))} required /></div>
               <div className="admin-form__field"><label>Adresse *</label>
                 <input value={form.adresse} onChange={e => setForm(f => ({ ...f, adresse: e.target.value }))} required /></div>
-              <div className="admin-form__field"><label>Catégorie *</label>
-                <select value={form.id_cat_site} onChange={e => setForm(f => ({ ...f, id_cat_site: e.target.value }))} required>
-                  <option value="">Sélectionner...</option>
-                  {cats.map(c => <option key={c.id} value={c.id}>{c.libelle}</option>)}
-                </select></div>
+              <div className="admin-form__row">
+                <div className="admin-form__field"><label>Catégorie *</label>
+                  <select value={form.id_cat_site} onChange={e => setForm(f => ({ ...f, id_cat_site: e.target.value }))} required>
+                    <option value="">Sélectionner...</option>
+                    {cats.map(c => <option key={c.id} value={c.id}>{c.libelle}</option>)}
+                  </select></div>
+                <div className="admin-form__field"><label>Région</label>
+                  <select value={form.id_region} onChange={e => setForm(f => ({ ...f, id_region: e.target.value }))}>
+                    <option value="">Sélectionner...</option>
+                    {regions.map(r => <option key={r.id} value={r.id}>{r.nom}</option>)}
+                  </select></div>
+              </div>
               <div className="admin-form__row">
                 <div className="admin-form__field"><label>Latitude *</label>
                   <input type="number" step="any" value={form.latitude} onChange={e => setForm(f => ({ ...f, latitude: e.target.value }))} required /></div>

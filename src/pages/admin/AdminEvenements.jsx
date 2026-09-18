@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react'
 import { Plus, Pencil, Trash2, CheckCircle, XCircle, X, Image } from 'lucide-react'
-import { evenementsApi, categoriesApi, galeriesApi } from '../../api/services'
+import { evenementsApi, categoriesApi, galeriesApi, regionsApi } from '../../api/services'
 import { Spinner } from '../../components/ui/index'
 import toast from 'react-hot-toast'
 
 const emptyForm = {
   libelle: '', adresse: '', description: '',
   id_cat_evenmt: '', date_debut: '', date_fin: '',
-  latitude: '', longitude: '', status: 'en_attente'
+  latitude: '', longitude: '', status: 'en_attente', id_region: ''
 }
 
 export default function AdminEvenements() {
   const [events, setEvents] = useState([])
   const [cats, setCats] = useState([])
+  const [regions, setRegions] = useState([])
   const [loading, setLoading] = useState(true)
   const [modal, setModal] = useState(null)
   const [form, setForm] = useState(emptyForm)
@@ -20,7 +21,10 @@ export default function AdminEvenements() {
   const [galFile, setGalFile] = useState(null)
   const [galLibelle, setGalLibelle] = useState('')
 
-  useEffect(() => { load(); categoriesApi.evenements().then(r => setCats(r.data?.data || r.data || [])) }, [])
+  useEffect(() => {
+    load(); categoriesApi.evenements().then(r => setCats(r.data?.data || r.data || []))
+    regionsApi.list().then(r => setRegions(r.data || []))
+  }, [])
 
   const load = () => {
     setLoading(true)
@@ -35,7 +39,7 @@ export default function AdminEvenements() {
       date_debut: evt.date_debut?.split('T')[0] || '',
       date_fin: evt.date_fin?.split('T')[0] || '',
       latitude: evt.latitude || '', longitude: evt.longitude || '',
-      status: evt.status || 'en_attente'
+      status: evt.status || 'en_attente', id_region: evt.id_region || ''
     })
     setModal(evt)
   }
@@ -47,6 +51,7 @@ export default function AdminEvenements() {
       latitude: form.latitude ? parseFloat(form.latitude) : undefined,
       longitude: form.longitude ? parseFloat(form.longitude) : undefined,
       id_cat_evenmt: form.id_cat_evenmt ? parseInt(form.id_cat_evenmt) : undefined,
+      id_region: form.id_region ? parseInt(form.id_region) : undefined,
     }
     try {
       if (modal === 'create') { await evenementsApi.create(payload); toast.success('Événement créé !') }
@@ -103,13 +108,14 @@ export default function AdminEvenements() {
 
       {loading ? <div className="center-spinner"><Spinner /></div> : (
         <table className="admin-table">
-          <thead><tr><th>Nom</th><th>Adresse</th><th>Date début</th><th>Statut</th><th>Actions</th></tr></thead>
+          <thead><tr><th>Nom</th><th>Adresse</th><th>Date début</th><th>Région</th><th>Statut</th><th>Actions</th></tr></thead>
           <tbody>
             {events.map(evt => (
               <tr key={evt.id}>
                 <td>{evt.libelle}</td>
                 <td>{evt.adresse}</td>
                 <td>{evt.date_debut ? new Date(evt.date_debut).toLocaleDateString('fr-FR') : '—'}</td>
+                <td>{evt.region?.nom || '—'}</td>
                 <td><span className={`status-badge status-badge--${statusColor(evt.status)}`}>{statusLabel(evt.status)}</span></td>
                 <td>
                   <div className="admin-table__actions">
@@ -139,11 +145,18 @@ export default function AdminEvenements() {
                 <input value={form.libelle} onChange={e => setForm(f => ({ ...f, libelle: e.target.value }))} required /></div>
               <div className="admin-form__field"><label>Adresse *</label>
                 <input value={form.adresse} onChange={e => setForm(f => ({ ...f, adresse: e.target.value }))} required /></div>
-              <div className="admin-form__field"><label>Catégorie</label>
-                <select value={form.id_cat_evenmt} onChange={e => setForm(f => ({ ...f, id_cat_evenmt: e.target.value }))}>
-                  <option value="">Sélectionner...</option>
-                  {cats.map(c => <option key={c.id} value={c.id}>{c.libelle}</option>)}
-                </select></div>
+              <div className="admin-form__row">
+                <div className="admin-form__field"><label>Catégorie</label>
+                  <select value={form.id_cat_evenmt} onChange={e => setForm(f => ({ ...f, id_cat_evenmt: e.target.value }))}>
+                    <option value="">Sélectionner...</option>
+                    {cats.map(c => <option key={c.id} value={c.id}>{c.libelle}</option>)}
+                  </select></div>
+                <div className="admin-form__field"><label>Région</label>
+                  <select value={form.id_region} onChange={e => setForm(f => ({ ...f, id_region: e.target.value }))}>
+                    <option value="">Aucune</option>
+                    {regions.map(r => <option key={r.id} value={r.id}>{r.nom}</option>)}
+                  </select></div>
+              </div>
               <div className="admin-form__row">
                 <div className="admin-form__field"><label>Date début</label>
                   <input type="date" value={form.date_debut} onChange={e => setForm(f => ({ ...f, date_debut: e.target.value }))} /></div>

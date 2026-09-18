@@ -75,6 +75,8 @@ export const sitesApi = {
   create: (data) => api.post('/admin/sites', data),
   update: (id, data) => api.put(`/admin/sites/${id}`, data),
   delete: (id) => api.delete(`/admin/sites/${id}`),
+  valider: (id) => api.patch(`/admin/sites/${id}/valider`),
+  rejeter: (id) => api.patch(`/admin/sites/${id}/rejeter`),
 }
 
 // ─── ÉVÉNEMENTS ──────────────────────────────────────────────
@@ -301,6 +303,43 @@ export const adminsApi = {
   create: (data) => api.post('/admin/admins', data),
   update: (id, data) => api.put(`/admin/admins/${id}`, data),
   delete: (id) => api.delete(`/admin/admins/${id}`),
+}
+
+// ─── RÉGIONS ─────────────────────────────────────────────────
+// GET /api/regions — liste fixe (12 départements du Bénin), pas de mutation exposée
+export const regionsApi = {
+  list: () => api.get('/regions'),
+}
+
+// ─── RESPONSABLES RÉGIONAUX ────────────────────────────────────
+// Gestion des comptes par un admin :
+// GET/POST/PUT/DELETE /api/admin/responsables (admin) — { nom, prenom, tel, password, status, id_region? }
+// Portail du responsable connecté :
+// POST /api/responsable/login   { tel, password }
+// GET  /api/responsable/me
+// POST /api/responsable/logout
+// POST /api/responsable/update-password
+// GET  /api/responsable/a-valider — { sites: [...], evenements: [...] } en attente dans son périmètre
+// PATCH /api/responsable/sites/{id}/valider | /rejeter
+// PATCH /api/responsable/evenements/{id}/valider | /rejeter
+export const adminResponsablesApi = {
+  list: () => api.get('/admin/responsables'),
+  get: (id) => api.get(`/admin/responsables/${id}`),
+  create: (data) => api.post('/admin/responsables', data),
+  update: (id, data) => api.put(`/admin/responsables/${id}`, data),
+  delete: (id) => api.delete(`/admin/responsables/${id}`),
+}
+
+export const responsablesApi = {
+  login: (data) => api.post('/responsable/login', data),
+  logout: () => api.post('/responsable/logout'),
+  me: () => api.get('/responsable/me'),
+  updatePassword: (data) => api.post('/responsable/update-password', data),
+  aValider: () => api.get('/responsable/a-valider'),
+  validerSite: (id) => api.patch(`/responsable/sites/${id}/valider`),
+  rejeterSite: (id) => api.patch(`/responsable/sites/${id}/rejeter`),
+  validerEvenement: (id) => api.patch(`/responsable/evenements/${id}/valider`),
+  rejeterEvenement: (id) => api.patch(`/responsable/evenements/${id}/rejeter`),
 }
 
 // ─── FONCTIONNALITÉS ─────────────────────────────────────────
