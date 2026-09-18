@@ -14,7 +14,7 @@ function toStep(etape) {
     id: etape.id,
     ordre: etape.ordre,
     type: etape.id_site ? 'site' : 'evenement',
-    libelle: cible?.libelle || '—',
+    libelle: cible?.libelle || '-',
     adresse: cible?.adresse,
     latitude: cible?.latitude,
     longitude: cible?.longitude,

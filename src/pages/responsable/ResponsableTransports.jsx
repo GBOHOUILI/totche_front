@@ -66,7 +66,7 @@ export default function ResponsableTransports() {
       id_region: form.id_region ? parseInt(form.id_region) : undefined,
     }
     try {
-      if (modal === 'create') { await responsablesApi.createTransport(payload); toast.success('Transport créé — seul un admin peut le valider') }
+      if (modal === 'create') { await responsablesApi.createTransport(payload); toast.success('Transport créé - seul un admin peut le valider') }
       else { await responsablesApi.updateTransport(modal.id, payload); toast.success('Transport modifié !') }
       setModal(null); load()
     } catch (err) {
@@ -133,7 +133,7 @@ export default function ResponsableTransports() {
 
       {loading ? <div className="center-spinner"><Spinner /></div> : transports.length === 0 ? (
         <p style={{ color: 'var(--gray-500)', textAlign: 'center', padding: '3rem 0' }}>
-          Aucun service de transport pour l'instant — cliquez sur "Ajouter" pour créer votre première fiche.
+          Aucun service de transport pour l'instant - cliquez sur "Ajouter" pour créer votre première fiche.
         </p>
       ) : (
         <table className="admin-table">
@@ -143,8 +143,8 @@ export default function ResponsableTransports() {
               <tr key={transport.id}>
                 <td>{transport.libelle}</td>
                 <td>{transport.adresse}</td>
-                <td>{transport.type_transport || '—'}</td>
-                <td>{transport.region?.nom || '—'}</td>
+                <td>{transport.type_transport || '-'}</td>
+                <td>{transport.region?.nom || '-'}</td>
                 <td><span className={`status-badge status-badge--${statusColor(transport.status)}`}>{statusLabel(transport.status)}</span></td>
                 <td>
                   <div className="admin-table__actions">
@@ -199,7 +199,7 @@ export default function ResponsableTransports() {
                 <textarea rows={4} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
               <p style={{ fontSize: '0.78rem', color: 'var(--gray-500)' }}>
                 {modal === 'create'
-                  ? "Ce transport sera créé en attente — seul un admin peut le valider (pas vous, pas un autre responsable)."
+                  ? "Ce transport sera créé en attente - seul un admin peut le valider (pas vous, pas un autre responsable)."
                   : "Le statut de validation n'est pas modifiable ici."}
               </p>
               <div className="admin-form__footer">
@@ -216,7 +216,7 @@ export default function ResponsableTransports() {
         <div className="admin-modal-overlay" onClick={() => setTrajetModal(null)}>
           <div className="admin-modal" onClick={e => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <h2>Trajets — {trajetModal.libelle}</h2>
+              <h2>Trajets - {trajetModal.libelle}</h2>
               <button onClick={() => setTrajetModal(null)}><X size={20} /></button>
             </div>
             <div style={{ padding: '0 1.5rem 1.5rem' }}>
@@ -224,7 +224,7 @@ export default function ResponsableTransports() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.25rem' }}>
                   {trajetModal.trajets.map(t => (
                     <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.6rem 0.75rem', background: 'var(--gray-100)' }}>
-                      <span>{t.ville_depart?.nom} → {t.ville_arrivee?.nom} · {t.horaire_depart?.slice(0, 5)} — <strong>{Number(t.prix).toLocaleString('fr-FR')} FCFA</strong></span>
+                      <span>{t.ville_depart?.nom} → {t.ville_arrivee?.nom} · {t.horaire_depart?.slice(0, 5)} - <strong>{Number(t.prix).toLocaleString('fr-FR')} FCFA</strong></span>
                       <button className="admin-icon-btn admin-icon-btn--danger" onClick={() => deleteTrajet(t.id)}><Trash2 size={14} /></button>
                     </div>
                   ))}
@@ -264,7 +264,7 @@ export default function ResponsableTransports() {
         <div className="admin-modal-overlay" onClick={() => setGalModal(null)}>
           <div className="admin-modal" onClick={e => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <h2>Galerie — {galModal.libelle}</h2>
+              <h2>Galerie - {galModal.libelle}</h2>
               <button onClick={() => setGalModal(null)}><X size={20} /></button>
             </div>
             <div style={{ padding: '1.5rem' }}>

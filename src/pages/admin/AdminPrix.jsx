@@ -69,8 +69,8 @@ export default function AdminPrix() {
               <tr key={p.id}>
                 <td>{p.libelle}</td>
                 <td><strong>{Number(p.montant).toLocaleString('fr-FR')} FCFA</strong></td>
-                <td>{p.site?.libelle || '—'}</td>
-                <td>{p.evenement?.libelle || '—'}</td>
+                <td>{p.site?.libelle || '-'}</td>
+                <td>{p.evenement?.libelle || '-'}</td>
                 <td>
                   <div className="admin-table__actions">
                     <button className="admin-icon-btn" onClick={() => openEdit(p)}><Pencil size={15} /></button>

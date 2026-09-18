@@ -84,7 +84,7 @@ export function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSending(true)
-    // Simulated send — wire to your backend endpoint if needed
+    // Simulated send - wire to your backend endpoint if needed
     await new Promise(r => setTimeout(r, 1000))
     toast.success('Message envoyé ! Nous vous répondrons dans les plus brefs délais.')
     setForm({ name: '', email: '', subject: '', message: '' })

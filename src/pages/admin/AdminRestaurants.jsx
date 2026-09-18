@@ -143,8 +143,8 @@ export default function AdminRestaurants() {
               <tr key={restaurant.id}>
                 <td>{restaurant.libelle}</td>
                 <td>{restaurant.adresse}</td>
-                <td>{restaurant.type_cuisine || '—'}</td>
-                <td>{restaurant.region?.nom || '—'}</td>
+                <td>{restaurant.type_cuisine || '-'}</td>
+                <td>{restaurant.region?.nom || '-'}</td>
                 <td><span className={`status-badge status-badge--${statusColor(restaurant.status)}`}>{statusLabel(restaurant.status)}</span></td>
                 <td>
                   <div className="admin-table__actions">
@@ -180,7 +180,7 @@ export default function AdminRestaurants() {
                   <input value={form.type_cuisine} onChange={e => setForm(f => ({ ...f, type_cuisine: e.target.value }))} placeholder="Ex: Locale" /></div>
                 <div className="admin-form__field"><label>Gamme de prix</label>
                   <select value={form.gamme_prix} onChange={e => setForm(f => ({ ...f, gamme_prix: e.target.value }))}>
-                    <option value="">—</option>
+                    <option value="">-</option>
                     <option value="economique">Économique</option>
                     <option value="moyen">Moyen</option>
                     <option value="eleve">Élevé</option>
@@ -220,7 +220,7 @@ export default function AdminRestaurants() {
         <div className="admin-modal-overlay" onClick={() => setPlatModal(null)}>
           <div className="admin-modal" onClick={e => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <h2>Plats — {platModal.libelle}</h2>
+              <h2>Plats - {platModal.libelle}</h2>
               <button onClick={() => setPlatModal(null)}><X size={20} /></button>
             </div>
             <div style={{ padding: '0 1.5rem 1.5rem' }}>
@@ -228,7 +228,7 @@ export default function AdminRestaurants() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.25rem' }}>
                   {platModal.plats.map(p => (
                     <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.6rem 0.75rem', background: 'var(--gray-100)' }}>
-                      <span>{p.nom} — <strong>{Number(p.prix).toLocaleString('fr-FR')} FCFA</strong></span>
+                      <span>{p.nom} - <strong>{Number(p.prix).toLocaleString('fr-FR')} FCFA</strong></span>
                       <button className="admin-icon-btn admin-icon-btn--danger" onClick={() => deletePlat(p.id)}><Trash2 size={14} /></button>
                     </div>
                   ))}
@@ -256,7 +256,7 @@ export default function AdminRestaurants() {
         <div className="admin-modal-overlay" onClick={() => setGalModal(null)}>
           <div className="admin-modal" onClick={e => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <h2>Galerie — {galModal.libelle}</h2>
+              <h2>Galerie - {galModal.libelle}</h2>
               <button onClick={() => setGalModal(null)}><X size={20} /></button>
             </div>
             <div style={{ padding: '1.5rem' }}>

@@ -64,7 +64,7 @@ export default function ResponsableHotels() {
       id_region: form.id_region ? parseInt(form.id_region) : undefined,
     }
     try {
-      if (modal === 'create') { await responsablesApi.createHotel(payload); toast.success('Hôtel créé — seul un admin peut le valider') }
+      if (modal === 'create') { await responsablesApi.createHotel(payload); toast.success('Hôtel créé - seul un admin peut le valider') }
       else { await responsablesApi.updateHotel(modal.id, payload); toast.success('Hôtel modifié !') }
       setModal(null); load()
     } catch (err) {
@@ -131,7 +131,7 @@ export default function ResponsableHotels() {
 
       {loading ? <div className="center-spinner"><Spinner /></div> : hotels.length === 0 ? (
         <p style={{ color: 'var(--gray-500)', textAlign: 'center', padding: '3rem 0' }}>
-          Aucun hôtel pour l'instant — cliquez sur "Ajouter" pour créer votre première fiche.
+          Aucun hôtel pour l'instant - cliquez sur "Ajouter" pour créer votre première fiche.
         </p>
       ) : (
         <table className="admin-table">
@@ -141,8 +141,8 @@ export default function ResponsableHotels() {
               <tr key={hotel.id}>
                 <td>{hotel.libelle}</td>
                 <td>{hotel.adresse}</td>
-                <td>{hotel.nombre_etoiles ? <Stars value={hotel.nombre_etoiles} size={12} /> : '—'}</td>
-                <td>{hotel.region?.nom || '—'}</td>
+                <td>{hotel.nombre_etoiles ? <Stars value={hotel.nombre_etoiles} size={12} /> : '-'}</td>
+                <td>{hotel.region?.nom || '-'}</td>
                 <td><span className={`status-badge status-badge--${statusColor(hotel.status)}`}>{statusLabel(hotel.status)}</span></td>
                 <td>
                   <div className="admin-table__actions">
@@ -174,7 +174,7 @@ export default function ResponsableHotels() {
               <div className="admin-form__row">
                 <div className="admin-form__field"><label>Étoiles</label>
                   <select value={form.nombre_etoiles} onChange={e => setForm(f => ({ ...f, nombre_etoiles: e.target.value }))}>
-                    <option value="">—</option>
+                    <option value="">-</option>
                     {[1, 2, 3, 4, 5].map(n => <option key={n} value={n}>{n}</option>)}
                   </select></div>
                 <div className="admin-form__field"><label>Région</label>
@@ -198,7 +198,7 @@ export default function ResponsableHotels() {
                 <textarea rows={4} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
               <p style={{ fontSize: '0.78rem', color: 'var(--gray-500)' }}>
                 {modal === 'create'
-                  ? "Cet hôtel sera créé en attente — seul un admin peut le valider (pas vous, pas un autre responsable)."
+                  ? "Cet hôtel sera créé en attente - seul un admin peut le valider (pas vous, pas un autre responsable)."
                   : "Le statut de validation n'est pas modifiable ici."}
               </p>
               <div className="admin-form__footer">
@@ -215,7 +215,7 @@ export default function ResponsableHotels() {
         <div className="admin-modal-overlay" onClick={() => setChambreModal(null)}>
           <div className="admin-modal" onClick={e => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <h2>Chambres — {chambreModal.libelle}</h2>
+              <h2>Chambres - {chambreModal.libelle}</h2>
               <button onClick={() => setChambreModal(null)}><X size={20} /></button>
             </div>
             <div style={{ padding: '0 1.5rem 1.5rem' }}>
@@ -223,7 +223,7 @@ export default function ResponsableHotels() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.25rem' }}>
                   {chambreModal.chambres.map(c => (
                     <div key={c.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.6rem 0.75rem', background: 'var(--gray-100)' }}>
-                      <span>{c.type_chambre} — <strong>{Number(c.prix_nuit).toLocaleString('fr-FR')} FCFA/nuit</strong> {c.capacite && `· ${c.capacite} pers.`}</span>
+                      <span>{c.type_chambre} - <strong>{Number(c.prix_nuit).toLocaleString('fr-FR')} FCFA/nuit</strong> {c.capacite && `· ${c.capacite} pers.`}</span>
                       <button className="admin-icon-btn admin-icon-btn--danger" onClick={() => deleteChambre(c.id)}><Trash2 size={14} /></button>
                     </div>
                   ))}
@@ -253,7 +253,7 @@ export default function ResponsableHotels() {
         <div className="admin-modal-overlay" onClick={() => setGalModal(null)}>
           <div className="admin-modal" onClick={e => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <h2>Galerie — {galModal.libelle}</h2>
+              <h2>Galerie - {galModal.libelle}</h2>
               <button onClick={() => setGalModal(null)}><X size={20} /></button>
             </div>
             <div style={{ padding: '1.5rem' }}>

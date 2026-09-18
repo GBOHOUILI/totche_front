@@ -63,7 +63,7 @@ export default function ResponsableRestaurants() {
       id_region: form.id_region ? parseInt(form.id_region) : undefined,
     }
     try {
-      if (modal === 'create') { await responsablesApi.createRestaurant(payload); toast.success('Restaurant créé — seul un admin peut le valider') }
+      if (modal === 'create') { await responsablesApi.createRestaurant(payload); toast.success('Restaurant créé - seul un admin peut le valider') }
       else { await responsablesApi.updateRestaurant(modal.id, payload); toast.success('Restaurant modifié !') }
       setModal(null); load()
     } catch (err) {
@@ -129,7 +129,7 @@ export default function ResponsableRestaurants() {
 
       {loading ? <div className="center-spinner"><Spinner /></div> : restaurants.length === 0 ? (
         <p style={{ color: 'var(--gray-500)', textAlign: 'center', padding: '3rem 0' }}>
-          Aucun restaurant pour l'instant — cliquez sur "Ajouter" pour créer votre première fiche.
+          Aucun restaurant pour l'instant - cliquez sur "Ajouter" pour créer votre première fiche.
         </p>
       ) : (
         <table className="admin-table">
@@ -139,8 +139,8 @@ export default function ResponsableRestaurants() {
               <tr key={restaurant.id}>
                 <td>{restaurant.libelle}</td>
                 <td>{restaurant.adresse}</td>
-                <td>{restaurant.type_cuisine || '—'}</td>
-                <td>{restaurant.region?.nom || '—'}</td>
+                <td>{restaurant.type_cuisine || '-'}</td>
+                <td>{restaurant.region?.nom || '-'}</td>
                 <td><span className={`status-badge status-badge--${statusColor(restaurant.status)}`}>{statusLabel(restaurant.status)}</span></td>
                 <td>
                   <div className="admin-table__actions">
@@ -174,7 +174,7 @@ export default function ResponsableRestaurants() {
                   <input value={form.type_cuisine} onChange={e => setForm(f => ({ ...f, type_cuisine: e.target.value }))} placeholder="Ex: Locale" /></div>
                 <div className="admin-form__field"><label>Gamme de prix</label>
                   <select value={form.gamme_prix} onChange={e => setForm(f => ({ ...f, gamme_prix: e.target.value }))}>
-                    <option value="">—</option>
+                    <option value="">-</option>
                     <option value="economique">Économique</option>
                     <option value="moyen">Moyen</option>
                     <option value="eleve">Élevé</option>
@@ -200,7 +200,7 @@ export default function ResponsableRestaurants() {
                 <textarea rows={4} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
               <p style={{ fontSize: '0.78rem', color: 'var(--gray-500)' }}>
                 {modal === 'create'
-                  ? "Ce restaurant sera créé en attente — seul un admin peut le valider (pas vous, pas un autre responsable)."
+                  ? "Ce restaurant sera créé en attente - seul un admin peut le valider (pas vous, pas un autre responsable)."
                   : "Le statut de validation n'est pas modifiable ici."}
               </p>
               <div className="admin-form__footer">
@@ -217,7 +217,7 @@ export default function ResponsableRestaurants() {
         <div className="admin-modal-overlay" onClick={() => setPlatModal(null)}>
           <div className="admin-modal" onClick={e => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <h2>Plats — {platModal.libelle}</h2>
+              <h2>Plats - {platModal.libelle}</h2>
               <button onClick={() => setPlatModal(null)}><X size={20} /></button>
             </div>
             <div style={{ padding: '0 1.5rem 1.5rem' }}>
@@ -225,7 +225,7 @@ export default function ResponsableRestaurants() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.25rem' }}>
                   {platModal.plats.map(p => (
                     <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.6rem 0.75rem', background: 'var(--gray-100)' }}>
-                      <span>{p.nom} — <strong>{Number(p.prix).toLocaleString('fr-FR')} FCFA</strong></span>
+                      <span>{p.nom} - <strong>{Number(p.prix).toLocaleString('fr-FR')} FCFA</strong></span>
                       <button className="admin-icon-btn admin-icon-btn--danger" onClick={() => deletePlat(p.id)}><Trash2 size={14} /></button>
                     </div>
                   ))}
@@ -253,7 +253,7 @@ export default function ResponsableRestaurants() {
         <div className="admin-modal-overlay" onClick={() => setGalModal(null)}>
           <div className="admin-modal" onClick={e => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <h2>Galerie — {galModal.libelle}</h2>
+              <h2>Galerie - {galModal.libelle}</h2>
               <button onClick={() => setGalModal(null)}><X size={20} /></button>
             </div>
             <div style={{ padding: '1.5rem' }}>

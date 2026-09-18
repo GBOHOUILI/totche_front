@@ -147,8 +147,8 @@ export default function AdminTransports() {
               <tr key={transport.id}>
                 <td>{transport.libelle}</td>
                 <td>{transport.adresse}</td>
-                <td>{transport.type_transport || '—'}</td>
-                <td>{transport.region?.nom || '—'}</td>
+                <td>{transport.type_transport || '-'}</td>
+                <td>{transport.region?.nom || '-'}</td>
                 <td><span className={`status-badge status-badge--${statusColor(transport.status)}`}>{statusLabel(transport.status)}</span></td>
                 <td>
                   <div className="admin-table__actions">
@@ -219,7 +219,7 @@ export default function AdminTransports() {
         <div className="admin-modal-overlay" onClick={() => setTrajetModal(null)}>
           <div className="admin-modal" onClick={e => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <h2>Trajets — {trajetModal.libelle}</h2>
+              <h2>Trajets - {trajetModal.libelle}</h2>
               <button onClick={() => setTrajetModal(null)}><X size={20} /></button>
             </div>
             <div style={{ padding: '0 1.5rem 1.5rem' }}>
@@ -227,7 +227,7 @@ export default function AdminTransports() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.25rem' }}>
                   {trajetModal.trajets.map(t => (
                     <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.6rem 0.75rem', background: 'var(--gray-100)' }}>
-                      <span>{t.ville_depart?.nom} → {t.ville_arrivee?.nom} · {t.horaire_depart?.slice(0, 5)} — <strong>{Number(t.prix).toLocaleString('fr-FR')} FCFA</strong></span>
+                      <span>{t.ville_depart?.nom} → {t.ville_arrivee?.nom} · {t.horaire_depart?.slice(0, 5)} - <strong>{Number(t.prix).toLocaleString('fr-FR')} FCFA</strong></span>
                       <button className="admin-icon-btn admin-icon-btn--danger" onClick={() => deleteTrajet(t.id)}><Trash2 size={14} /></button>
                     </div>
                   ))}
@@ -267,7 +267,7 @@ export default function AdminTransports() {
         <div className="admin-modal-overlay" onClick={() => setGalModal(null)}>
           <div className="admin-modal" onClick={e => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <h2>Galerie — {galModal.libelle}</h2>
+              <h2>Galerie - {galModal.libelle}</h2>
               <button onClick={() => setGalModal(null)}><X size={20} /></button>
             </div>
             <div style={{ padding: '1.5rem' }}>

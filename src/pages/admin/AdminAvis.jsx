@@ -27,7 +27,7 @@ const avisCible = (a) => {
   const reservation = a.utilisation?.ticket?.reservation
   if (reservation?.site) return { libelle: reservation.site.libelle, type: 'Site touristique' }
   if (reservation?.evenement) return { libelle: reservation.evenement.libelle, type: 'Événement' }
-  return { libelle: '—', type: '—' }
+  return { libelle: '-', type: '-' }
 }
 
 export default function AdminAvis() {
@@ -139,7 +139,7 @@ export default function AdminAvis() {
               ) : avis.map(a => (
                 <tr key={a.id}>
                   <td>{a.id}</td>
-                  <td><strong>{avisUser(a)?.nom || '—'}</strong></td>
+                  <td><strong>{avisUser(a)?.nom || '-'}</strong></td>
                   <td style={{ fontSize: '0.82rem', color: 'var(--gray-700)' }}>
                     {avisCible(a).libelle}
                   </td>
@@ -197,7 +197,7 @@ export default function AdminAvis() {
                 <div style={{ background: 'var(--gray-100)', padding: '0.75rem', borderRadius: '8px' }}>
                   <p style={{ fontSize: '0.75rem', color: 'var(--gray-500)', marginBottom: '0.25rem' }}>Utilisateur</p>
                   <p style={{ fontWeight: 600 }}>{avisUser(selected)?.nom} {avisUser(selected)?.prenom || ''}</p>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>{avisUser(selected)?.email || '—'}</p>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>{avisUser(selected)?.email || '-'}</p>
                 </div>
                 <div style={{ background: 'var(--gray-100)', padding: '0.75rem', borderRadius: '8px' }}>
                   <p style={{ fontSize: '0.75rem', color: 'var(--gray-500)', marginBottom: '0.25rem' }}>Cible</p>

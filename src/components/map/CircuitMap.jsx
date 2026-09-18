@@ -4,7 +4,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
 // Marqueur numéroté custom (DivIcon en SVG inline) plutôt que les icônes PNG par
-// défaut de Leaflet, dont les chemins cassent avec les bundlers (gotcha connu) —
+// défaut de Leaflet, dont les chemins cassent avec les bundlers (gotcha connu) -
 // évite d'avoir à copier des assets, et reste cohérent avec le style de l'app.
 function numberedIcon(n, reservee) {
   const bg = reservee ? 'var(--success, #1E7A46)' : 'var(--red, #E63946)'
@@ -34,7 +34,7 @@ function FitBounds({ points }) {
 
 // etapes : [{ id, ordre, libelle, adresse, latitude, longitude, reservee }]
 // Étapes sans coordonnées valides simplement ignorées (jamais de crash sur une
-// donnée manquante — un site/événement de démo peut ne pas avoir de lat/lng).
+// donnée manquante - un site/événement de démo peut ne pas avoir de lat/lng).
 export default function CircuitMap({ etapes = [], height = 360 }) {
   const points = etapes
     .map(e => ({ ...e, lat: parseFloat(e.latitude), lng: parseFloat(e.longitude) }))

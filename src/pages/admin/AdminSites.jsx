@@ -118,8 +118,8 @@ export default function AdminSites() {
               <tr key={site.id}>
                 <td>{site.libelle}</td>
                 <td>{site.adresse}</td>
-                <td>{site.categorie?.libelle || '—'}</td>
-                <td>{site.region?.nom || '—'}</td>
+                <td>{site.categorie?.libelle || '-'}</td>
+                <td>{site.region?.nom || '-'}</td>
                 <td><span className={`status-badge status-badge--${statusColor(site.status)}`}>{statusLabel(site.status)}</span></td>
                 <td>
                   <div className="admin-table__actions">
@@ -196,7 +196,7 @@ export default function AdminSites() {
         <div className="admin-modal-overlay" onClick={() => setGalModal(null)}>
           <div className="admin-modal" onClick={e => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <h2>Galerie — {galModal.libelle}</h2>
+              <h2>Galerie - {galModal.libelle}</h2>
               <button onClick={() => setGalModal(null)}><X size={20} /></button>
             </div>
             <div style={{ padding: '1.5rem' }}>

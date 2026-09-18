@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Search, X, Calendar, MapPin, PartyPopper, Music2, Image, Flame, Store, Tag } from 'lucide-react'
-import { evenementsApi, categoriesApi } from '../../api/services'
+import { evenementsApi, categoriesApi, regionsApi } from '../../api/services'
 import { EventCard, Spinner, EmptyState } from '../../components/ui/index'
 
-// Icône par catégorie pour les filtres pilules — purement présentationnel,
+// Icône par catégorie pour les filtres pilules - purement présentationnel,
 // catégorie non mappée -> icône générique (Tag), jamais d'erreur.
 const CAT_ICON = {
   'Festival culturel': PartyPopper,
@@ -17,9 +17,11 @@ const CAT_ICON = {
 export default function Evenements() {
   const [events, setEvents] = useState([])
   const [categories, setCategories] = useState([])
+  const [regions, setRegions] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [selectedCat, setSelectedCat] = useState('')
+  const [selectedRegion, setSelectedRegion] = useState('')
   const [page, setPage] = useState(1)
   const [meta, setMeta] = useState(null)
   const [geo, setGeo] = useState(null) // { lat, lng } | null
@@ -31,6 +33,7 @@ export default function Evenements() {
 
   useEffect(() => {
     categoriesApi.evenements().then(r => setCategories(r.data?.data || r.data || []))
+    regionsApi.list().then(r => setRegions(r.data || []))
   }, [])
 
   // Resynchronise avec l'URL à chaque navigation (ex: lien du mega-menu vers
@@ -47,6 +50,7 @@ export default function Evenements() {
       page,
       libelle: search || undefined,
       id_cat_evenmt: selectedCat || undefined,
+      id_region: selectedRegion || undefined,
       lat: geo?.lat,
       lng: geo?.lng,
       radius: geo ? radius : undefined,
@@ -58,7 +62,7 @@ export default function Evenements() {
         setMeta(r.data?.meta || null)
       })
       .finally(() => setLoading(false))
-  }, [page, search, selectedCat, geo, radius, prixMin, prixMax])
+  }, [page, search, selectedCat, selectedRegion, geo, radius, prixMin, prixMax])
 
   const toggleGeo = () => {
     if (geo) { setGeo(null); setGeoError(''); return }
@@ -105,7 +109,15 @@ export default function Evenements() {
             })}
           </div>
 
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center', margin: '0.75rem 0 0' }}>
+          <div className="filters__extra">
+            <select
+              className="filters__select"
+              value={selectedRegion}
+              onChange={e => { setSelectedRegion(e.target.value); setPage(1) }}
+            >
+              <option value="">Toutes les régions</option>
+              {regions.map(r => <option key={r.id} value={r.id}>{r.nom}</option>)}
+            </select>
             <button
               type="button"
               className={`filters__cat${geo ? ' filters__cat--active' : ''}`}
@@ -116,9 +128,9 @@ export default function Evenements() {
             </button>
             {geo && (
               <select
+                className="filters__select"
                 value={radius}
                 onChange={e => { setRadius(Number(e.target.value)); setPage(1) }}
-                style={{ padding: '0.4rem 0.6rem', border: '1px solid var(--gray-300)', borderRadius: 'var(--radius)', background: 'var(--white)', color: 'var(--black)', fontSize: '0.85rem' }}
               >
                 <option value={5}>5 km</option>
                 <option value={10}>10 km</option>
@@ -133,7 +145,7 @@ export default function Evenements() {
               placeholder="Prix min"
               value={prixMin}
               onChange={e => { setPrixMin(e.target.value); setPage(1) }}
-              style={{ width: 100, padding: '0.4rem 0.6rem', border: '1px solid var(--gray-300)', borderRadius: 'var(--radius)' }}
+              className="filters__input-sm"
             />
             <input
               type="number"
@@ -141,9 +153,9 @@ export default function Evenements() {
               placeholder="Prix max"
               value={prixMax}
               onChange={e => { setPrixMax(e.target.value); setPage(1) }}
-              style={{ width: 100, padding: '0.4rem 0.6rem', border: '1px solid var(--gray-300)', borderRadius: 'var(--radius)' }}
+              className="filters__input-sm"
             />
-            {geoError && <span style={{ color: 'var(--red-dark)', fontSize: '0.8rem' }}>{geoError}</span>}
+            {geoError && <span className="filters__error">{geoError}</span>}
           </div>
         </div>
 

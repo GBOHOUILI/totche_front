@@ -48,7 +48,7 @@ export default function Home() {
 
   return (
     <div className="home">
-      {/* ── HERO — image plein cadre, texte minimal centré, scroll discret ── */}
+      {/* ── HERO - image plein cadre, texte minimal centré, scroll discret ── */}
       <section className="hero">
         {HERO_IMAGES.map((src, i) => (
           <div
@@ -61,7 +61,7 @@ export default function Home() {
 
         <div className="hero__content">
           <h1>Le Bénin, à vivre pleinement</h1>
-          <p>Sites historiques, réserves naturelles et festivals culturels — réservez directement, sans détour par une agence.</p>
+          <p>Sites historiques, réserves naturelles et festivals culturels - réservez directement, sans détour par une agence.</p>
         </div>
 
         <div className="hero__scroll" aria-hidden="true">
@@ -142,7 +142,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── IMMERSIF — deux photos en chevauchement + carte de contenu ── */}
+      {/* ── IMMERSIF - deux photos en chevauchement + carte de contenu ── */}
       <section className="home__overlap">
         <div className="container home__overlap-inner">
           <div className="home__overlap-images">
