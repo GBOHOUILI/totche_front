@@ -71,6 +71,8 @@ export const prestatairesApi = {
 // DEL  /api/admin/sites/{site}  (admin)
 export const sitesApi = {
   list: (params) => api.get('/sites', { params }),
+  // Tous statuts confondus (admin) — la liste publique ne renvoie que les sites validés
+  adminList: (params) => api.get('/admin/sites', { params }),
   get: (id) => api.get(`/sites/${id}`),
   create: (data) => api.post('/admin/sites', data),
   update: (id, data) => api.put(`/admin/sites/${id}`, data),
@@ -89,6 +91,8 @@ export const sitesApi = {
 // PATCH /api/admin/evenements/{id}/rejeter (admin)
 export const evenementsApi = {
   list: (params) => api.get('/evenements', { params }),
+  // Tous statuts confondus (admin) — la liste publique ne renvoie que les événements validés
+  adminList: (params) => api.get('/admin/evenements', { params }),
   get: (id) => api.get(`/evenements/${id}`),
   create: (data) => api.post('/admin/evenements', data),
   update: (id, data) => api.put(`/admin/evenements/${id}`, data),
