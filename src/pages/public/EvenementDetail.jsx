@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { MapPin, Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
-import { evenementsApi, prixApi, reservationsApi } from '../../api/services'
+import { evenementsApi, prixApi, reservationsApi, avisApi } from '../../api/services'
 import { Spinner } from '../../components/ui/index'
 import { useAuth } from '../../context/AuthContext'
 import toast from 'react-hot-toast'
@@ -16,6 +16,12 @@ export default function EvenementDetail() {
   const [showReservation, setShowReservation] = useState(false)
   const [reservation, setReservation] = useState({ nombre: 1, prix: 0, selectedPrix: null })
 
+  const [avisList, setAvisList] = useState([])
+  const [reviewableReservation, setReviewableReservation] = useState(null)
+  const [avisMessage, setAvisMessage] = useState('')
+  const [avisSubmitting, setAvisSubmitting] = useState(false)
+  const [avisJustSubmitted, setAvisJustSubmitted] = useState(false)
+
   useEffect(() => {
     setLoading(true)
     Promise.all([evenementsApi.get(id), prixApi.list({ id_evnmt: id })])
@@ -24,6 +30,40 @@ export default function EvenementDetail() {
         setPrix(p.data?.data || p.data || [])
       }).finally(() => setLoading(false))
   }, [id])
+
+  useEffect(() => {
+    avisApi.list({ id_evnmt: id, status: 'approuve' })
+      .then(r => setAvisList(r.data?.data || r.data || []))
+      .catch(() => {})
+  }, [id])
+
+  // Cf. SiteDetail.jsx : un avis se rattache à une réservation confirmee,
+  // pas à un flux de visite scannée séparé. Ré-appelé après une réservation
+  // réussie (résa gratuite confirmee immédiatement) pour éviter un reload.
+  const refreshReviewable = () => {
+    if (!isAuthenticated) { setReviewableReservation(null); return }
+    reservationsApi.list({ id_evnmt: id }).then(r => {
+      const reservations = r.data?.data || r.data || []
+      const candidate = reservations.find(res => res.statut === 'confirmee' && !res.avis)
+      setReviewableReservation(candidate || null)
+    }).catch(() => {})
+  }
+
+  useEffect(refreshReviewable, [id, isAuthenticated])
+
+  const submitAvis = async (e) => {
+    e.preventDefault()
+    if (!reviewableReservation || !avisMessage.trim()) return
+    setAvisSubmitting(true)
+    try {
+      await avisApi.create({ id_reservation: reviewableReservation.id, message: avisMessage.trim() })
+      toast.success('Merci ! Votre avis sera visible après modération.')
+      setAvisJustSubmitted(true)
+      setAvisMessage('')
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Erreur lors de l'envoi de l'avis")
+    } finally { setAvisSubmitting(false) }
+  }
 
   const submitReservation = async (e) => {
     e.preventDefault()
@@ -37,6 +77,7 @@ export default function EvenementDetail() {
       })
       toast.success('Réservation effectuée !')
       setShowReservation(false)
+      refreshReviewable()
     } catch (err) {
       toast.error(err.response?.data?.message || 'Erreur lors de la réservation')
     }
@@ -98,6 +139,47 @@ export default function EvenementDetail() {
                 </div>
               </section>
             )}
+
+            {/* Avis */}
+            <section className="detail-section">
+              <h2>Avis des visiteurs</h2>
+              {avisList.length === 0 ? (
+                <p className="detail-description" style={{ color: 'var(--gray-500)' }}>Aucun avis pour l'instant.</p>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {avisList.map(a => (
+                    <div key={a.id} style={{ borderLeft: '3px solid var(--red)', paddingLeft: '1rem' }}>
+                      <strong>{a.reservation?.user?.prenom} {a.reservation?.user?.nom}</strong>
+                      <p style={{ color: 'var(--gray-700)', marginTop: '0.25rem' }}>{a.message}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {reviewableReservation && !avisJustSubmitted && (
+                <form onSubmit={submitAvis} style={{ marginTop: '1.5rem' }}>
+                  <label style={{ fontSize: '0.8rem', color: 'var(--gray-700)', display: 'block', marginBottom: '0.35rem' }}>
+                    Vous avez participé à cet événement — laissez un avis
+                  </label>
+                  <textarea
+                    required
+                    rows={3}
+                    value={avisMessage}
+                    onChange={e => setAvisMessage(e.target.value)}
+                    placeholder="Partagez votre expérience..."
+                    style={{ width: '100%', marginBottom: '0.75rem' }}
+                  />
+                  <button type="submit" className="btn btn--primary" disabled={avisSubmitting}>
+                    {avisSubmitting ? 'Envoi...' : "Envoyer l'avis"}
+                  </button>
+                </form>
+              )}
+              {avisJustSubmitted && (
+                <p style={{ marginTop: '1rem', color: 'var(--gray-500)', fontSize: '0.875rem' }}>
+                  Votre avis a été envoyé et sera visible après modération.
+                </p>
+              )}
+            </section>
           </div>
 
           <div className="detail-sidebar">

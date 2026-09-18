@@ -20,11 +20,13 @@ const StatusBadge = ({ status }) => {
 }
 
 // L'API n'expose pas directement { user, site, evenement } sur l'avis : ces
-// infos remontent via la chaîne avis -> utilisation -> ticket -> reservation.
+// infos remontent via avis -> reservation (un avis porte sur une réservation
+// confirmée du touriste, cf. décision produit du 2026-09-18 - avant, il
+// fallait une Utilisation scannée par un staff, trop lourd opérationnellement).
 // Pas de note chiffrée dans le modèle Avis actuel (seulement message + status).
-const avisUser = (a) => a.utilisation?.ticket?.reservation?.user
+const avisUser = (a) => a.reservation?.user
 const avisCible = (a) => {
-  const reservation = a.utilisation?.ticket?.reservation
+  const reservation = a.reservation
   if (reservation?.site) return { libelle: reservation.site.libelle, type: 'Site touristique' }
   if (reservation?.evenement) return { libelle: reservation.evenement.libelle, type: 'Événement' }
   return { libelle: '-', type: '-' }

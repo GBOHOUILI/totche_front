@@ -330,7 +330,9 @@ export const prixApi = {
 // DEL  /api/avis/{avi}        auth requis
 // PATCH /api/admin/avis/{avi}/approuver (admin)
 // PATCH /api/admin/avis/{avi}/rejeter   (admin)
-// Champs : { id_utilisation, message, status }
+// Champs : { id_reservation, message, status } - id_reservation doit référencer
+// une réservation confirmee appartenant à l'utilisateur connecté (2026-09-18)
+// list() accepte aussi { id_site } ou { id_evnmt } pour filtrer par cible
 export const avisApi = {
   list: (params) => api.get('/avis', { params }),
   get: (id) => api.get(`/avis/${id}`),
