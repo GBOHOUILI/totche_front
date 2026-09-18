@@ -340,6 +340,31 @@ export const responsablesApi = {
   rejeterSite: (id) => api.patch(`/responsable/sites/${id}/rejeter`),
   validerEvenement: (id) => api.patch(`/responsable/evenements/${id}/valider`),
   rejeterEvenement: (id) => api.patch(`/responsable/evenements/${id}/rejeter`),
+
+  // Mes propres fiches (un responsable connaît son territoire) — jamais
+  // auto-validées, seul un admin les valide.
+  mesSites: () => api.get('/responsable/sites'),
+  createSite: (data) => api.post('/responsable/sites', data),
+  updateSite: (id, data) => api.put(`/responsable/sites/${id}`, data),
+  deleteSite: (id) => api.delete(`/responsable/sites/${id}`),
+
+  mesEvenements: () => api.get('/responsable/evenements'),
+  createEvenement: (data) => api.post('/responsable/evenements', data),
+  updateEvenement: (id, data) => api.put(`/responsable/evenements/${id}`, data),
+  deleteEvenement: (id) => api.delete(`/responsable/evenements/${id}`),
+
+  createPrix: (data) => api.post('/responsable/prix', data),
+  updatePrix: (id, data) => api.put(`/responsable/prix/${id}`, data),
+  deletePrix: (id) => api.delete(`/responsable/prix/${id}`),
+
+  createGalerieSite: (formData) => api.post('/responsable/galeries/sites', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  deleteGalerieSite: (id) => api.delete(`/responsable/galeries/sites/${id}`),
+  createGalerieEvenement: (formData) => api.post('/responsable/galeries/evenements', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  deleteGalerieEvenement: (id) => api.delete(`/responsable/galeries/evenements/${id}`),
 }
 
 // ─── FONCTIONNALITÉS ─────────────────────────────────────────

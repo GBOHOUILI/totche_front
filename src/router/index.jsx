@@ -35,6 +35,8 @@ const AdminResponsables = lazy(() => import('../pages/admin/AdminResponsables'))
 
 const ResponsableLayout = lazy(() => import('../pages/responsable/ResponsableLayout'))
 const ResponsableAValider = lazy(() => import('../pages/responsable/ResponsableAValider'))
+const ResponsableSites = lazy(() => import('../pages/responsable/ResponsableSites'))
+const ResponsableEvenements = lazy(() => import('../pages/responsable/ResponsableEvenements'))
 
 const PrestataireLayout = lazy(() => import('../pages/prestataire/PrestataireLayout'))
 const PrestataireDashboard = lazy(() => import('../pages/prestataire/PrestataireDashboard'))
@@ -118,6 +120,8 @@ const router = createBrowserRouter([
         element: <ResponsableLayout />,
         children: [
           { index: true, element: <ResponsableAValider /> },
+          { path: 'sites', element: <ResponsableSites /> },
+          { path: 'evenements', element: <ResponsableEvenements /> },
         ]
       }
     ]

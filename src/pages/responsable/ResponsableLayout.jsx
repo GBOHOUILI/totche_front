@@ -1,7 +1,13 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { ClipboardCheck, ShieldCheck, LogOut } from 'lucide-react'
+import { ClipboardCheck, ShieldCheck, MapPin, Calendar, LogOut } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import toast from 'react-hot-toast'
+
+const NAV_ITEMS = [
+  { to: '/responsable', label: 'À valider', icon: ClipboardCheck, end: true },
+  { to: '/responsable/sites', label: 'Mes Sites', icon: MapPin },
+  { to: '/responsable/evenements', label: 'Mes Événements', icon: Calendar },
+]
 
 export default function ResponsableLayout() {
   const { user, logout } = useAuth()
@@ -23,11 +29,17 @@ export default function ResponsableLayout() {
         </div>
 
         <nav className="admin-sidebar__nav">
-          <NavLink to="/responsable" end
-            className={({ isActive }) => `admin-nav-link${isActive ? ' admin-nav-link--active' : ''}`}>
-            <ClipboardCheck size={18} />
-            <span>À valider</span>
-          </NavLink>
+          {NAV_ITEMS.map(({ to, icon: Icon, label, end }) => (
+            <NavLink
+              key={to}
+              to={to}
+              end={end}
+              className={({ isActive }) => `admin-nav-link${isActive ? ' admin-nav-link--active' : ''}`}
+            >
+              <Icon size={18} />
+              <span>{label}</span>
+            </NavLink>
+          ))}
         </nav>
 
         <div className="admin-sidebar__footer">
