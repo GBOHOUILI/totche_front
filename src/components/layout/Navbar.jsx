@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { Search, User, Menu, X, ChevronDown, Landmark, Trees, Building2, Milestone, Waves, PartyPopper, Music2, Image, Flame, Store, Tag } from 'lucide-react'
+import { Search, User, Menu, X, ChevronDown, Landmark, Trees, Building2, Milestone, Waves, PartyPopper, Music2, Image, Flame, Store, Tag, Hotel, UtensilsCrossed, Bus } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { categoriesApi } from '../../api/services'
 
@@ -17,6 +17,30 @@ const EVENT_CAT_META = {
   'Exposition': { icon: Image, tagline: 'Art, artisanat et savoir-faire locaux' },
   'Cérémonie traditionnelle': { icon: Flame, tagline: 'Rituels vodun et cérémonies ancestrales' },
   'Foire': { icon: Store, tagline: 'Marchés et rencontres artisanales' },
+}
+
+const SERVICES_LINKS = [
+  { to: '/hotels', label: 'Hôtels', icon: Hotel, tagline: 'Où séjourner partout au Bénin' },
+  { to: '/restaurants', label: 'Restaurants', icon: UtensilsCrossed, tagline: 'La gastronomie locale à table' },
+  { to: '/transports', label: 'Transports', icon: Bus, tagline: 'Se déplacer entre les villes' },
+]
+
+function ServicesMenu() {
+  return (
+    <div className="mega-menu mega-menu--sm" onMouseDown={e => e.stopPropagation()}>
+      <div className="mega-menu__grid mega-menu__grid--1col">
+        {SERVICES_LINKS.map(({ to, label, icon: Icon, tagline }) => (
+          <Link key={to} to={to} className="mega-menu__item">
+            <Icon size={18} />
+            <span>
+              <strong>{label}</strong>
+              <em>{tagline}</em>
+            </span>
+          </Link>
+        ))}
+      </div>
+    </div>
+  )
 }
 
 function CatMegaMenu({ categories, meta, basePath, featured }) {
@@ -97,12 +121,18 @@ export default function Navbar() {
     { to: '/', label: 'Accueil' },
     { to: '/sites', label: 'Sites Touristiques', mega: 'sites' },
     { to: '/evenements', label: 'Événements', mega: 'evenements' },
-    { to: '/hotels', label: 'Hôtels' },
-    { to: '/restaurants', label: 'Restaurants' },
-    { to: '/transports', label: 'Transports' },
+    { to: '/hotels', label: 'Services', mega: 'services' },
     { to: '/circuits', label: 'Circuits' },
     { to: '/a-propos', label: 'À Propos' },
     { to: '/contacts', label: 'Contacts' },
+  ]
+
+  // Repris dans le menu mobile : les 3 liens du dropdown "Services" restent
+  // accessibles individuellement une fois le menu déplié en colonne.
+  const mobileExtraLinks = [
+    { to: '/hotels', label: 'Hôtels' },
+    { to: '/restaurants', label: 'Restaurants' },
+    { to: '/transports', label: 'Transports' },
   ]
 
   return (
@@ -148,10 +178,11 @@ export default function Navbar() {
                   featured={{
                     img: 'https://commons.wikimedia.org/wiki/Special:FilePath/10%20Janvier%202023,%20F%C3%AAte%20de%20vodoun%20%C3%A0%20Ouidah%2033.jpg?width=500',
                     title: 'Festival Vodun Days',
-                    text: 'Célébration annuelle des traditions vodun à Ouidah — cérémonies, danses et musiques rituelles.',
+                    text: 'Célébration annuelle des traditions vodun à Ouidah, cérémonies, danses et musiques rituelles.',
                   }}
                 />
               )}
+              {mega === 'services' && openMega === 'services' && <ServicesMenu />}
             </li>
           ))}
         </ul>
@@ -215,10 +246,17 @@ export default function Navbar() {
       {/* Mobile menu */}
       {menuOpen && (
         <div className="navbar__mobile">
-          {navLinks.map(({ to, label }) => (
-            <NavLink key={to} to={to} end={to === '/'} className="navbar__mobile-link"
-              onClick={() => setMenuOpen(false)}>{label}</NavLink>
-          ))}
+          {navLinks.map(({ to, label, mega }) =>
+            mega === 'services' ? (
+              mobileExtraLinks.map(link => (
+                <NavLink key={link.to} to={link.to} className="navbar__mobile-link"
+                  onClick={() => setMenuOpen(false)}>{link.label}</NavLink>
+              ))
+            ) : (
+              <NavLink key={to} to={to} end={to === '/'} className="navbar__mobile-link"
+                onClick={() => setMenuOpen(false)}>{label}</NavLink>
+            )
+          )}
           {isAuthenticated ? (
             <>
               <Link to="/profil" className="navbar__mobile-link" onClick={() => setMenuOpen(false)}>Mon profil</Link>

@@ -8,7 +8,7 @@ const StatCard = ({ icon: Icon, label, value, color, sub }) => (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
       <div>
         <p style={{ color: 'var(--gray-500)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.4rem' }}>{label}</p>
-        <p style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--gray-900)', lineHeight: 1 }}>{value ?? '—'}</p>
+        <p style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--gray-900)', lineHeight: 1 }}>{value ?? '-'}</p>
         {sub && <p style={{ color: 'var(--gray-500)', fontSize: '0.78rem', marginTop: '0.35rem' }}>{sub}</p>}
       </div>
       <div style={{ background: `color-mix(in srgb, ${color} 14%, transparent)`, borderRadius: 'var(--radius)', padding: '0.6rem' }}>
@@ -51,7 +51,7 @@ export default function PrestataireDashboard() {
         <p style={{ color: 'var(--gray-700)', fontSize: '0.9rem', lineHeight: 1.6 }}>
           Gérez vos fiches depuis <strong>Mes Sites</strong> et <strong>Mes Événements</strong> dans le menu à
           gauche. Une nouvelle fiche est créée <strong>inactive</strong> (site) ou <strong>en attente</strong>{' '}
-          (événement) en attendant une vérification — elle deviendra visible publiquement une fois validée.
+          (événement) en attendant une vérification - elle deviendra visible publiquement une fois validée.
         </p>
       </div>
     </div>

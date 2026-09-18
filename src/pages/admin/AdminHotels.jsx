@@ -144,8 +144,8 @@ export default function AdminHotels() {
               <tr key={hotel.id}>
                 <td>{hotel.libelle}</td>
                 <td>{hotel.adresse}</td>
-                <td>{hotel.nombre_etoiles ? <Stars value={hotel.nombre_etoiles} size={12} /> : '—'}</td>
-                <td>{hotel.region?.nom || '—'}</td>
+                <td>{hotel.nombre_etoiles ? <Stars value={hotel.nombre_etoiles} size={12} /> : '-'}</td>
+                <td>{hotel.region?.nom || '-'}</td>
                 <td><span className={`status-badge status-badge--${statusColor(hotel.status)}`}>{statusLabel(hotel.status)}</span></td>
                 <td>
                   <div className="admin-table__actions">
@@ -179,7 +179,7 @@ export default function AdminHotels() {
               <div className="admin-form__row">
                 <div className="admin-form__field"><label>Étoiles</label>
                   <select value={form.nombre_etoiles} onChange={e => setForm(f => ({ ...f, nombre_etoiles: e.target.value }))}>
-                    <option value="">—</option>
+                    <option value="">-</option>
                     {[1, 2, 3, 4, 5].map(n => <option key={n} value={n}>{n}</option>)}
                   </select></div>
                 <div className="admin-form__field"><label>Région</label>
@@ -217,7 +217,7 @@ export default function AdminHotels() {
         <div className="admin-modal-overlay" onClick={() => setChambreModal(null)}>
           <div className="admin-modal" onClick={e => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <h2>Chambres — {chambreModal.libelle}</h2>
+              <h2>Chambres - {chambreModal.libelle}</h2>
               <button onClick={() => setChambreModal(null)}><X size={20} /></button>
             </div>
             <div style={{ padding: '0 1.5rem 1.5rem' }}>
@@ -225,7 +225,7 @@ export default function AdminHotels() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.25rem' }}>
                   {chambreModal.chambres.map(c => (
                     <div key={c.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.6rem 0.75rem', background: 'var(--gray-100)' }}>
-                      <span>{c.type_chambre} — <strong>{Number(c.prix_nuit).toLocaleString('fr-FR')} FCFA/nuit</strong> {c.capacite && `· ${c.capacite} pers.`}</span>
+                      <span>{c.type_chambre} - <strong>{Number(c.prix_nuit).toLocaleString('fr-FR')} FCFA/nuit</strong> {c.capacite && `· ${c.capacite} pers.`}</span>
                       <button className="admin-icon-btn admin-icon-btn--danger" onClick={() => deleteChambre(c.id)}><Trash2 size={14} /></button>
                     </div>
                   ))}
@@ -255,7 +255,7 @@ export default function AdminHotels() {
         <div className="admin-modal-overlay" onClick={() => setGalModal(null)}>
           <div className="admin-modal" onClick={e => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <h2>Galerie — {galModal.libelle}</h2>
+              <h2>Galerie - {galModal.libelle}</h2>
               <button onClick={() => setGalModal(null)}><X size={20} /></button>
             </div>
             <div style={{ padding: '1.5rem' }}>

@@ -4,7 +4,7 @@ import { ticketsApi, utilisationsApi } from '../../api/services'
 import { Spinner } from '../../components/ui/index'
 import toast from 'react-hot-toast'
 
-// Un ticket est "utilisé" si une Utilisation existe déjà pour lui — jamais un champ
+// Un ticket est "utilisé" si une Utilisation existe déjà pour lui - jamais un champ
 // direct de l'API. Selon la source, cette info arrive soit via la relation
 // `utilisations` (liste /admin/tickets), soit via `deja_utilise` (POST /tickets/verifier).
 const estUtilise = (ticket) =>
@@ -204,16 +204,16 @@ export default function AdminTickets() {
                     <span style={{ fontFamily: 'monospace', fontWeight: 600, fontSize: '0.85rem' }}>{t.numero}</span>
                   </td>
                   <td style={{ fontSize: '0.85rem' }}>
-                    {t.reservation?.site?.libelle || t.reservation?.evenement?.libelle || '—'}
+                    {t.reservation?.site?.libelle || t.reservation?.evenement?.libelle || '-'}
                   </td>
                   <td style={{ fontSize: '0.85rem' }}>
-                    {t.reservation?.user?.nom || '—'}
+                    {t.reservation?.user?.nom || '-'}
                   </td>
                   <td style={{ fontSize: '0.85rem', fontWeight: 600 }}>
-                    {t.reservation?.total ? `${Number(t.reservation.total).toLocaleString('fr-FR')} FCFA` : '—'}
+                    {t.reservation?.total ? `${Number(t.reservation.total).toLocaleString('fr-FR')} FCFA` : '-'}
                   </td>
                   <td style={{ fontSize: '0.82rem', color: 'var(--gray-500)' }}>
-                    {t.created_at ? new Date(t.created_at).toLocaleDateString('fr-FR') : '—'}
+                    {t.created_at ? new Date(t.created_at).toLocaleDateString('fr-FR') : '-'}
                   </td>
                   <td><StatusBadge utilise={estUtilise(t)} /></td>
                 </tr>
@@ -249,19 +249,19 @@ export default function AdminTickets() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.875rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'var(--gray-500)' }}>Destination</span>
-                  <span style={{ fontWeight: 500 }}>{selected.reservation?.site?.libelle || selected.reservation?.evenement?.libelle || '—'}</span>
+                  <span style={{ fontWeight: 500 }}>{selected.reservation?.site?.libelle || selected.reservation?.evenement?.libelle || '-'}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'var(--gray-500)' }}>Utilisateur</span>
-                  <span style={{ fontWeight: 500 }}>{selected.reservation?.user?.nom || '—'}</span>
+                  <span style={{ fontWeight: 500 }}>{selected.reservation?.user?.nom || '-'}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'var(--gray-500)' }}>Montant total</span>
-                  <span style={{ fontWeight: 600 }}>{selected.reservation?.total ? `${Number(selected.reservation.total).toLocaleString('fr-FR')} FCFA` : '—'}</span>
+                  <span style={{ fontWeight: 600 }}>{selected.reservation?.total ? `${Number(selected.reservation.total).toLocaleString('fr-FR')} FCFA` : '-'}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'var(--gray-500)' }}>Date d'émission</span>
-                  <span>{selected.created_at ? new Date(selected.created_at).toLocaleDateString('fr-FR') : '—'}</span>
+                  <span>{selected.created_at ? new Date(selected.created_at).toLocaleDateString('fr-FR') : '-'}</span>
                 </div>
                 {estUtilise(selected) && selected.utilisations?.[0]?.date_visite && (
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>

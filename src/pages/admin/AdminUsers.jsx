@@ -58,8 +58,8 @@ export default function AdminUsers() {
                   <td>{u.id}</td>
                   <td><strong>{u.nom}</strong> {u.prenom}</td>
                   <td>{u.email}</td>
-                  <td>{u.tel || '—'}</td>
-                  <td>{u.nationalite || '—'}</td>
+                  <td>{u.tel || '-'}</td>
+                  <td>{u.nationalite || '-'}</td>
                   <td>
                     <div className="admin-table__actions">
                       <button className="admin-icon-btn admin-icon-btn--danger" title="Supprimer"

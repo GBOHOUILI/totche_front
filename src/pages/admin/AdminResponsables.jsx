@@ -68,7 +68,7 @@ export default function AdminResponsables() {
         <div>
           <h1>Responsables régionaux</h1>
           <p style={{ color: 'var(--gray-500)', fontSize: '0.875rem', marginTop: '0.25rem' }}>
-            {responsables.length} compte(s) — valident les sites/événements de leur région
+            {responsables.length} compte(s) - valident les sites/événements de leur région
           </p>
         </div>
         <button className="btn btn--primary" onClick={openCreate}><Plus size={16} /> Ajouter un responsable</button>
@@ -100,7 +100,7 @@ export default function AdminResponsables() {
                     <p style={{ fontWeight: 600, fontSize: '0.875rem' }}>{r.nom} {r.prenom || ''}</p>
                   </div>
                 </td>
-                <td>{r.tel || '—'}</td>
+                <td>{r.tel || '-'}</td>
                 <td>{r.region?.nom || <em style={{ color: 'var(--gray-500)' }}>Toutes régions</em>}</td>
                 <td>
                   <span className={`status-badge status-badge--${r.status ? 'success' : 'danger'}`}>

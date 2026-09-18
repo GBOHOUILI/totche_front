@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react'
 import { Search, X, MapPin, Hotel as HotelIcon } from 'lucide-react'
-import { hotelsApi } from '../../api/services'
+import { hotelsApi, regionsApi } from '../../api/services'
 import { HotelCard, Spinner, EmptyState } from '../../components/ui/index'
 
 export default function Hotels() {
   const [hotels, setHotels] = useState([])
+  const [regions, setRegions] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+  const [selectedRegion, setSelectedRegion] = useState('')
+  const [minEtoiles, setMinEtoiles] = useState('')
   const [page, setPage] = useState(1)
   const [meta, setMeta] = useState(null)
   const [geo, setGeo] = useState(null)
@@ -14,17 +17,23 @@ export default function Hotels() {
   const [geoError, setGeoError] = useState('')
 
   useEffect(() => {
+    regionsApi.list().then(r => setRegions(r.data || []))
+  }, [])
+
+  useEffect(() => {
     setLoading(true)
     hotelsApi.list({
       page,
       libelle: search || undefined,
+      id_region: selectedRegion || undefined,
+      nombre_etoiles: minEtoiles || undefined,
       lat: geo?.lat,
       lng: geo?.lng,
       radius: geo ? radius : undefined,
     })
       .then(r => { setHotels(r.data?.data || r.data || []); setMeta(r.data?.meta || null) })
       .finally(() => setLoading(false))
-  }, [page, search, geo, radius])
+  }, [page, search, selectedRegion, minEtoiles, geo, radius])
 
   const toggleGeo = () => {
     if (geo) { setGeo(null); setGeoError(''); return }
@@ -56,7 +65,23 @@ export default function Hotels() {
             {search && <button onClick={() => { setSearch(''); setPage(1) }}><X size={14} /></button>}
           </div>
 
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center', margin: '0.75rem 0 0' }}>
+          <div className="filters__extra">
+            <select
+              className="filters__select"
+              value={selectedRegion}
+              onChange={e => { setSelectedRegion(e.target.value); setPage(1) }}
+            >
+              <option value="">Toutes les régions</option>
+              {regions.map(r => <option key={r.id} value={r.id}>{r.nom}</option>)}
+            </select>
+            <select
+              className="filters__select"
+              value={minEtoiles}
+              onChange={e => { setMinEtoiles(e.target.value); setPage(1) }}
+            >
+              <option value="">Toutes les étoiles</option>
+              {[1, 2, 3, 4, 5].map(n => <option key={n} value={n}>{n}+ étoiles</option>)}
+            </select>
             <button
               type="button"
               className={`filters__cat${geo ? ' filters__cat--active' : ''}`}
@@ -67,9 +92,9 @@ export default function Hotels() {
             </button>
             {geo && (
               <select
+                className="filters__select"
                 value={radius}
                 onChange={e => { setRadius(Number(e.target.value)); setPage(1) }}
-                style={{ padding: '0.4rem 0.6rem', border: '1px solid var(--gray-300)', borderRadius: 'var(--radius)', background: 'var(--white)', color: 'var(--black)', fontSize: '0.85rem' }}
               >
                 <option value={5}>5 km</option>
                 <option value={10}>10 km</option>
@@ -78,7 +103,7 @@ export default function Hotels() {
                 <option value={100}>100 km</option>
               </select>
             )}
-            {geoError && <span style={{ color: 'var(--red-dark)', fontSize: '0.8rem' }}>{geoError}</span>}
+            {geoError && <span className="filters__error">{geoError}</span>}
           </div>
         </div>
 

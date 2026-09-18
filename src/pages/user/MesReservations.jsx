@@ -33,7 +33,7 @@ function PayerButton({ reservation, onPaid }) {
           toast.success('Paiement confirmé !')
           onPaid?.()
         } catch {
-          toast.error("Paiement reçu par Kkiapay mais pas encore confirmé côté serveur — patientez puis rafraîchissez.")
+          toast.error("Paiement reçu par Kkiapay mais pas encore confirmé côté serveur - patientez puis rafraîchissez.")
         }
       })
       window.addFailedListener(() => {

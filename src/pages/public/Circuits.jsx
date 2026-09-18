@@ -18,7 +18,7 @@ function loadDraft() {
   } catch { return emptyDraft }
 }
 
-// Picker sites/événements — ajoute une étape au brouillon, ne navigue jamais
+// Picker sites/événements - ajoute une étape au brouillon, ne navigue jamais
 // (contrairement à SiteCard/EventCard qui sont des <Link>, inutilisables ici).
 function Picker({ onAdd, alreadyAdded }) {
   const [tab, setTab] = useState('sites')
@@ -121,7 +121,7 @@ export default function Circuits() {
     if (draft.etapes.length === 0) { toast.error('Ajoutez au moins une étape.'); return }
 
     if (!isAuthenticated) {
-      toast('Créez votre compte pour enregistrer ce circuit — vos étapes sont conservées.', { icon: '🔒' })
+      toast('Créez votre compte pour enregistrer ce circuit - vos étapes sont conservées.', { icon: '🔒' })
       navigate('/inscription?redirect=/circuits')
       return
     }
@@ -169,7 +169,7 @@ export default function Circuits() {
             {loadingMine ? (
               <div className="center-spinner"><Spinner /></div>
             ) : myCircuits.length === 0 ? (
-              <p className="step-list__empty">Vous n'avez pas encore de circuit enregistré — construisez-en un ci-dessous.</p>
+              <p className="step-list__empty">Vous n'avez pas encore de circuit enregistré - construisez-en un ci-dessous.</p>
             ) : (
               <div className="circuit-list">
                 {myCircuits.map(c => (
@@ -196,7 +196,7 @@ export default function Circuits() {
           <h2 className="circuit-section-title">Nouveau circuit</h2>
           {!isAuthenticated && (
             <p className="circuit-banner">
-              Vous pouvez construire votre circuit librement — un compte est seulement nécessaire pour l'enregistrer.
+              Vous pouvez construire votre circuit librement - un compte est seulement nécessaire pour l'enregistrer.
             </p>
           )}
 

@@ -110,7 +110,7 @@ export const prestatairesApi = {
 // DEL  /api/admin/sites/{site}  (admin)
 export const sitesApi = {
   list: (params) => api.get('/sites', { params }),
-  // Tous statuts confondus (admin) — la liste publique ne renvoie que les sites validés
+  // Tous statuts confondus (admin) - la liste publique ne renvoie que les sites validés
   adminList: (params) => api.get('/admin/sites', { params }),
   get: (id) => api.get(`/sites/${id}`),
   create: (data) => api.post('/admin/sites', data),
@@ -130,7 +130,7 @@ export const sitesApi = {
 // PATCH /api/admin/evenements/{id}/rejeter (admin)
 export const evenementsApi = {
   list: (params) => api.get('/evenements', { params }),
-  // Tous statuts confondus (admin) — la liste publique ne renvoie que les événements validés
+  // Tous statuts confondus (admin) - la liste publique ne renvoie que les événements validés
   adminList: (params) => api.get('/admin/evenements', { params }),
   get: (id) => api.get(`/evenements/${id}`),
   create: (data) => api.post('/admin/evenements', data),
@@ -184,7 +184,7 @@ export const transportsApi = {
 }
 
 // ─── VILLES ──────────────────────────────────────────────────
-// GET /api/villes — liste ouverte (contrairement aux régions, fixe/seedée)
+// GET /api/villes - liste ouverte (contrairement aux régions, fixe/seedée)
 export const villesApi = {
   list: () => api.get('/villes'),
   get: (id) => api.get(`/villes/${id}`),
@@ -373,7 +373,7 @@ export const paiementsApi = {
 }
 
 // ─── CIRCUITS (itinéraires personnalisés) ─────────────────────
-// GET    /api/circuits                              auth requis — mes circuits
+// GET    /api/circuits                              auth requis - mes circuits
 // POST   /api/circuits                              auth requis  { libelle, description? }
 // GET    /api/circuits/{id}                         auth requis
 // PUT    /api/circuits/{id}                         auth requis  { libelle?, description? }
@@ -428,7 +428,7 @@ export const utilisationsApi = {
 // ─── USERS ───────────────────────────────────────────────────
 // GET    /api/admin/users              (admin)
 // POST   /api/admin/users              (admin)
-// DELETE /api/admin/users/{user}       (admin — supprime n'importe quel compte)
+// DELETE /api/admin/users/{user}       (admin - supprime n'importe quel compte)
 // GET    /api/users/{user}             auth requis, self uniquement
 // PUT    /api/users/{user}             auth requis, self uniquement
 // DELETE /api/users/{user}             auth requis, self uniquement
@@ -459,20 +459,20 @@ export const adminsApi = {
 }
 
 // ─── RÉGIONS ─────────────────────────────────────────────────
-// GET /api/regions — liste fixe (12 départements du Bénin), pas de mutation exposée
+// GET /api/regions - liste fixe (12 départements du Bénin), pas de mutation exposée
 export const regionsApi = {
   list: () => api.get('/regions'),
 }
 
 // ─── RESPONSABLES RÉGIONAUX ────────────────────────────────────
 // Gestion des comptes par un admin :
-// GET/POST/PUT/DELETE /api/admin/responsables (admin) — { nom, prenom, tel, password, status, id_region? }
+// GET/POST/PUT/DELETE /api/admin/responsables (admin) - { nom, prenom, tel, password, status, id_region? }
 // Portail du responsable connecté :
 // POST /api/responsable/login   { tel, password }
 // GET  /api/responsable/me
 // POST /api/responsable/logout
 // POST /api/responsable/update-password
-// GET  /api/responsable/a-valider — { sites: [...], evenements: [...] } en attente dans son périmètre
+// GET  /api/responsable/a-valider - { sites: [...], evenements: [...] } en attente dans son périmètre
 // PATCH /api/responsable/sites/{id}/valider | /rejeter
 // PATCH /api/responsable/evenements/{id}/valider | /rejeter
 export const adminResponsablesApi = {
@@ -501,7 +501,7 @@ export const responsablesApi = {
   validerTransport: (id) => api.patch(`/responsable/transports/${id}/valider`),
   rejeterTransport: (id) => api.patch(`/responsable/transports/${id}/rejeter`),
 
-  // Mes propres fiches (un responsable connaît son territoire) — jamais
+  // Mes propres fiches (un responsable connaît son territoire) - jamais
   // auto-validées, seul un admin les valide.
   mesSites: () => api.get('/responsable/sites'),
   createSite: (data) => api.post('/responsable/sites', data),

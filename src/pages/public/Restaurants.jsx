@@ -1,12 +1,17 @@
 import { useState, useEffect } from 'react'
 import { Search, X, MapPin, UtensilsCrossed } from 'lucide-react'
-import { restaurantsApi } from '../../api/services'
+import { restaurantsApi, regionsApi } from '../../api/services'
 import { RestaurantCard, Spinner, EmptyState } from '../../components/ui/index'
+
+const GAMME_LABEL = { economique: 'Économique', moyen: 'Moyen', eleve: 'Élevé' }
 
 export default function Restaurants() {
   const [restaurants, setRestaurants] = useState([])
+  const [regions, setRegions] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+  const [selectedRegion, setSelectedRegion] = useState('')
+  const [gammePrix, setGammePrix] = useState('')
   const [page, setPage] = useState(1)
   const [meta, setMeta] = useState(null)
   const [geo, setGeo] = useState(null)
@@ -14,17 +19,23 @@ export default function Restaurants() {
   const [geoError, setGeoError] = useState('')
 
   useEffect(() => {
+    regionsApi.list().then(r => setRegions(r.data || []))
+  }, [])
+
+  useEffect(() => {
     setLoading(true)
     restaurantsApi.list({
       page,
       libelle: search || undefined,
+      id_region: selectedRegion || undefined,
+      gamme_prix: gammePrix || undefined,
       lat: geo?.lat,
       lng: geo?.lng,
       radius: geo ? radius : undefined,
     })
       .then(r => { setRestaurants(r.data?.data || r.data || []); setMeta(r.data?.meta || null) })
       .finally(() => setLoading(false))
-  }, [page, search, geo, radius])
+  }, [page, search, selectedRegion, gammePrix, geo, radius])
 
   const toggleGeo = () => {
     if (geo) { setGeo(null); setGeoError(''); return }
@@ -56,7 +67,23 @@ export default function Restaurants() {
             {search && <button onClick={() => { setSearch(''); setPage(1) }}><X size={14} /></button>}
           </div>
 
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center', margin: '0.75rem 0 0' }}>
+          <div className="filters__extra">
+            <select
+              className="filters__select"
+              value={selectedRegion}
+              onChange={e => { setSelectedRegion(e.target.value); setPage(1) }}
+            >
+              <option value="">Toutes les régions</option>
+              {regions.map(r => <option key={r.id} value={r.id}>{r.nom}</option>)}
+            </select>
+            <select
+              className="filters__select"
+              value={gammePrix}
+              onChange={e => { setGammePrix(e.target.value); setPage(1) }}
+            >
+              <option value="">Toutes les gammes</option>
+              {Object.entries(GAMME_LABEL).map(([val, label]) => <option key={val} value={val}>{label}</option>)}
+            </select>
             <button
               type="button"
               className={`filters__cat${geo ? ' filters__cat--active' : ''}`}
@@ -67,9 +94,9 @@ export default function Restaurants() {
             </button>
             {geo && (
               <select
+                className="filters__select"
                 value={radius}
                 onChange={e => { setRadius(Number(e.target.value)); setPage(1) }}
-                style={{ padding: '0.4rem 0.6rem', border: '1px solid var(--gray-300)', borderRadius: 'var(--radius)', background: 'var(--white)', color: 'var(--black)', fontSize: '0.85rem' }}
               >
                 <option value={5}>5 km</option>
                 <option value={10}>10 km</option>
@@ -78,7 +105,7 @@ export default function Restaurants() {
                 <option value={100}>100 km</option>
               </select>
             )}
-            {geoError && <span style={{ color: 'var(--red-dark)', fontSize: '0.8rem' }}>{geoError}</span>}
+            {geoError && <span className="filters__error">{geoError}</span>}
           </div>
         </div>
 

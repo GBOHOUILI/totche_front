@@ -114,8 +114,8 @@ export default function AdminEvenements() {
               <tr key={evt.id}>
                 <td>{evt.libelle}</td>
                 <td>{evt.adresse}</td>
-                <td>{evt.date_debut ? new Date(evt.date_debut).toLocaleDateString('fr-FR') : '—'}</td>
-                <td>{evt.region?.nom || '—'}</td>
+                <td>{evt.date_debut ? new Date(evt.date_debut).toLocaleDateString('fr-FR') : '-'}</td>
+                <td>{evt.region?.nom || '-'}</td>
                 <td><span className={`status-badge status-badge--${statusColor(evt.status)}`}>{statusLabel(evt.status)}</span></td>
                 <td>
                   <div className="admin-table__actions">
@@ -191,7 +191,7 @@ export default function AdminEvenements() {
         <div className="admin-modal-overlay" onClick={() => setGalModal(null)}>
           <div className="admin-modal" onClick={e => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <h2>Galerie — {galModal.libelle}</h2>
+              <h2>Galerie - {galModal.libelle}</h2>
               <button onClick={() => setGalModal(null)}><X size={20} /></button>
             </div>
             <div style={{ padding: '1.5rem' }}>

@@ -4,7 +4,7 @@ import { Eye, EyeOff, ShieldCheck } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import toast from 'react-hot-toast'
 
-// Login responsable régional : { tel, password } — compte créé par un admin,
+// Login responsable régional : { tel, password } - compte créé par un admin,
 // pas d'auto-inscription (poste officiel, même logique que l'admin).
 export default function ResponsableLogin() {
   const [form, setForm] = useState({ tel: '', password: '' })

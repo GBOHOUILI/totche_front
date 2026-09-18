@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { GripVertical, ChevronUp, ChevronDown, MapPin, Calendar, Trash2, CheckCircle2 } from 'lucide-react'
 
-// Liste réordonnable des étapes d'un circuit — deux façons équivalentes de
+// Liste réordonnable des étapes d'un circuit - deux façons équivalentes de
 // réordonner (l'utilisateur a demandé les deux) : glisser-déposer (souris) et
 // flèches haut/bas (clavier/tactile, toujours visibles). Les deux aboutissent au
-// même callback onReorder(steps) avec le tableau complet dans le nouvel ordre —
+// même callback onReorder(steps) avec le tableau complet dans le nouvel ordre -
 // à l'appelant de traduire ça en état local (brouillon) ou en appel API
 // (circuitsApi.reordonner attend justement une liste d'ids dans l'ordre voulu).
 export default function StepList({ steps, onReorder, onRemove, renderTrailing }) {
@@ -27,7 +27,7 @@ export default function StepList({ steps, onReorder, onRemove, renderTrailing })
   }
 
   if (steps.length === 0) {
-    return <p className="step-list__empty">Aucune étape pour l'instant — ajoutez un site ou un événement ci-dessus.</p>
+    return <p className="step-list__empty">Aucune étape pour l'instant - ajoutez un site ou un événement ci-dessus.</p>
   }
 
   return (

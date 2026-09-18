@@ -1,8 +1,8 @@
 /* ═══════════════════════════════════════════════════════════
-   TOTCHÉ — Bénin Tourisme · Global Styles
+   TOTCHÉ - Bénin Tourisme · Global Styles
    Direction v2 : site éditorial de destination, pas un template
    SaaS. Proportions calibrées sur l'analyse réelle (getComputedStyle)
-   de armenia.travel et visitpa.com — voir ROADMAP.md. Rouge d'origine
+   de armenia.travel et visitpa.com - voir ROADMAP.md. Rouge d'origine
    comme couleur primaire, base neutre claire, cartes plates sans
    cadre/ombre/radius, hiérarchie typographique large.
    ═══════════════════════════════════════════════════════════ */
@@ -11,7 +11,7 @@
 
 /* ── Variables ── */
 :root {
-  --red:        #E63946; /* rouge d'origine — couleur primaire */
+  --red:        #E63946; /* rouge d'origine - couleur primaire */
   --red-dark:   #C1121F;
   --success:    #1E7A46;
   --warning:    #B45309;
@@ -25,7 +25,7 @@
   --white:      #ffffff;
   --font-display: 'Besley', Georgia, serif;
   --font-body:    'Karla', system-ui, sans-serif;
-  --radius:     0px;   /* net par défaut — pas de radius systématique */
+  --radius:     0px;   /* net par défaut - pas de radius systématique */
   --radius-full: 999px; /* réservé aux avatars/icônes rondes */
   --shadow-md:  0 8px 28px rgba(0,0,0,.10);
   --shadow-lg:  0 16px 48px rgba(0,0,0,.16);
@@ -81,11 +81,12 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .navbar__logo-icon { color: var(--red); font-family: var(--font-display); font-style: italic; }
 .navbar__logo-text { color: var(--black); font-family: var(--font-display); }
 
-.navbar__links { display: flex; align-items: center; gap: 0.35rem; margin-left: auto; }
+.navbar__links { display: flex; align-items: center; gap: 0.5rem; margin-left: auto; }
 .navbar__link {
-  padding: 0.4rem 0.75rem;
+  padding: 0.4rem 0.9rem;
   font-size: 0.9rem; font-weight: 500; letter-spacing: .01em;
   color: var(--gray-700);
+  white-space: nowrap;
   transition: color var(--transition);
 }
 .navbar__link:hover { color: var(--black); }
@@ -104,7 +105,9 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
   animation: megaMenuIn 0.18s ease both;
 }
 @keyframes megaMenuIn { from { opacity: 0; transform: translateX(-50%) translateY(-6px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+.mega-menu--sm { width: min(320px, 92vw); padding: 1rem; }
 .mega-menu__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.25rem 1.5rem; }
+.mega-menu__grid--1col { grid-template-columns: 1fr; gap: 0.1rem; }
 .mega-menu__item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.65rem 0.5rem; color: var(--gray-700); }
 .mega-menu__item:hover { background: var(--gray-100); }
 .mega-menu__item svg { color: var(--red); flex-shrink: 0; margin-top: 0.15rem; }
@@ -144,9 +147,9 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .navbar__mobile-link:hover { background: var(--gray-100); }
 
 /* ═══════════════════════════════════════════════════════════
-   HERO — image plein cadre, texte minimal centré superposé,
+   HERO - image plein cadre, texte minimal centré superposé,
    indicateur de scroll discret. Pas de barre de recherche
-   flottante (retirée — cf. recherche déplacée dans le header).
+   flottante (retirée - cf. recherche déplacée dans le header).
    ═══════════════════════════════════════════════════════════ */
 .hero { position: relative; height: calc(100vh - var(--nav-h)); min-height: 520px; max-height: 760px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 .hero__bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: opacity 1.4s ease; opacity: 0; }
@@ -220,9 +223,9 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .faq-item__a { color: var(--gray-700); font-size: 0.95rem; padding-top: 0.85rem; line-height: 1.7; max-width: 60ch; }
 
 /* ═══════════════════════════════════════════════════════════
-   CARDS — pattern "liste éditoriale" (armenia/visitpa) :
+   CARDS - pattern "liste éditoriale" (armenia/visitpa) :
    image plate (ratio 3:2, zéro radius/ombre/bordure), légende
-   SOUS l'image (jamais dessus), lien texte en CTA — pas de bouton.
+   SOUS l'image (jamais dessus), lien texte en CTA - pas de bouton.
    ═══════════════════════════════════════════════════════════ */
 .cards-grid { display: grid; gap: 2.5rem 2rem; }
 .cards-grid--4 { grid-template-columns: repeat(4, 1fr); }
@@ -254,7 +257,7 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .star--filled { color: var(--red); }
 .star--empty { color: var(--gray-300); }
 
-/* Badges — étiquette à bordure gauche, jamais une pilule */
+/* Badges - étiquette à bordure gauche, jamais une pilule */
 .badge { display: inline-block; padding: 0.2rem 0.6rem 0.2rem 0.55rem; font-size: 0.75rem; font-weight: 600; border-left: 3px solid currentColor; }
 .badge--default { background: var(--gray-100); color: var(--gray-700); }
 .badge--success { background: #EAF5EE; color: var(--success); }
@@ -291,9 +294,13 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .filters__cat:hover { border-color: var(--red); color: var(--red); }
 .filters__cat--active { background: var(--red); color: var(--white); border-color: var(--red); }
 .filters__cat--active:hover { color: var(--white); border-color: var(--red); }
+.filters__extra { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin-top: 0.75rem; width: 100%; }
+.filters__select { padding: 0.5rem 0.75rem; border: 1px solid var(--gray-300); border-radius: var(--radius); background: var(--white); color: var(--black); font-size: 0.85rem; }
+.filters__input-sm { width: 100px; padding: 0.5rem 0.6rem; border: 1px solid var(--gray-300); border-radius: var(--radius); font-size: 0.85rem; }
+.filters__error { color: var(--red-dark); font-size: 0.8rem; }
 
 /* ═══════════════════════════════════════════════════════════
-   PAGE HEADERS — bandeau éditorial clair, plus de bloc sombre
+   PAGE HEADERS - bandeau éditorial clair, plus de bloc sombre
    centré : titre large aligné à gauche + court chapeau.
    ═══════════════════════════════════════════════════════════ */
 .page-hero { padding: 4rem 0 2.5rem; background: var(--white); color: var(--black); text-align: left; border-bottom: 1px solid var(--gray-100); }
@@ -313,7 +320,7 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .detail-hero__overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.78) 0%, transparent 50%); }
 .detail-hero__info { position: absolute; bottom: 2.5rem; left: 0; right: 0; padding: 0 2rem; max-width: var(--container-w); margin: 0 auto; }
 .detail-hero__info h1 { color: var(--white); max-width: 18ch; }
-.detail-hero__meta { display: flex; gap: 1.5rem; align-items: center; margin-top: 0.75rem; color: rgba(255,255,255,.85); font-size: 0.9375rem; }
+.detail-hero__meta { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; align-items: center; margin-top: 0.75rem; color: rgba(255,255,255,.85); font-size: 0.9375rem; }
 .detail-hero__meta span { display: flex; align-items: center; gap: 0.35rem; }
 .detail-hero__nav { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.92); display: flex; align-items: center; justify-content: center; color: var(--black); transition: background var(--transition); z-index: 2; }
 .detail-hero__nav:hover { background: var(--white); }
@@ -400,7 +407,7 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .auth-card__switch a { color: var(--red); font-weight: 600; }
 
 /* ═══════════════════════════════════════════════════════════
-   ADMIN (pas la priorité de cette refonte — tokens seulement)
+   ADMIN (pas la priorité de cette refonte - tokens seulement)
    ═══════════════════════════════════════════════════════════ */
 .admin-layout { display: flex; min-height: 100vh; }
 .admin-sidebar { width: 240px; flex-shrink: 0; background: var(--black); color: var(--white); display: flex; flex-direction: column; padding: 1.5rem 1rem; }
@@ -418,8 +425,8 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .admin-sidebar__logout { color: rgba(255,255,255,.5); transition: color var(--transition); }
 .admin-sidebar__logout:hover { color: var(--red); }
 
-.admin-main { flex: 1; background: var(--gray-100); overflow-y: auto; }
-.admin-page { padding: 2.5rem 2rem; max-width: 1100px; }
+.admin-main { flex: 1; width: 100%; min-width: 0; background: var(--gray-100); overflow-y: auto; overflow-x: hidden; }
+.admin-page { padding: 2.5rem 2rem; width: 100%; }
 .admin-page__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
 .admin-page__header h1 { font-size: 1.75rem; }
 .admin-page__header p { color: var(--gray-500); margin-top: 0.25rem; font-size: 0.875rem; }
@@ -459,7 +466,7 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .admin-form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
 .admin-form__footer { display: flex; justify-content: flex-end; gap: 0.75rem; padding-top: 0.5rem; border-top: 1px solid var(--gray-100); }
 
-/* Status badges — même traitement que .badge */
+/* Status badges - même traitement que .badge */
 .status-badge { padding: 0.2rem 0.6rem 0.2rem 0.55rem; font-size: 0.75rem; font-weight: 600; text-transform: capitalize; border-left: 3px solid currentColor; }
 .status-badge--success { background: #EAF5EE; color: var(--success); }
 .status-badge--danger { background: #FBEAEA; color: var(--red-dark); }
@@ -646,6 +653,13 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 /* ═══════════════════════════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════════════════════════ */
+@media (max-width: 1100px) {
+  .navbar__container { gap: 1rem; padding: 0 1.25rem; }
+  .navbar__links { gap: 0.15rem; }
+  .navbar__link { padding: 0.4rem 0.55rem; font-size: 0.85rem; }
+  .navbar__actions { margin-left: 0.5rem; }
+}
+
 @media (max-width: 1024px) {
   .cards-grid--5, .cards-grid--4 { grid-template-columns: repeat(3, 1fr); }
   .footer__grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
@@ -685,10 +699,22 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
   .admin-layout { flex-direction: column; }
   .admin-sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; padding: 1rem; }
   .admin-sidebar__nav { flex-direction: row; flex-wrap: wrap; flex: auto; }
+  .admin-page { padding: 1.5rem 1rem; }
+  .admin-page__header { flex-wrap: wrap; gap: 1rem; }
+  .admin-table { display: block; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+  .admin-modal { max-width: 100%; margin: 0 0.5rem; }
+  .admin-form__row { grid-template-columns: 1fr; }
+  .detail-layout { padding: 2rem 0; }
+  .apropos-team { flex-wrap: wrap; justify-content: center; }
+  .home__overlap { padding: 3.5rem 0; }
+  .home__section, .home__section--dark, .home__featured, .home__faq { padding: 3.5rem 0; }
 }
 
 @media (max-width: 480px) {
   .cards-grid--5, .cards-grid--4, .cards-grid--home .card:first-child { grid-template-columns: 1fr; grid-column: span 1; }
   .admin-form__row { grid-template-columns: 1fr; }
   .auth-form__row-2 { grid-template-columns: 1fr; }
+  .navbar__search-panel { width: calc(100vw - 2.5rem); right: -1rem; }
+  .detail-hero__info { padding: 0 1.25rem; }
+  .container { padding: 0 1.25rem; }
 }

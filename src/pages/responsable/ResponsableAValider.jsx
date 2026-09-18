@@ -54,7 +54,7 @@ export default function ResponsableAValider() {
           <p style={{ color: 'var(--gray-500)', fontSize: '0.875rem', marginTop: '0.25rem' }}>
             {user?.region?.nom
               ? `Fiches en attente dans la région ${user.region.nom}`
-              : 'Responsable global — fiches en attente dans toutes les régions'}
+              : 'Responsable global - fiches en attente dans toutes les régions'}
           </p>
         </div>
       </div>
@@ -79,8 +79,8 @@ export default function ResponsableAValider() {
                   {items.map(item => (
                     <tr key={item.id}>
                       <td>{item.libelle}</td>
-                      <td>{item.region?.nom || '—'}</td>
-                      <td>{item.prestataire?.nom_entreprise || item.admin?.nom || '—'}</td>
+                      <td>{item.region?.nom || '-'}</td>
+                      <td>{item.prestataire?.nom_entreprise || item.admin?.nom || '-'}</td>
                       <td>
                         <div className="admin-table__actions">
                           <button className="admin-icon-btn admin-icon-btn--success" title="Valider" onClick={() => valider(section, item.id)}><CheckCircle size={15} /></button>

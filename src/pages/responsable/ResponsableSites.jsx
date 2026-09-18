@@ -16,7 +16,7 @@ const statusColor = (s) => ({ valide: 'success', rejete: 'danger', en_attente: '
 const statusLabel = (s) => ({ valide: 'Validé', rejete: 'Rejeté', en_attente: 'En attente', suspendu: 'Suspendu' })[s] || s
 
 // Un responsable scopé crée toujours dans sa propre région (forcé côté
-// serveur de toute façon) — pas de select, juste un rappel. Un responsable
+// serveur de toute façon) - pas de select, juste un rappel. Un responsable
 // global n'en a pas : il doit en choisir une.
 export default function ResponsableSites() {
   const { user } = useAuth()
@@ -70,7 +70,7 @@ export default function ResponsableSites() {
       id_region: form.id_region ? parseInt(form.id_region) : undefined,
     }
     try {
-      if (modal === 'create') { await responsablesApi.createSite(payload); toast.success('Site créé — seul un admin peut le valider') }
+      if (modal === 'create') { await responsablesApi.createSite(payload); toast.success('Site créé - seul un admin peut le valider') }
       else { await responsablesApi.updateSite(modal.id, payload); toast.success('Site modifié !') }
       setModal(null); load()
     } catch (err) {
@@ -131,7 +131,7 @@ export default function ResponsableSites() {
 
       {loading ? <div className="center-spinner"><Spinner /></div> : sites.length === 0 ? (
         <p style={{ color: 'var(--gray-500)', textAlign: 'center', padding: '3rem 0' }}>
-          Aucun site pour l'instant — cliquez sur "Ajouter" pour créer votre première fiche.
+          Aucun site pour l'instant - cliquez sur "Ajouter" pour créer votre première fiche.
         </p>
       ) : (
         <table className="admin-table">
@@ -141,8 +141,8 @@ export default function ResponsableSites() {
               <tr key={site.id}>
                 <td>{site.libelle}</td>
                 <td>{site.adresse}</td>
-                <td>{site.categorie?.libelle || '—'}</td>
-                <td>{site.region?.nom || '—'}</td>
+                <td>{site.categorie?.libelle || '-'}</td>
+                <td>{site.region?.nom || '-'}</td>
                 <td><span className={`status-badge status-badge--${statusColor(site.status)}`}>{statusLabel(site.status)}</span></td>
                 <td>
                   <div className="admin-table__actions">
@@ -204,7 +204,7 @@ export default function ResponsableSites() {
                 <textarea rows={4} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
               <p style={{ fontSize: '0.78rem', color: 'var(--gray-500)' }}>
                 {modal === 'create'
-                  ? "Ce site sera créé en attente — seul un admin peut le valider (pas vous, pas un autre responsable)."
+                  ? "Ce site sera créé en attente - seul un admin peut le valider (pas vous, pas un autre responsable)."
                   : "Le statut de validation n'est pas modifiable ici."}
               </p>
               <div className="admin-form__footer">
@@ -221,7 +221,7 @@ export default function ResponsableSites() {
         <div className="admin-modal-overlay" onClick={() => setPrixModal(null)}>
           <div className="admin-modal" onClick={e => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <h2>Tarifs — {prixModal.libelle}</h2>
+              <h2>Tarifs - {prixModal.libelle}</h2>
               <button onClick={() => setPrixModal(null)}><X size={20} /></button>
             </div>
             <div style={{ padding: '0 1.5rem 1.5rem' }}>
@@ -229,7 +229,7 @@ export default function ResponsableSites() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.25rem' }}>
                   {prixModal.prix.map(p => (
                     <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.6rem 0.75rem', background: 'var(--gray-100)' }}>
-                      <span>{p.libelle} — <strong>{Number(p.montant).toLocaleString('fr-FR')} FCFA</strong></span>
+                      <span>{p.libelle} - <strong>{Number(p.montant).toLocaleString('fr-FR')} FCFA</strong></span>
                       <button className="admin-icon-btn admin-icon-btn--danger" onClick={() => deletePrix(p.id)}><Trash2 size={14} /></button>
                     </div>
                   ))}
@@ -257,7 +257,7 @@ export default function ResponsableSites() {
         <div className="admin-modal-overlay" onClick={() => setGalModal(null)}>
           <div className="admin-modal" onClick={e => e.stopPropagation()}>
             <div className="admin-modal__header">
-              <h2>Galerie — {galModal.libelle}</h2>
+              <h2>Galerie - {galModal.libelle}</h2>
               <button onClick={() => setGalModal(null)}><X size={20} /></button>
             </div>
             <div style={{ padding: '1.5rem' }}>

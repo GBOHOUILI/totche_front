@@ -8,7 +8,7 @@ const StatCard = ({ icon: Icon, label, value, color, sub }) => (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
       <div>
         <p style={{ color: 'var(--gray-500)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.4rem' }}>{label}</p>
-        <p style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--gray-900)', lineHeight: 1 }}>{value ?? '—'}</p>
+        <p style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--gray-900)', lineHeight: 1 }}>{value ?? '-'}</p>
         {sub && <p style={{ color: 'var(--gray-500)', fontSize: '0.78rem', marginTop: '0.35rem' }}>{sub}</p>}
       </div>
       <div style={{ background: `color-mix(in srgb, ${color} 14%, transparent)`, borderRadius: 'var(--radius)', padding: '0.6rem' }}>
@@ -89,7 +89,7 @@ export default function Dashboard() {
                   <div key={s.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.6rem 0.75rem', background: 'var(--gray-100)', borderRadius: 'var(--radius)' }}>
                     <div>
                       <p style={{ fontWeight: 600, fontSize: '0.875rem' }}>{s.libelle}</p>
-                      <p style={{ color: 'var(--gray-500)', fontSize: '0.78rem' }}>{s.commune || s.ville || '—'}</p>
+                      <p style={{ color: 'var(--gray-500)', fontSize: '0.78rem' }}>{s.commune || s.ville || '-'}</p>
                     </div>
                     <span style={{ fontSize: '0.75rem', color: 'var(--gray-500)' }}>#{s.id}</span>
                   </div>
@@ -111,7 +111,7 @@ export default function Dashboard() {
                     <div>
                       <p style={{ fontWeight: 600, fontSize: '0.875rem' }}>{ev.libelle}</p>
                       <p style={{ color: 'var(--gray-500)', fontSize: '0.78rem' }}>
-                        {ev.date_debut ? new Date(ev.date_debut).toLocaleDateString('fr-FR') : '—'}
+                        {ev.date_debut ? new Date(ev.date_debut).toLocaleDateString('fr-FR') : '-'}
                       </p>
                     </div>
                     <span className={`status-badge status-badge--${ev.statut === 'valide' ? 'success' : ev.statut === 'rejete' ? 'danger' : 'warning'}`}>
@@ -123,7 +123,7 @@ export default function Dashboard() {
           }
         </div>
 
-        {/* Avis en attente — full width si données */}
+        {/* Avis en attente - full width si données */}
         {pendingAvis.length > 0 && (
           <div className="admin-section" style={{ gridColumn: '1 / -1' }}>
             <h2 style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -134,8 +134,8 @@ export default function Dashboard() {
               {pendingAvis.map(a => (
                 <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem', background: 'color-mix(in srgb, var(--warning) 10%, var(--white))', borderRadius: 'var(--radius)', border: '1px solid var(--gray-300)' }}>
                   <div>
-                    <p style={{ fontWeight: 600, fontSize: '0.875rem' }}>{a.user?.nom || 'Utilisateur'} — <span style={{ fontWeight: 400, color: 'var(--gray-700)' }}>{a.contenu?.slice(0, 80)}{a.contenu?.length > 80 ? '…' : ''}</span></p>
-                    <p style={{ color: 'var(--gray-500)', fontSize: '0.78rem' }}>Note : {'⭐'.repeat(a.note || 0)} · {a.site?.libelle || a.evenement?.libelle || '—'}</p>
+                    <p style={{ fontWeight: 600, fontSize: '0.875rem' }}>{a.user?.nom || 'Utilisateur'} - <span style={{ fontWeight: 400, color: 'var(--gray-700)' }}>{a.contenu?.slice(0, 80)}{a.contenu?.length > 80 ? '…' : ''}</span></p>
+                    <p style={{ color: 'var(--gray-500)', fontSize: '0.78rem' }}>Note : {'⭐'.repeat(a.note || 0)} · {a.site?.libelle || a.evenement?.libelle || '-'}</p>
                   </div>
                   <a href="/admin/avis" style={{ fontSize: '0.8rem', color: 'var(--red)', textDecoration: 'none', whiteSpace: 'nowrap' }}>Modérer →</a>
                 </div>
