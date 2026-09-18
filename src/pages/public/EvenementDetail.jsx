@@ -72,7 +72,7 @@ export default function EvenementDetail() {
       await reservationsApi.create({
         type: 'evenement',
         id_evnmt: parseInt(id),
-        prix: reservation.prix,
+        id_prix: reservation.selectedPrix || undefined,
         nombre: parseInt(reservation.nombre),
       })
       toast.success('Réservation effectuée !')

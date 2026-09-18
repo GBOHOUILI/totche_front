@@ -77,7 +77,7 @@ export default function SiteDetail() {
       await reservationsApi.create({
         type: 'site',
         id_site: parseInt(id),
-        prix: reservation.prix,
+        id_prix: reservation.selectedPrix || undefined,
         nombre: parseInt(reservation.nombre),
       })
       toast.success('Réservation effectuée ! Vos tickets sont disponibles dans votre espace.')
