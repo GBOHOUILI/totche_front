@@ -65,8 +65,8 @@ export default function ResponsableHotels() {
     e.preventDefault()
     const payload = {
       ...form,
-      latitude: form.latitude !== '' ? parseFloat(form.latitude) : undefined,
-      longitude: form.longitude !== '' ? parseFloat(form.longitude) : undefined,
+      latitude: form.latitude !== '' && form.latitude != null ? parseFloat(form.latitude) : undefined,
+      longitude: form.longitude !== '' && form.longitude != null ? parseFloat(form.longitude) : undefined,
       nombre_etoiles: form.nombre_etoiles ? parseInt(form.nombre_etoiles) : undefined,
       id_region: form.id_region ? parseInt(form.id_region) : undefined,
       points_forts: form.points_forts.filter(v => v.trim()),
