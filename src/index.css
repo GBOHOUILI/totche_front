@@ -666,6 +666,11 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .tag-list-input__remove:hover { color: var(--red); }
 .tag-list-input__add { display: inline-flex; align-items: center; gap: 0.35rem; color: var(--red); font-size: 0.8rem; font-weight: 600; padding: 0.4rem 0; background: none; border: none; cursor: pointer; }
 
+/* ItineraryEditor */
+.itinerary-editor__step { border: 1px solid var(--gray-100); padding: 0.75rem; margin-bottom: 0.6rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.itinerary-editor__step-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 600; color: var(--gray-700); }
+.itinerary-editor__step input, .itinerary-editor__step textarea { border: 1px solid var(--gray-300); padding: 0.6rem 0.75rem; font-size: 0.85rem; width: 100%; }
+
 /* ═══════════════════════════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════════════════════════ */
