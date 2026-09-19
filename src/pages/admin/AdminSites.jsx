@@ -11,6 +11,7 @@ const emptyForm = {
   id_cat_site: '', latitude: '', longitude: '',
   ouverture: '', fermeture: '', status: 'en_attente', id_region: '',
   points_forts: [], inclus: [], non_inclus: [], duree_visite: '', difficulte: '',
+  infos_pratiques: '', recommandations: '',
 }
 
 const statusColor = (s) => ({ valide: 'success', rejete: 'danger', en_attente: 'warning', suspendu: 'danger' })[s] || 'warning'
@@ -51,6 +52,7 @@ export default function AdminSites() {
       status: site.status || 'en_attente', id_region: site.id_region || '',
       points_forts: site.points_forts || [], inclus: site.inclus || [], non_inclus: site.non_inclus || [],
       duree_visite: site.duree_visite || '', difficulte: site.difficulte || '',
+      infos_pratiques: site.infos_pratiques || '', recommandations: site.recommandations || '',
     })
     setModal(site)
   }
@@ -68,6 +70,8 @@ export default function AdminSites() {
       non_inclus: form.non_inclus.filter(v => v.trim()),
       duree_visite: form.duree_visite || undefined,
       difficulte: form.difficulte || undefined,
+      infos_pratiques: form.infos_pratiques || undefined,
+      recommandations: form.recommandations || undefined,
     }
     try {
       if (modal === 'create') { await sitesApi.create(payload); toast.success('Site créé !') }
@@ -218,6 +222,10 @@ export default function AdminSites() {
                     <option value="difficile">Difficile</option>
                   </select></div>
               </div>
+              <div className="admin-form__field"><label>Infos pratiques</label>
+                <textarea rows={3} value={form.infos_pratiques} onChange={e => setForm(f => ({ ...f, infos_pratiques: e.target.value }))} placeholder="Ex: Prévoir de l'eau, chaussures fermées recommandées" /></div>
+              <div className="admin-form__field"><label>Recommandations</label>
+                <textarea rows={3} value={form.recommandations} onChange={e => setForm(f => ({ ...f, recommandations: e.target.value }))} placeholder="Ex: Meilleure période : novembre à février" /></div>
               <div className="admin-form__field"><label>Description</label>
                 <textarea rows={4} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
               <div className="admin-form__footer">
