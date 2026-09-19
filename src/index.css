@@ -725,6 +725,7 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
   .admin-table { display: block; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
   .admin-modal { max-width: 100%; margin: 0 0.5rem; }
   .admin-form__row { grid-template-columns: 1fr; }
+  .location-picker__coords { grid-template-columns: 1fr; }
   .detail-layout { padding: 2rem 0; }
   .apropos-team { flex-wrap: wrap; justify-content: center; }
   .home__overlap { padding: 3.5rem 0; }
@@ -734,6 +735,7 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 @media (max-width: 480px) {
   .cards-grid--5, .cards-grid--4, .cards-grid--home .card:first-child { grid-template-columns: 1fr; grid-column: span 1; }
   .admin-form__row { grid-template-columns: 1fr; }
+  .location-picker__coords { grid-template-columns: 1fr; }
   .auth-form__row-2 { grid-template-columns: 1fr; }
   .navbar__search-panel { width: calc(100vw - 2.5rem); right: -1rem; }
   .detail-hero__info { padding: 0 1.25rem; }

@@ -69,7 +69,12 @@ export default function LocationPicker({ latitude, longitude, onChange }) {
   const zoom = hasPosition ? 14 : BENIN_ZOOM
 
   const handlePick = (newLat, newLng) => {
-    onChange({ latitude: newLat, longitude: newLng })
+    // Colonne DB en decimal(10,7) - on arrondit ici pour éviter un
+    // mismatch d'affichage / round-trip avec le float brut de Leaflet.
+    onChange({
+      latitude: Math.round(newLat * 1e7) / 1e7,
+      longitude: Math.round(newLng * 1e7) / 1e7,
+    })
   }
 
   const applyLink = () => {
