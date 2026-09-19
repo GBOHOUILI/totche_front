@@ -59,8 +59,8 @@ export default function AdminSites() {
     e.preventDefault()
     const payload = {
       ...form,
-      latitude: form.latitude ? parseFloat(form.latitude) : undefined,
-      longitude: form.longitude ? parseFloat(form.longitude) : undefined,
+      latitude: form.latitude !== '' && form.latitude != null ? parseFloat(form.latitude) : undefined,
+      longitude: form.longitude !== '' && form.longitude != null ? parseFloat(form.longitude) : undefined,
       id_cat_site: form.id_cat_site ? parseInt(form.id_cat_site) : undefined,
       id_region: form.id_region ? parseInt(form.id_region) : undefined,
       points_forts: form.points_forts.filter(v => v.trim()),
@@ -191,19 +191,19 @@ export default function AdminSites() {
                 </select></div>
               <TagListInput
                 label="Points forts"
-                values={form.points_forts}
+                value={form.points_forts}
                 onChange={v => setForm(f => ({ ...f, points_forts: v }))}
                 placeholder="Ex: Vue imprenable sur la lagune"
               />
               <TagListInput
                 label="Ce que le billet inclut"
-                values={form.inclus}
+                value={form.inclus}
                 onChange={v => setForm(f => ({ ...f, inclus: v }))}
                 placeholder="Ex: Accès au site, parking"
               />
               <TagListInput
                 label="Non inclus"
-                values={form.non_inclus}
+                value={form.non_inclus}
                 onChange={v => setForm(f => ({ ...f, non_inclus: v }))}
                 placeholder="Ex: Guide privé, transport"
               />
