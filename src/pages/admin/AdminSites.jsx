@@ -3,11 +3,14 @@ import { Plus, Pencil, Trash2, X, Image, CheckCircle, XCircle } from 'lucide-rea
 import { sitesApi, categoriesApi, galeriesApi, regionsApi } from '../../api/services'
 import { Spinner } from '../../components/ui/index'
 import toast from 'react-hot-toast'
+import LocationPicker from '../../components/map/LocationPicker'
+import TagListInput from '../../components/forms/TagListInput'
 
 const emptyForm = {
   libelle: '', adresse: '', description: '',
   id_cat_site: '', latitude: '', longitude: '',
-  ouverture: '', fermeture: '', status: 'en_attente', id_region: ''
+  ouverture: '', fermeture: '', status: 'en_attente', id_region: '',
+  points_forts: [], inclus: [], non_inclus: [], duree_visite: '', difficulte: '',
 }
 
 const statusColor = (s) => ({ valide: 'success', rejete: 'danger', en_attente: 'warning', suspendu: 'danger' })[s] || 'warning'
@@ -45,7 +48,9 @@ export default function AdminSites() {
       description: site.description || '', id_cat_site: site.id_cat_site || '',
       latitude: site.latitude || '', longitude: site.longitude || '',
       ouverture: site.ouverture || '', fermeture: site.fermeture || '',
-      status: site.status || 'en_attente', id_region: site.id_region || ''
+      status: site.status || 'en_attente', id_region: site.id_region || '',
+      points_forts: site.points_forts || [], inclus: site.inclus || [], non_inclus: site.non_inclus || [],
+      duree_visite: site.duree_visite || '', difficulte: site.difficulte || '',
     })
     setModal(site)
   }
@@ -58,6 +63,11 @@ export default function AdminSites() {
       longitude: form.longitude ? parseFloat(form.longitude) : undefined,
       id_cat_site: form.id_cat_site ? parseInt(form.id_cat_site) : undefined,
       id_region: form.id_region ? parseInt(form.id_region) : undefined,
+      points_forts: form.points_forts.filter(v => v.trim()),
+      inclus: form.inclus.filter(v => v.trim()),
+      non_inclus: form.non_inclus.filter(v => v.trim()),
+      duree_visite: form.duree_visite || undefined,
+      difficulte: form.difficulte || undefined,
     }
     try {
       if (modal === 'create') { await sitesApi.create(payload); toast.success('Site créé !') }
@@ -161,12 +171,11 @@ export default function AdminSites() {
                     {regions.map(r => <option key={r.id} value={r.id}>{r.nom}</option>)}
                   </select></div>
               </div>
-              <div className="admin-form__row">
-                <div className="admin-form__field"><label>Latitude *</label>
-                  <input type="number" step="any" value={form.latitude} onChange={e => setForm(f => ({ ...f, latitude: e.target.value }))} required /></div>
-                <div className="admin-form__field"><label>Longitude *</label>
-                  <input type="number" step="any" value={form.longitude} onChange={e => setForm(f => ({ ...f, longitude: e.target.value }))} required /></div>
-              </div>
+              <LocationPicker
+                latitude={form.latitude}
+                longitude={form.longitude}
+                onChange={({ latitude, longitude }) => setForm(f => ({ ...f, latitude, longitude }))}
+              />
               <div className="admin-form__row">
                 <div className="admin-form__field"><label>Ouverture (HH:MM)</label>
                   <input type="time" value={form.ouverture} onChange={e => setForm(f => ({ ...f, ouverture: e.target.value }))} /></div>
@@ -180,6 +189,35 @@ export default function AdminSites() {
                   <option value="rejete">Rejeté</option>
                   <option value="suspendu">Suspendu</option>
                 </select></div>
+              <TagListInput
+                label="Points forts"
+                values={form.points_forts}
+                onChange={v => setForm(f => ({ ...f, points_forts: v }))}
+                placeholder="Ex: Vue imprenable sur la lagune"
+              />
+              <TagListInput
+                label="Ce que le billet inclut"
+                values={form.inclus}
+                onChange={v => setForm(f => ({ ...f, inclus: v }))}
+                placeholder="Ex: Accès au site, parking"
+              />
+              <TagListInput
+                label="Non inclus"
+                values={form.non_inclus}
+                onChange={v => setForm(f => ({ ...f, non_inclus: v }))}
+                placeholder="Ex: Guide privé, transport"
+              />
+              <div className="admin-form__row">
+                <div className="admin-form__field"><label>Durée de visite</label>
+                  <input type="text" value={form.duree_visite} onChange={e => setForm(f => ({ ...f, duree_visite: e.target.value }))} placeholder="Ex: 2h, Demi-journée" /></div>
+                <div className="admin-form__field"><label>Difficulté</label>
+                  <select value={form.difficulte} onChange={e => setForm(f => ({ ...f, difficulte: e.target.value }))}>
+                    <option value="">Non précisée</option>
+                    <option value="facile">Facile</option>
+                    <option value="moderee">Modérée</option>
+                    <option value="difficile">Difficile</option>
+                  </select></div>
+              </div>
               <div className="admin-form__field"><label>Description</label>
                 <textarea rows={4} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
               <div className="admin-form__footer">
