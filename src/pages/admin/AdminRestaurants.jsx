@@ -3,11 +3,15 @@ import { Plus, Pencil, Trash2, X, Image, CheckCircle, XCircle, UtensilsCrossed }
 import { restaurantsApi, galeriesApi, regionsApi, platsApi } from '../../api/services'
 import { Spinner } from '../../components/ui/index'
 import toast from 'react-hot-toast'
+import LocationPicker from '../../components/map/LocationPicker'
+import TagListInput from '../../components/forms/TagListInput'
 
 const emptyForm = {
   libelle: '', adresse: '', description: '',
   latitude: '', longitude: '', type_cuisine: '', gamme_prix: '',
-  status: 'en_attente', id_region: ''
+  status: 'en_attente', id_region: '',
+  points_forts: [], inclus: [], non_inclus: [],
+  infos_pratiques: '', recommandations: '', horaires: '',
 }
 const emptyPlatForm = { nom: '', prix: '', description: '' }
 
@@ -48,7 +52,10 @@ export default function AdminRestaurants() {
       description: restaurant.description || '', latitude: restaurant.latitude || '',
       longitude: restaurant.longitude || '', type_cuisine: restaurant.type_cuisine || '',
       gamme_prix: restaurant.gamme_prix || '',
-      status: restaurant.status || 'en_attente', id_region: restaurant.id_region || ''
+      status: restaurant.status || 'en_attente', id_region: restaurant.id_region || '',
+      points_forts: restaurant.points_forts || [], inclus: restaurant.inclus || [], non_inclus: restaurant.non_inclus || [],
+      infos_pratiques: restaurant.infos_pratiques || '', recommandations: restaurant.recommandations || '',
+      horaires: restaurant.horaires || '',
     })
     setModal(restaurant)
   }
@@ -57,9 +64,15 @@ export default function AdminRestaurants() {
     e.preventDefault()
     const payload = {
       ...form,
-      latitude: form.latitude ? parseFloat(form.latitude) : undefined,
-      longitude: form.longitude ? parseFloat(form.longitude) : undefined,
+      latitude: form.latitude !== '' && form.latitude != null ? parseFloat(form.latitude) : undefined,
+      longitude: form.longitude !== '' && form.longitude != null ? parseFloat(form.longitude) : undefined,
       id_region: form.id_region ? parseInt(form.id_region) : undefined,
+      points_forts: form.points_forts.filter(v => v.trim()),
+      inclus: form.inclus.filter(v => v.trim()),
+      non_inclus: form.non_inclus.filter(v => v.trim()),
+      infos_pratiques: form.infos_pratiques || undefined,
+      recommandations: form.recommandations || undefined,
+      horaires: form.horaires || undefined,
     }
     try {
       if (modal === 'create') { await restaurantsApi.create(payload); toast.success('Restaurant créé !') }
@@ -191,12 +204,11 @@ export default function AdminRestaurants() {
                   <option value="">Aucune</option>
                   {regions.map(r => <option key={r.id} value={r.id}>{r.nom}</option>)}
                 </select></div>
-              <div className="admin-form__row">
-                <div className="admin-form__field"><label>Latitude *</label>
-                  <input type="number" step="any" value={form.latitude} onChange={e => setForm(f => ({ ...f, latitude: e.target.value }))} required /></div>
-                <div className="admin-form__field"><label>Longitude *</label>
-                  <input type="number" step="any" value={form.longitude} onChange={e => setForm(f => ({ ...f, longitude: e.target.value }))} required /></div>
-              </div>
+              <LocationPicker
+                latitude={form.latitude}
+                longitude={form.longitude}
+                onChange={({ latitude, longitude }) => setForm(f => ({ ...f, latitude, longitude }))}
+              />
               <div className="admin-form__field"><label>Statut</label>
                 <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}>
                   <option value="en_attente">En attente</option>
@@ -204,6 +216,30 @@ export default function AdminRestaurants() {
                   <option value="rejete">Rejeté</option>
                   <option value="suspendu">Suspendu</option>
                 </select></div>
+              <TagListInput
+                label="Points forts"
+                value={form.points_forts}
+                onChange={v => setForm(f => ({ ...f, points_forts: v }))}
+                placeholder="Ex: Terrasse ombragée, spécialités locales"
+              />
+              <TagListInput
+                label="Ce qui est inclus"
+                value={form.inclus}
+                onChange={v => setForm(f => ({ ...f, inclus: v }))}
+                placeholder="Ex: Boisson offerte, wifi"
+              />
+              <TagListInput
+                label="Non inclus"
+                value={form.non_inclus}
+                onChange={v => setForm(f => ({ ...f, non_inclus: v }))}
+                placeholder="Ex: Boissons alcoolisées"
+              />
+              <div className="admin-form__field"><label>Horaires</label>
+                <input type="text" value={form.horaires} onChange={e => setForm(f => ({ ...f, horaires: e.target.value }))} placeholder="Ex: Lun-Ven 11h-22h" /></div>
+              <div className="admin-form__field"><label>Infos pratiques</label>
+                <textarea rows={3} value={form.infos_pratiques} onChange={e => setForm(f => ({ ...f, infos_pratiques: e.target.value }))} placeholder="Ex: Réservation recommandée le week-end" /></div>
+              <div className="admin-form__field"><label>Recommandations</label>
+                <textarea rows={3} value={form.recommandations} onChange={e => setForm(f => ({ ...f, recommandations: e.target.value }))} placeholder="Ex: Essayez le poisson braisé maison" /></div>
               <div className="admin-form__field"><label>Description</label>
                 <textarea rows={4} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
               <div className="admin-form__footer">
