@@ -72,8 +72,7 @@ export default function LocationPicker({ latitude, longitude, onChange }) {
     onChange({ latitude: newLat, longitude: newLng })
   }
 
-  const handleLinkSubmit = (e) => {
-    e.preventDefault()
+  const applyLink = () => {
     if (!linkValue.trim()) return
     const coords = parseGoogleMapsLink(linkValue)
     if (!coords) {
@@ -87,15 +86,16 @@ export default function LocationPicker({ latitude, longitude, onChange }) {
 
   return (
     <div className="location-picker">
-      <form className="location-picker__link" onSubmit={handleLinkSubmit}>
+      <div className="location-picker__link">
         <input
           type="text"
           value={linkValue}
           onChange={e => setLinkValue(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); applyLink() } }}
           placeholder="Coller un lien Google Maps (facultatif)"
         />
-        <button type="submit" className="btn btn--ghost btn--sm">Utiliser</button>
-      </form>
+        <button type="button" className="btn btn--ghost btn--sm" onClick={applyLink}>Utiliser</button>
+      </div>
 
       <div className="location-picker__map">
         <MapContainer center={center} zoom={zoom} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }}>
