@@ -3,11 +3,15 @@ import { Plus, Pencil, Trash2, X, Image, Tag } from 'lucide-react'
 import { prestatairesApi, categoriesApi, regionsApi } from '../../api/services'
 import { Spinner } from '../../components/ui/index'
 import toast from 'react-hot-toast'
+import LocationPicker from '../../components/map/LocationPicker'
+import TagListInput from '../../components/forms/TagListInput'
 
 const emptyForm = {
   libelle: '', adresse: '', description: '',
   id_cat_site: '', latitude: '', longitude: '',
   ouverture: '', fermeture: '', id_region: '',
+  points_forts: [], inclus: [], non_inclus: [], duree_visite: '', difficulte: '',
+  infos_pratiques: '', recommandations: '',
 }
 const emptyPrixForm = { libelle: '', montant: '' }
 
@@ -50,6 +54,9 @@ export default function PrestataireSites() {
       latitude: site.latitude || '', longitude: site.longitude || '',
       ouverture: site.ouverture || '', fermeture: site.fermeture || '',
       id_region: site.id_region || '',
+      points_forts: site.points_forts || [], inclus: site.inclus || [], non_inclus: site.non_inclus || [],
+      duree_visite: site.duree_visite || '', difficulte: site.difficulte || '',
+      infos_pratiques: site.infos_pratiques || '', recommandations: site.recommandations || '',
     })
     setModal(site)
   }
@@ -58,10 +65,17 @@ export default function PrestataireSites() {
     e.preventDefault()
     const payload = {
       ...form,
-      latitude: form.latitude ? parseFloat(form.latitude) : undefined,
-      longitude: form.longitude ? parseFloat(form.longitude) : undefined,
+      latitude: form.latitude !== '' && form.latitude != null ? parseFloat(form.latitude) : undefined,
+      longitude: form.longitude !== '' && form.longitude != null ? parseFloat(form.longitude) : undefined,
       id_cat_site: form.id_cat_site ? parseInt(form.id_cat_site) : undefined,
       id_region: form.id_region ? parseInt(form.id_region) : undefined,
+      points_forts: form.points_forts.filter(v => v.trim()),
+      inclus: form.inclus.filter(v => v.trim()),
+      non_inclus: form.non_inclus.filter(v => v.trim()),
+      duree_visite: form.duree_visite || undefined,
+      difficulte: form.difficulte || undefined,
+      infos_pratiques: form.infos_pratiques || undefined,
+      recommandations: form.recommandations || undefined,
     }
     try {
       if (modal === 'create') { await prestatairesApi.createSite(payload); toast.success('Site créé - en attente de validation') }
@@ -177,18 +191,50 @@ export default function PrestataireSites() {
                     {regions.map(r => <option key={r.id} value={r.id}>{r.nom}</option>)}
                   </select></div>
               </div>
-              <div className="admin-form__row">
-                <div className="admin-form__field"><label>Latitude *</label>
-                  <input type="number" step="any" value={form.latitude} onChange={e => setForm(f => ({ ...f, latitude: e.target.value }))} required /></div>
-                <div className="admin-form__field"><label>Longitude *</label>
-                  <input type="number" step="any" value={form.longitude} onChange={e => setForm(f => ({ ...f, longitude: e.target.value }))} required /></div>
-              </div>
+              <LocationPicker
+                latitude={form.latitude}
+                longitude={form.longitude}
+                onChange={({ latitude, longitude }) => setForm(f => ({ ...f, latitude, longitude }))}
+              />
               <div className="admin-form__row">
                 <div className="admin-form__field"><label>Ouverture (HH:MM)</label>
                   <input type="time" value={form.ouverture} onChange={e => setForm(f => ({ ...f, ouverture: e.target.value }))} /></div>
                 <div className="admin-form__field"><label>Fermeture (HH:MM)</label>
                   <input type="time" value={form.fermeture} onChange={e => setForm(f => ({ ...f, fermeture: e.target.value }))} /></div>
               </div>
+              <TagListInput
+                label="Points forts"
+                value={form.points_forts}
+                onChange={v => setForm(f => ({ ...f, points_forts: v }))}
+                placeholder="Ex: Vue imprenable sur la lagune"
+              />
+              <TagListInput
+                label="Ce que le billet inclut"
+                value={form.inclus}
+                onChange={v => setForm(f => ({ ...f, inclus: v }))}
+                placeholder="Ex: Accès au site, parking"
+              />
+              <TagListInput
+                label="Non inclus"
+                value={form.non_inclus}
+                onChange={v => setForm(f => ({ ...f, non_inclus: v }))}
+                placeholder="Ex: Guide privé, transport"
+              />
+              <div className="admin-form__row">
+                <div className="admin-form__field"><label>Durée de visite</label>
+                  <input type="text" value={form.duree_visite} onChange={e => setForm(f => ({ ...f, duree_visite: e.target.value }))} placeholder="Ex: 2h, Demi-journée" /></div>
+                <div className="admin-form__field"><label>Difficulté</label>
+                  <select value={form.difficulte} onChange={e => setForm(f => ({ ...f, difficulte: e.target.value }))}>
+                    <option value="">Non précisée</option>
+                    <option value="facile">Facile</option>
+                    <option value="moderee">Modérée</option>
+                    <option value="difficile">Difficile</option>
+                  </select></div>
+              </div>
+              <div className="admin-form__field"><label>Infos pratiques</label>
+                <textarea rows={3} value={form.infos_pratiques} onChange={e => setForm(f => ({ ...f, infos_pratiques: e.target.value }))} placeholder="Ex: Prévoir de l'eau, chaussures fermées recommandées" /></div>
+              <div className="admin-form__field"><label>Recommandations</label>
+                <textarea rows={3} value={form.recommandations} onChange={e => setForm(f => ({ ...f, recommandations: e.target.value }))} placeholder="Ex: Meilleure période : novembre à février" /></div>
               <div className="admin-form__field"><label>Description</label>
                 <textarea rows={4} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
               <p style={{ fontSize: '0.78rem', color: 'var(--gray-500)' }}>
