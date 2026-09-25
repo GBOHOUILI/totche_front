@@ -392,6 +392,9 @@ export const circuitsApi = {
   update: (id, data) => api.put(`/circuits/${id}`, data),
   delete: (id) => api.delete(`/circuits/${id}`),
   reordonner: (id, ordre) => api.patch(`/circuits/${id}/etapes/reordonner`, { ordre }),
+  // Public, ne persiste rien - renvoie une proposition {titre, budget_estime, etapes}
+  // que l'appelant intègre au brouillon existant (même flux que la composition manuelle).
+  genererIA: (contraintes) => api.post('/circuits/generer-ia', contraintes),
 }
 
 export const etapesApi = {

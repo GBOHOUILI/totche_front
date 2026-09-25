@@ -1,12 +1,100 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Search, Plus, MapPin, Calendar, Route, ChevronRight, Trash2, Save } from 'lucide-react'
+import { Search, Plus, MapPin, Calendar, Route, ChevronRight, Trash2, Save, Sparkles } from 'lucide-react'
 import { sitesApi, evenementsApi, circuitsApi, etapesApi } from '../../api/services'
 import { useAuth } from '../../context/AuthContext'
 import { Spinner } from '../../components/ui/index'
 import StepList from '../../components/circuit/StepList'
 import CircuitMap from '../../components/map/CircuitMap'
 import toast from 'react-hot-toast'
+
+const INTERETS_DISPONIBLES = ['Culture', 'Nature', 'Plage', 'Gastronomie', 'Artisanat', 'Aventure']
+
+// Assistant de génération - une seule proposition à la fois, jamais persistée
+// ici : le résultat vient simplement remplacer le brouillon existant
+// (Circuits.jsx gère déjà tout le cycle édition/enregistrement manuel).
+function AiWizard({ onGenerated }) {
+  const [jours, setJours] = useState(3)
+  const [budget, setBudget] = useState('')
+  const [saison, setSaison] = useState('sec')
+  const [interets, setInterets] = useState([])
+  const [loading, setLoading] = useState(false)
+
+  const toggleInteret = (i) => {
+    setInterets(cur => cur.includes(i) ? cur.filter(x => x !== i) : [...cur, i])
+  }
+
+  const generer = async () => {
+    setLoading(true)
+    try {
+      const { data } = await circuitsApi.genererIA({
+        jours,
+        budget: budget || undefined,
+        saison,
+        interets,
+      })
+      onGenerated(data)
+      const budgetLine = data.budget_estime
+        ? ` · budget estimé ${Number(data.budget_estime).toLocaleString('fr-FR')} FCFA`
+        : ''
+      toast.success(`Circuit proposé : « ${data.titre} »${budgetLine}`)
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Impossible de générer un circuit pour l'instant")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="ai-wizard">
+      <div className="ai-wizard__header">
+        <Sparkles size={18} />
+        <div>
+          <h3>Composer avec l'IA</h3>
+          <p>Répondez à quelques questions, l'IA propose un itinéraire que vous pourrez ensuite ajuster librement.</p>
+        </div>
+      </div>
+
+      <div className="ai-wizard__fields">
+        <div className="ai-wizard__field">
+          <label>Combien de jours ?</label>
+          <input type="number" min={1} max={14} value={jours} onChange={e => setJours(Number(e.target.value))} />
+        </div>
+        <div className="ai-wizard__field">
+          <label>Budget total (FCFA, optionnel)</label>
+          <input type="number" min={0} placeholder="Ex: 50000" value={budget} onChange={e => setBudget(e.target.value)} />
+        </div>
+        <div className="ai-wizard__field">
+          <label>Période</label>
+          <div className="seg">
+            <label className="seg-opt"><input type="radio" checked={saison === 'sec'} onChange={() => setSaison('sec')} /><span>Saison sèche</span></label>
+            <label className="seg-opt"><input type="radio" checked={saison === 'pluie'} onChange={() => setSaison('pluie')} /><span>Saison des pluies</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div className="ai-wizard__field">
+        <label>Centres d'intérêt</label>
+        <div className="filters__cats">
+          {INTERETS_DISPONIBLES.map(i => (
+            <button
+              type="button"
+              key={i}
+              className={`filters__cat${interets.includes(i) ? ' filters__cat--active' : ''}`}
+              onClick={() => toggleInteret(i)}
+            >
+              {i}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <button className="btn btn--primary" onClick={generer} disabled={loading}>
+        <Sparkles size={16} /> {loading ? 'Génération en cours...' : 'Générer mon circuit'}
+      </button>
+    </div>
+  )
+}
 
 const DRAFT_KEY = 'totche_circuit_draft'
 const emptyDraft = { libelle: '', description: '', etapes: [] }
@@ -116,6 +204,21 @@ export default function Circuits() {
 
   const resetDraft = () => setDraft(emptyDraft)
 
+  // Remplace le brouillon par la proposition de l'IA - prévient d'abord si des
+  // étapes manuelles existent déjà, pour ne jamais les écraser silencieusement.
+  const applyAiProposal = (proposal) => {
+    if (draft.etapes.length > 0 && !confirm('Remplacer les étapes actuelles par la proposition de l\'IA ?')) return
+    setDraft(d => ({
+      libelle: d.libelle.trim() || proposal.titre || d.libelle,
+      description: d.description,
+      etapes: proposal.etapes.map(e => ({
+        id: `${e.type}-${e.item.id}`, type: e.type, refId: e.item.id,
+        libelle: e.item.libelle, adresse: e.item.adresse,
+        latitude: e.item.latitude, longitude: e.item.longitude,
+      })),
+    }))
+  }
+
   const handleSave = async () => {
     if (!draft.libelle.trim()) { toast.error('Donnez un nom à votre circuit.'); return }
     if (draft.etapes.length === 0) { toast.error('Ajoutez au moins une étape.'); return }
@@ -191,6 +294,10 @@ export default function Circuits() {
             )}
           </section>
         )}
+
+        <section style={{ marginBottom: '2.5rem' }}>
+          <AiWizard onGenerated={applyAiProposal} />
+        </section>
 
         <section>
           <h2 className="circuit-section-title">Nouveau circuit</h2>
