@@ -320,12 +320,11 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
    style inline (background-image), cette classe ne gère que la
    structure/l'overlay/le centrage.
    ═══════════════════════════════════════════════════════════ */
-.page-hero { padding: 5rem 0 3.5rem; background-color: var(--black); background-size: cover; background-position: center; color: var(--white); text-align: center; position: relative; }
+.page-hero { min-height: 460px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; background-color: var(--black); background-size: cover; background-position: center; color: var(--white); text-align: center; position: relative; margin-bottom: 3.5rem; }
 .page-hero::before { content: ''; position: absolute; inset: 0; background: rgba(13,13,13,.55); }
-.page-hero .container { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
-.page-hero--sm { padding: 4rem 0 3rem; }
-.page-hero h1 { color: var(--white); max-width: 20ch; margin: 0 auto 0.85rem; }
-.page-hero p { color: rgba(255,255,255,.9); font-size: 1.0625rem; max-width: 56ch; margin: 0 auto; }
+.page-hero--sm { min-height: 380px; }
+.page-hero h1 { position: relative; z-index: 1; color: var(--white); max-width: 20ch; margin: 0 auto 0.85rem; }
+.page-hero p { position: relative; z-index: 1; color: rgba(255,255,255,.9); font-size: 1.0625rem; max-width: 56ch; margin: 0 auto; }
 
 /* ═══════════════════════════════════════════════════════════
    DETAIL PAGE
@@ -784,4 +783,6 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
   .navbar__search-panel { width: calc(100vw - 2.5rem); right: -1rem; }
   .detail-hero__info { padding: 0 1.25rem; }
   .container { padding: 0 1.25rem; }
+  .page-hero { min-height: 340px; margin-bottom: 2.5rem; padding: 1.25rem; }
+  .page-hero--sm { min-height: 300px; }
 }
