@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { Search, User, Menu, X, ChevronDown, Landmark, Trees, Building2, Milestone, Waves, PartyPopper, Music2, Image, Flame, Store, Tag, Hotel, UtensilsCrossed, Bus } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { categoriesApi } from '../../api/services'
+import NotificationBell from '../notifications/NotificationBell'
 
 const SITE_CAT_META = {
   'Patrimoine historique': { icon: Landmark, tagline: 'Palais royaux et vestiges d’un royaume millénaire' },
@@ -239,6 +240,8 @@ export default function Navbar() {
           </div>
 
           {isAuthenticated ? (
+            <>
+            <NotificationBell />
             <div className="navbar__user" onClick={() => setUserMenu(!userMenu)}>
               <div className="navbar__avatar">
                 {user?.nom?.[0]?.toUpperCase() || <User size={16} />}
@@ -255,6 +258,7 @@ export default function Navbar() {
                 </div>
               )}
             </div>
+            </>
           ) : (
             <>
               <Link to="/connexion" className="navbar__icon-btn" aria-label="Connexion">

@@ -4,6 +4,7 @@ import {
   Users, Shield, ShieldCheck, Star, LogOut, Hotel, UtensilsCrossed, Bus, CreditCard, Receipt, Quote
 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
+import NotificationBell from '../../components/notifications/NotificationBell'
 import toast from 'react-hot-toast'
 
 const NAV_ITEMS = [
@@ -46,6 +47,7 @@ export default function AdminLayout() {
           <Shield size={18} />
           <span className="admin-sidebar__title">Totché</span>
           <span className="admin-sidebar__badge">Admin</span>
+          <div style={{ marginLeft: 'auto' }}><NotificationBell /></div>
         </div>
 
         {/* NAV */}

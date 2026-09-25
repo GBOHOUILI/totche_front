@@ -664,3 +664,14 @@ export const abonnementsApi = {
     api.patch(`/prestataire/factures-abonnement/${factureId}/verifier`, { transaction_id: transactionId }),
   adminList: () => api.get('/admin/abonnements'),
 }
+
+// ─── NOTIFICATIONS ────────────────────────────────────────────────────────
+// Même contrôleur backend monté sous les 4 guards (cf. routes/api.php) -
+// seul le préfixe change selon le rôle connecté (AuthContext user.role).
+const PREFIX_NOTIFICATIONS = { user: '', admin: '/admin', prestataire: '/prestataire', responsable: '/responsable' }
+export const notificationsApi = {
+  list: (role) => api.get(`${PREFIX_NOTIFICATIONS[role] || ''}/mes-notifications`),
+  nonLues: (role) => api.get(`${PREFIX_NOTIFICATIONS[role] || ''}/mes-notifications/non-lues`),
+  marquerLu: (role, id) => api.patch(`${PREFIX_NOTIFICATIONS[role] || ''}/mes-notifications/${id}/lu`),
+  marquerToutesLues: (role) => api.patch(`${PREFIX_NOTIFICATIONS[role] || ''}/mes-notifications/tout-lire`),
+}
