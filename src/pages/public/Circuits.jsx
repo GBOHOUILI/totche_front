@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { Search, Plus, MapPin, Calendar, Route, ChevronRight, Trash2, Save, Sparkles } from 'lucide-react'
-import { sitesApi, evenementsApi, circuitsApi, etapesApi } from '../../api/services'
+import { Search, Plus, MapPin, Calendar, Route, ChevronRight, Trash2, Save, Sparkles, Send } from 'lucide-react'
+import { sitesApi, evenementsApi, circuitsApi, etapesApi, assistantApi } from '../../api/services'
 import { useAuth } from '../../context/AuthContext'
 import { Spinner } from '../../components/ui/index'
 import StepList from '../../components/circuit/StepList'
@@ -9,8 +9,11 @@ import CircuitMap from '../../components/map/CircuitMap'
 import toast from 'react-hot-toast'
 
 const INTERETS_DISPONIBLES = ['Culture', 'Nature', 'Plage', 'Gastronomie', 'Artisanat', 'Aventure']
-const JOURS_RAPIDES = [1, 2, 3, 5, 7, 10]
-const BUDGETS_RAPIDES = [25000, 50000, 100000, 200000]
+const SUGGESTIONS_CHAT = [
+  'Que voir en 3 jours dans la région de Ouidah ?',
+  "Quel est le prix d'une chambre à l'hôtel ?",
+  'Propose-moi un circuit pas cher en saison sèche',
+]
 
 // Appel de génération partagé par les 3 modes (conversation/curseurs/cartes -
 // mêmes 3 variantes que le prototype web.html) : même contrat API, seule
@@ -100,113 +103,95 @@ function AiSliders({ onGenerated }) {
 }
 
 // ── Mode "Conversation" ──────────────────────────────────────────────────
-// Questions à choix rapides (pas de texte libre) : garde une génération
-// fiable sans dépendre d'une analyse de langage sur la conversation
-// elle-même - seule l'étape finale interroge réellement le modèle.
-const QUESTIONS_CHAT = [
-  'Combien de jours dure votre séjour ?',
-  'Quel est votre budget total (FCFA) ?',
-  "Quelle période de l'année ?",
-  "Qu'est-ce qui vous intéresse ? (plusieurs choix possibles)",
-]
-
+// Vrai chat en texte libre : le visiteur pose n'importe quelle question sur
+// les sites/événements/hôtels/restaurants/transports réels, l'assistant
+// répond (POST /assistant/chat) et peut, si pertinent, joindre une
+// proposition de circuit (même contrat que circuitsApi.genererIA - jamais
+// de confiance aveugle côté backend sur les id renvoyés par le modèle).
 function AiChat({ onGenerated }) {
-  const [reponses, setReponses] = useState({ jours: null, budget: null, saison: null, interets: [] })
-  const [etape, setEtape] = useState(0)
+  const [messages, setMessages] = useState([])
+  const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const scrollRef = useRef(null)
 
-  const repondreEtSuivre = (cle, valeur) => {
-    setReponses(r => ({ ...r, [cle]: valeur }))
-    setEtape(e => e + 1)
-  }
+  useEffect(() => {
+    const el = scrollRef.current
+    if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
+  }, [messages.length, loading])
 
-  const generer = async () => {
+  const envoyer = async (e, texteSuggere) => {
+    e?.preventDefault()
+    const texte = (texteSuggere ?? input).trim()
+    if (! texte || loading) return
+
+    const historique = [...messages, { role: 'user', content: texte }]
+    setMessages(historique)
+    setInput('')
     setLoading(true)
     try {
-      const data = await genererCircuit(reponses)
-      onGenerated(data)
-      notifierResultat(data)
-      setEtape(0)
-      setReponses({ jours: null, budget: null, saison: null, interets: [] })
+      const { data } = await assistantApi.chat(historique.map(({ role, content }) => ({ role, content })))
+      setMessages(h => [...h, { role: 'assistant', content: data.reponse, circuit: data.circuit }])
     } catch (err) {
-      toast.error(err.response?.data?.message || "Impossible de générer un circuit pour l'instant")
+      setMessages(h => [...h, {
+        role: 'assistant',
+        content: err.response?.data?.message || "Désolé, je ne peux pas répondre pour l'instant.",
+      }])
     } finally {
       setLoading(false)
     }
   }
 
-  const historique = []
-  if (reponses.jours) historique.push({ q: QUESTIONS_CHAT[0], a: `${reponses.jours} jour${reponses.jours > 1 ? 's' : ''}` })
-  if (etape > 1) historique.push({ q: QUESTIONS_CHAT[1], a: reponses.budget ? `${Number(reponses.budget).toLocaleString('fr-FR')} FCFA` : 'Pas de limite précise' })
-  if (reponses.saison) historique.push({ q: QUESTIONS_CHAT[2], a: reponses.saison === 'sec' ? 'Saison sèche' : 'Saison des pluies' })
-  if (etape > 3) historique.push({ q: QUESTIONS_CHAT[3], a: reponses.interets.length ? reponses.interets.join(', ') : 'Surprenez-moi' })
-
-  const commence = historique.length > 0
-
-  // Auto-scroll vers le bas à chaque nouvelle question/réponse, comme un vrai chat.
-  useEffect(() => {
-    const el = scrollRef.current
-    if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
-  }, [historique.length, etape])
+  const appliquer = (circuit) => {
+    onGenerated(circuit)
+    notifierResultat(circuit)
+  }
 
   return (
     <div className="ai-chat">
       <div className="ai-chat__scroll" ref={scrollRef}>
-        {!commence ? (
+        {messages.length === 0 ? (
           <div className="ai-chat__empty">
             <Sparkles size={26} />
-            <h3>{QUESTIONS_CHAT[0]}</h3>
+            <h3>Posez-moi votre question sur le Bénin</h3>
+            <div className="ai-chat__suggestions">
+              {SUGGESTIONS_CHAT.map(s => (
+                <button type="button" key={s} className="filters__cat" onClick={(e) => envoyer(e, s)}>{s}</button>
+              ))}
+            </div>
           </div>
         ) : (
-          <>
-            {historique.map((m, i) => (
-              <div key={i} className="ai-chat__row">
-                <p className="ai-chat__text">{m.q}</p>
-                <div className="ai-chat__bubble">{m.a}</div>
-              </div>
-            ))}
-            <p className="ai-chat__text ai-chat__text--current">
-              {etape <= 3 ? QUESTIONS_CHAT[etape] : 'Parfait, je vous prépare un circuit sur mesure !'}
-            </p>
-          </>
+          messages.map((m, i) => (
+            <div key={i} className={`ai-chat__row${m.role === 'user' ? ' ai-chat__row--user' : ''}`}>
+              {m.role === 'user' ? (
+                <div className="ai-chat__bubble">{m.content}</div>
+              ) : (
+                <>
+                  <p className="ai-chat__text">{m.content}</p>
+                  {m.circuit && (
+                    <button type="button" className="btn btn--ghost btn--sm" onClick={() => appliquer(m.circuit)}>
+                      <Route size={14} /> Appliquer « {m.circuit.titre} » à mon circuit
+                    </button>
+                  )}
+                </>
+              )}
+            </div>
+          ))
         )}
+        {loading && <p className="ai-chat__text ai-chat__text--current ai-chat__typing"><span /><span /><span /></p>}
       </div>
 
-      <div className="ai-chat__bar">
-        {etape === 0 && JOURS_RAPIDES.map(j => (
-          <button type="button" key={j} className="filters__cat" onClick={() => repondreEtSuivre('jours', j)}>{j} jour{j > 1 ? 's' : ''}</button>
-        ))}
-
-        {etape === 1 && (
-          <>
-            {BUDGETS_RAPIDES.map(b => (
-              <button type="button" key={b} className="filters__cat" onClick={() => repondreEtSuivre('budget', b)}>{b.toLocaleString('fr-FR')} FCFA</button>
-            ))}
-            <button type="button" className="filters__cat" onClick={() => repondreEtSuivre('budget', null)}>Pas de limite précise</button>
-          </>
-        )}
-
-        {etape === 2 && (
-          <>
-            <button type="button" className="filters__cat" onClick={() => repondreEtSuivre('saison', 'sec')}>Saison sèche</button>
-            <button type="button" className="filters__cat" onClick={() => repondreEtSuivre('saison', 'pluie')}>Saison des pluies</button>
-          </>
-        )}
-
-        {etape === 3 && (
-          <>
-            <InteretsChips value={reponses.interets} onChange={v => setReponses(r => ({ ...r, interets: v }))} />
-            <button type="button" className="btn btn--ghost btn--sm" onClick={() => setEtape(4)}>Continuer</button>
-          </>
-        )}
-
-        {etape >= 4 && (
-          <button className="btn btn--primary" onClick={generer} disabled={loading}>
-            <Sparkles size={16} /> {loading ? 'Génération en cours...' : 'Générer mon circuit'}
-          </button>
-        )}
-      </div>
+      <form className="ai-chat__bar" onSubmit={envoyer}>
+        <input
+          type="text"
+          placeholder="Posez votre question (ex. Que voir en 3 jours à Ouidah ?)"
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          disabled={loading}
+        />
+        <button type="submit" className="ai-chat__send" disabled={loading || ! input.trim()} aria-label="Envoyer">
+          <Send size={17} />
+        </button>
+      </form>
     </div>
   )
 }
