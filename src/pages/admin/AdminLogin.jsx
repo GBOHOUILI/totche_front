@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, Shield } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import toast from 'react-hot-toast'
@@ -46,6 +46,9 @@ export default function AdminLogin() {
             {loading ? 'Connexion...' : 'SE CONNECTER'}
           </button>
         </form>
+        <p className="auth-card__switch">
+          <Link to="/mot-de-passe-oublie/admin">Mot de passe oublié ?</Link>
+        </p>
       </div>
     </div>
   )

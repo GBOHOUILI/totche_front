@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, ShieldCheck } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import toast from 'react-hot-toast'
@@ -47,6 +47,9 @@ export default function ResponsableLogin() {
             {loading ? 'Connexion...' : 'SE CONNECTER'}
           </button>
         </form>
+        <p className="auth-card__switch">
+          <Link to="/mot-de-passe-oublie/responsable">Mot de passe oublié ?</Link>
+        </p>
       </div>
     </div>
   )

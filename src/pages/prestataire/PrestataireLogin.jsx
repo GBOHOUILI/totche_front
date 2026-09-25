@@ -43,6 +43,9 @@ export default function PrestataireLogin() {
             {loading ? 'Connexion...' : 'SE CONNECTER'}
           </button>
         </form>
+        <p className="auth-card__switch">
+          <Link to="/mot-de-passe-oublie/prestataire">Mot de passe oublié ?</Link>
+        </p>
         <p className="auth-card__switch">Pas encore de compte pro ? <Link to="/prestataire/inscription">Créer un compte</Link></p>
       </div>
     </div>

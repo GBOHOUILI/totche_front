@@ -14,6 +14,8 @@ import RestaurantDetail from '../pages/public/RestaurantDetail'
 import Transports from '../pages/public/Transports'
 import TransportDetail from '../pages/public/TransportDetail'
 import { Login, Register } from '../pages/auth/Auth'
+import MotDePasseOublie from '../pages/auth/MotDePasseOublie'
+import ReinitialiserMotDePasse from '../pages/auth/ReinitialiserMotDePasse'
 import AdminLogin from '../pages/admin/AdminLogin'
 import PrestataireLogin from '../pages/prestataire/PrestataireLogin'
 import PrestataireRegister from '../pages/prestataire/PrestataireRegister'
@@ -120,6 +122,8 @@ const router = createBrowserRouter([
       { path: 'transports', element: <Transports /> },
       { path: 'transports/:id', element: <TransportDetail /> },
       { path: 'connexion', element: <Login /> },
+      { path: 'mot-de-passe-oublie/:type', element: <MotDePasseOublie /> },
+      { path: 'mot-de-passe/reinitialiser/:type', element: <ReinitialiserMotDePasse /> },
       { path: 'inscription', element: <Register /> },
       { path: 'a-propos', element: <APropos /> },
       { path: 'contacts', element: <Contact /> },

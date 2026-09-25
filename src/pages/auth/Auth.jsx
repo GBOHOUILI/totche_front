@@ -45,6 +45,9 @@ export function Login() {
           </button>
         </form>
         <p className="auth-card__switch">
+          <Link to="/mot-de-passe-oublie/user">Mot de passe oublié ?</Link>
+        </p>
+        <p className="auth-card__switch">
           Pas encore de compte ?{' '}
           <Link to={`/inscription${searchParams.get('redirect') ? `?redirect=${encodeURIComponent(searchParams.get('redirect'))}` : ''}`}>Inscription</Link>
         </p>
