@@ -1,5 +1,25 @@
-import { Star, ArrowRight } from 'lucide-react'
+import { Star, ArrowRight, Heart } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { useFavoris } from '../../context/FavorisContext'
+
+// ─── Bouton favori ───────────────────────────────────────
+// Superposé au coin de l'image d'une carte (le parent doit être
+// `position: relative`, ex. .card__img-wrap). stopPropagation +
+// preventDefault car la carte entière est un <Link> - sans ça, cliquer le
+// cœur déclencherait aussi la navigation vers la fiche.
+export function FavoriButton({ type, id }) {
+  const { isFavori, toggle } = useFavoris()
+  const active = isFavori(type, id)
+  return (
+    <button
+      className={`card__fav-btn${active ? ' card__fav-btn--active' : ''}`}
+      aria-label={active ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+      onClick={e => { e.preventDefault(); e.stopPropagation(); toggle(type, id) }}
+    >
+      <Heart size={16} fill={active ? 'currentColor' : 'none'} />
+    </button>
+  )
+}
 
 // ─── Stars ───────────────────────────────────────────────
 export function Stars({ value = 0, max = 5, size = 14 }) {
@@ -44,6 +64,7 @@ export function SiteCard({ site, index = 0 }) {
           ? <img src={cover} alt={site.libelle} loading="lazy" />
           : <div className="card__img-placeholder" />
         }
+        <FavoriButton type="site" id={site.id} />
       </div>
       <div className="card__body">
         {site.categorie && <p className="card__eyebrow">{site.categorie.libelle}</p>}
@@ -72,6 +93,7 @@ export function EventCard({ event, index = 0 }) {
           ? <img src={cover} alt={event.libelle} loading="lazy" />
           : <div className="card__img-placeholder card__img-placeholder--event" />
         }
+        <FavoriButton type="evenement" id={event.id} />
       </div>
       <div className="card__body">
         <p className="card__eyebrow">
@@ -96,6 +118,7 @@ export function HotelCard({ hotel, index = 0 }) {
     <Link to={`/hotels/${hotel.id}`} className="card card--site" style={{ animationDelay: `${index * 60}ms` }}>
       <div className="card__img-wrap">
         {cover ? <img src={cover} alt={hotel.libelle} loading="lazy" /> : <div className="card__img-placeholder" />}
+        <FavoriButton type="hotel" id={hotel.id} />
       </div>
       <div className="card__body">
         {hotel.nombre_etoiles && <div className="card__eyebrow"><Stars value={hotel.nombre_etoiles} size={12} /></div>}
@@ -116,6 +139,7 @@ export function RestaurantCard({ restaurant, index = 0 }) {
     <Link to={`/restaurants/${restaurant.id}`} className="card card--site" style={{ animationDelay: `${index * 60}ms` }}>
       <div className="card__img-wrap">
         {cover ? <img src={cover} alt={restaurant.libelle} loading="lazy" /> : <div className="card__img-placeholder" />}
+        <FavoriButton type="restaurant" id={restaurant.id} />
       </div>
       <div className="card__body">
         {restaurant.type_cuisine && <p className="card__eyebrow">{restaurant.type_cuisine}</p>}
@@ -136,6 +160,7 @@ export function TransportCard({ transport, index = 0 }) {
     <Link to={`/transports/${transport.id}`} className="card card--site" style={{ animationDelay: `${index * 60}ms` }}>
       <div className="card__img-wrap">
         {cover ? <img src={cover} alt={transport.libelle} loading="lazy" /> : <div className="card__img-placeholder" />}
+        <FavoriButton type="transport" id={transport.id} />
       </div>
       <div className="card__body">
         {transport.type_transport && <p className="card__eyebrow">{transport.type_transport}</p>}

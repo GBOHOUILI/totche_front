@@ -21,6 +21,7 @@ import ResponsableLogin from '../pages/responsable/ResponsableLogin'
 import { APropos, Contact } from '../pages/public/AProposContact'
 import Profil from '../pages/user/Profil'
 import MesReservations from '../pages/user/MesReservations'
+import MesFavoris from '../pages/user/MesFavoris'
 import Circuits from '../pages/public/Circuits'
 import CircuitDetail from '../pages/public/CircuitDetail'
 import { Spinner } from '../components/ui/index'
@@ -128,6 +129,7 @@ const router = createBrowserRouter([
         children: [
           { path: 'profil', element: <Profil /> },
           { path: 'mes-reservations', element: <MesReservations /> },
+          { path: 'mes-favoris', element: <MesFavoris /> },
           { path: 'circuits/:id', element: <CircuitDetail /> },
         ]
       }
