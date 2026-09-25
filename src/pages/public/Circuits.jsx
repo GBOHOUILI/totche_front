@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { Search, Plus, MapPin, Calendar, Route, ChevronRight, Trash2, Save, Sparkles } from 'lucide-react'
 import { sitesApi, evenementsApi, circuitsApi, etapesApi } from '../../api/services'
 import { useAuth } from '../../context/AuthContext'
@@ -103,10 +103,18 @@ function AiSliders({ onGenerated }) {
 // Questions à choix rapides (pas de texte libre) : garde une génération
 // fiable sans dépendre d'une analyse de langage sur la conversation
 // elle-même - seule l'étape finale interroge réellement le modèle.
+const QUESTIONS_CHAT = [
+  'Combien de jours dure votre séjour ?',
+  'Quel est votre budget total (FCFA) ?',
+  "Quelle période de l'année ?",
+  "Qu'est-ce qui vous intéresse ? (plusieurs choix possibles)",
+]
+
 function AiChat({ onGenerated }) {
   const [reponses, setReponses] = useState({ jours: null, budget: null, saison: null, interets: [] })
   const [etape, setEtape] = useState(0)
   const [loading, setLoading] = useState(false)
+  const scrollRef = useRef(null)
 
   const repondreEtSuivre = (cle, valeur) => {
     setReponses(r => ({ ...r, [cle]: valeur }))
@@ -129,69 +137,76 @@ function AiChat({ onGenerated }) {
   }
 
   const historique = []
-  if (reponses.jours) historique.push({ q: 'Combien de jours dure votre séjour ?', a: `${reponses.jours} jour${reponses.jours > 1 ? 's' : ''}` })
-  if (etape > 1) historique.push({ q: 'Quel est votre budget total ?', a: reponses.budget ? `${Number(reponses.budget).toLocaleString('fr-FR')} FCFA` : 'Pas de limite précise' })
-  if (reponses.saison) historique.push({ q: "Quelle période de l'année ?", a: reponses.saison === 'sec' ? 'Saison sèche' : 'Saison des pluies' })
-  if (etape > 3) historique.push({ q: "Qu'est-ce qui vous intéresse ?", a: reponses.interets.length ? reponses.interets.join(', ') : 'Surprenez-moi' })
+  if (reponses.jours) historique.push({ q: QUESTIONS_CHAT[0], a: `${reponses.jours} jour${reponses.jours > 1 ? 's' : ''}` })
+  if (etape > 1) historique.push({ q: QUESTIONS_CHAT[1], a: reponses.budget ? `${Number(reponses.budget).toLocaleString('fr-FR')} FCFA` : 'Pas de limite précise' })
+  if (reponses.saison) historique.push({ q: QUESTIONS_CHAT[2], a: reponses.saison === 'sec' ? 'Saison sèche' : 'Saison des pluies' })
+  if (etape > 3) historique.push({ q: QUESTIONS_CHAT[3], a: reponses.interets.length ? reponses.interets.join(', ') : 'Surprenez-moi' })
+
+  const commence = historique.length > 0
+
+  // Auto-scroll vers le bas à chaque nouvelle question/réponse, comme un vrai chat.
+  useEffect(() => {
+    const el = scrollRef.current
+    if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
+  }, [historique.length, etape])
 
   return (
     <div className="ai-chat">
-      {historique.map((m, i) => (
-        <div key={i} className="ai-chat__exchange">
-          <div className="ai-chat__bubble ai-chat__bubble--bot">{m.q}</div>
-          <div className="ai-chat__bubble ai-chat__bubble--user">{m.a}</div>
-        </div>
-      ))}
-
-      {etape === 0 && (
-        <div className="ai-chat__step">
-          <div className="ai-chat__bubble ai-chat__bubble--bot">Combien de jours dure votre séjour ?</div>
-          <div className="filters__cats">
-            {JOURS_RAPIDES.map(j => (
-              <button type="button" key={j} className="filters__cat" onClick={() => repondreEtSuivre('jours', j)}>{j} jour{j > 1 ? 's' : ''}</button>
-            ))}
+      <div className="ai-chat__scroll" ref={scrollRef}>
+        {!commence ? (
+          <div className="ai-chat__empty">
+            <Sparkles size={26} />
+            <h3>{QUESTIONS_CHAT[0]}</h3>
           </div>
-        </div>
-      )}
+        ) : (
+          <>
+            {historique.map((m, i) => (
+              <div key={i} className="ai-chat__row">
+                <p className="ai-chat__text">{m.q}</p>
+                <div className="ai-chat__bubble">{m.a}</div>
+              </div>
+            ))}
+            <p className="ai-chat__text ai-chat__text--current">
+              {etape <= 3 ? QUESTIONS_CHAT[etape] : 'Parfait, je vous prépare un circuit sur mesure !'}
+            </p>
+          </>
+        )}
+      </div>
 
-      {etape === 1 && (
-        <div className="ai-chat__step">
-          <div className="ai-chat__bubble ai-chat__bubble--bot">Quel est votre budget total (FCFA) ?</div>
-          <div className="filters__cats">
+      <div className="ai-chat__bar">
+        {etape === 0 && JOURS_RAPIDES.map(j => (
+          <button type="button" key={j} className="filters__cat" onClick={() => repondreEtSuivre('jours', j)}>{j} jour{j > 1 ? 's' : ''}</button>
+        ))}
+
+        {etape === 1 && (
+          <>
             {BUDGETS_RAPIDES.map(b => (
               <button type="button" key={b} className="filters__cat" onClick={() => repondreEtSuivre('budget', b)}>{b.toLocaleString('fr-FR')} FCFA</button>
             ))}
             <button type="button" className="filters__cat" onClick={() => repondreEtSuivre('budget', null)}>Pas de limite précise</button>
-          </div>
-        </div>
-      )}
+          </>
+        )}
 
-      {etape === 2 && (
-        <div className="ai-chat__step">
-          <div className="ai-chat__bubble ai-chat__bubble--bot">Quelle période de l'année ?</div>
-          <div className="filters__cats">
+        {etape === 2 && (
+          <>
             <button type="button" className="filters__cat" onClick={() => repondreEtSuivre('saison', 'sec')}>Saison sèche</button>
             <button type="button" className="filters__cat" onClick={() => repondreEtSuivre('saison', 'pluie')}>Saison des pluies</button>
-          </div>
-        </div>
-      )}
+          </>
+        )}
 
-      {etape === 3 && (
-        <div className="ai-chat__step">
-          <div className="ai-chat__bubble ai-chat__bubble--bot">Qu'est-ce qui vous intéresse ? (plusieurs choix possibles)</div>
-          <InteretsChips value={reponses.interets} onChange={v => setReponses(r => ({ ...r, interets: v }))} />
-          <button type="button" className="btn btn--ghost btn--sm" style={{ marginTop: '0.75rem' }} onClick={() => setEtape(4)}>Continuer</button>
-        </div>
-      )}
+        {etape === 3 && (
+          <>
+            <InteretsChips value={reponses.interets} onChange={v => setReponses(r => ({ ...r, interets: v }))} />
+            <button type="button" className="btn btn--ghost btn--sm" onClick={() => setEtape(4)}>Continuer</button>
+          </>
+        )}
 
-      {etape >= 4 && (
-        <div className="ai-chat__step">
-          <div className="ai-chat__bubble ai-chat__bubble--bot">Parfait, je vous prépare un circuit sur mesure !</div>
+        {etape >= 4 && (
           <button className="btn btn--primary" onClick={generer} disabled={loading}>
             <Sparkles size={16} /> {loading ? 'Génération en cours...' : 'Générer mon circuit'}
           </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }
@@ -228,7 +243,7 @@ function AiSection({ onGenerated }) {
   const [mode, setMode] = useState('conversation')
 
   return (
-    <div className="ai-wizard">
+    <div className="ai-wizard" id="circuit-ia">
       <div className="ai-wizard__header">
         <Sparkles size={18} />
         <div>
@@ -325,6 +340,7 @@ function Picker({ onAdd, alreadyAdded }) {
 export default function Circuits() {
   const { isAuthenticated } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const [draft, setDraft] = useState(loadDraft)
   const [myCircuits, setMyCircuits] = useState([])
   const [loadingMine, setLoadingMine] = useState(false)
@@ -333,6 +349,18 @@ export default function Circuits() {
   useEffect(() => {
     localStorage.setItem(DRAFT_KEY, JSON.stringify(draft))
   }, [draft])
+
+  // Point d'entrée du bouton flottant / de la mise en avant sur l'accueil :
+  // /circuits#circuit-ia doit amener directement sur l'assistant IA, React
+  // Router ne scrollant pas seul sur un changement de hash entre deux routes.
+  useEffect(() => {
+    if (location.hash === '#circuit-ia') {
+      const t = setTimeout(() => {
+        document.getElementById('circuit-ia')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 60)
+      return () => clearTimeout(t)
+    }
+  }, [location.hash])
 
   const loadMine = useCallback(() => {
     if (!isAuthenticated) return
