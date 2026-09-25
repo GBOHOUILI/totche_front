@@ -20,6 +20,15 @@ export const authApi = {
   updatePassword: (data) => api.post('/update-password', data),
 }
 
+// Commun aux 4 types de comptes (user/admin/prestataire/responsable) - le
+// recouvrement se fait par email pour tous, même si la connexion elle-même
+// se fait par tel pour admin/responsable. Réponse toujours identique côté
+// demander() (compte trouvé ou non), jamais d'énumération d'emails.
+export const passwordResetApi = {
+  demander: (type, email) => api.post('/mot-de-passe/oublie', { type, email }),
+  reinitialiser: (data) => api.post('/mot-de-passe/reinitialiser', data),
+}
+
 // ─── PRESTATAIRES (portail SaaS) ───────────────────────────────
 // POST /api/prestataire/register   { nom_entreprise, type_prestataire, email, tel?, password, password_confirmation }
 // POST /api/prestataire/login      { email, password }
