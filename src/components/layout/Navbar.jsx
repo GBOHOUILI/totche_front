@@ -248,6 +248,7 @@ export default function Navbar() {
                 <div className="navbar__dropdown">
                   <Link to="/profil" onClick={() => setUserMenu(false)}>Mon profil</Link>
                   <Link to="/mes-reservations" onClick={() => setUserMenu(false)}>Mes réservations</Link>
+                  <Link to="/mes-favoris" onClick={() => setUserMenu(false)}>Mes favoris</Link>
                   <Link to="/circuits" onClick={() => setUserMenu(false)}>Mes circuits</Link>
                   {isAdmin && <Link to="/admin" onClick={() => setUserMenu(false)}>Administration</Link>}
                   <button onClick={handleLogout}>Déconnexion</button>
@@ -287,6 +288,7 @@ export default function Navbar() {
             <>
               <Link to="/profil" className="navbar__mobile-link" onClick={() => setMenuOpen(false)}>Mon profil</Link>
               <Link to="/mes-reservations" className="navbar__mobile-link" onClick={() => setMenuOpen(false)}>Mes réservations</Link>
+              <Link to="/mes-favoris" className="navbar__mobile-link" onClick={() => setMenuOpen(false)}>Mes favoris</Link>
               <Link to="/circuits" className="navbar__mobile-link" onClick={() => setMenuOpen(false)}>Mes circuits</Link>
               {isAdmin && <Link to="/admin" className="navbar__mobile-link" onClick={() => setMenuOpen(false)}>Administration</Link>}
             </>

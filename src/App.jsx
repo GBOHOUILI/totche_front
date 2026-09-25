@@ -1,12 +1,15 @@
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from './context/AuthContext'
+import { FavorisProvider } from './context/FavorisContext'
 import AppRouter from './router/index'
 import './index.css'
 
 export default function App() {
   return (
     <AuthProvider>
-      <AppRouter />
+      <FavorisProvider>
+        <AppRouter />
+      </FavorisProvider>
       <Toaster
         position="top-right"
         toastOptions={{

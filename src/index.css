@@ -247,6 +247,9 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .card:hover .card__img-wrap img { transform: scale(1.04); }
 .card__img-placeholder { position: absolute; inset: 0; background: var(--gray-100); }
 .card__img-placeholder--event { background: linear-gradient(135deg, var(--black), var(--red-dark)); }
+.card__fav-btn { position: absolute; top: 0.6rem; right: 0.6rem; z-index: 1; width: 32px; height: 32px; border-radius: var(--radius-full); background: rgba(255,255,255,.92); color: var(--gray-700); display: flex; align-items: center; justify-content: center; transition: color var(--transition), transform var(--transition); }
+.card__fav-btn:hover { transform: scale(1.08); }
+.card__fav-btn--active { color: var(--red); }
 .card__cat { display: none; } /* remplacé par .card__eyebrow, texte simple, plus de pastille */
 .card__body { padding: 1.1rem 0 0; flex: 1; display: flex; flex-direction: column; gap: 0.4rem; }
 .card__eyebrow { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--red); }

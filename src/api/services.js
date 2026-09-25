@@ -400,6 +400,16 @@ export const etapesApi = {
   delete: (id) => api.delete(`/etapes/${id}`),
 }
 
+// ─── FAVORIS (auth:sanctum) ─────────────────────────────────────────────
+// GET    /api/favoris            [{ id, type, item }]
+// POST   /api/favoris            { type, id }  idempotent
+// DELETE /api/favoris/{id}
+export const favorisApi = {
+  list: () => api.get('/favoris'),
+  add: (type, id) => api.post('/favoris', { type, id }),
+  remove: (favoriId) => api.delete(`/favoris/${favoriId}`),
+}
+
 // ─── TICKETS ─────────────────────────────────────────────────
 // GET  /api/admin/tickets            (admin)
 // GET  /api/admin/tickets/{id}       (admin)
