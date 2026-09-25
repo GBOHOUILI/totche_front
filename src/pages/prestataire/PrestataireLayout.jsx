@@ -1,6 +1,7 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { LayoutDashboard, MapPin, Calendar, Briefcase, LogOut, User, Hotel, UtensilsCrossed, Bus, CreditCard } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
+import NotificationBell from '../../components/notifications/NotificationBell'
 import toast from 'react-hot-toast'
 
 const NAV_ITEMS = [
@@ -31,6 +32,7 @@ export default function PrestataireLayout() {
           <Briefcase size={18} />
           <span className="admin-sidebar__title">Totché</span>
           <span className="admin-sidebar__badge">Pro</span>
+          <div style={{ marginLeft: 'auto' }}><NotificationBell /></div>
         </div>
 
         <nav className="admin-sidebar__nav">

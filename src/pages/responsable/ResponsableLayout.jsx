@@ -1,6 +1,7 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { ClipboardCheck, ShieldCheck, MapPin, Calendar, LogOut, Hotel, UtensilsCrossed, Bus } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
+import NotificationBell from '../../components/notifications/NotificationBell'
 import toast from 'react-hot-toast'
 
 const NAV_ITEMS = [
@@ -29,6 +30,7 @@ export default function ResponsableLayout() {
           <ShieldCheck size={18} />
           <span className="admin-sidebar__title">Totché</span>
           <span className="admin-sidebar__badge">Responsable</span>
+          <div style={{ marginLeft: 'auto' }}><NotificationBell /></div>
         </div>
 
         <nav className="admin-sidebar__nav">

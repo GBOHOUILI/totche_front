@@ -481,6 +481,23 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .admin-sidebar__logout { color: rgba(255,255,255,.5); transition: color var(--transition); }
 .admin-sidebar__logout:hover { color: var(--red); }
 
+/* ── Notifications (partagé par les 4 types de comptes) ── */
+.notif-bell { position: relative; display: inline-flex; }
+.notif-bell__btn { position: relative; display: flex; align-items: center; justify-content: center; color: inherit; }
+.notif-bell__badge { position: absolute; top: -6px; right: -8px; background: var(--red); color: var(--white); font-size: 0.62rem; font-weight: 700; min-width: 16px; height: 16px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; padding: 0 3px; line-height: 1; }
+.notif-bell__dropdown { width: 320px; max-height: 420px; background: var(--white); border: 1px solid var(--gray-300); box-shadow: var(--shadow-lg); z-index: 250; display: flex; flex-direction: column; }
+.notif-bell__header { display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1rem; border-bottom: 1px solid var(--gray-100); gap: 0.75rem; }
+.notif-bell__header strong { font-size: 0.9rem; color: var(--black); }
+.notif-bell__header button { font-size: 0.72rem; color: var(--red); font-weight: 700; text-transform: uppercase; letter-spacing: .02em; white-space: nowrap; }
+.notif-bell__list { overflow-y: auto; max-height: 360px; }
+.notif-bell__empty { padding: 1.5rem 1rem; text-align: center; color: var(--gray-500); font-size: 0.85rem; }
+.notif-bell__item { display: block; width: 100%; text-align: left; padding: 0.85rem 1rem; border-bottom: 1px solid var(--gray-100); }
+.notif-bell__item:hover { background: var(--gray-100); }
+.notif-bell__item strong { display: block; font-size: 0.85rem; color: var(--black); margin-bottom: 0.2rem; }
+.notif-bell__item p { font-size: 0.8rem; color: var(--gray-700); line-height: 1.4; }
+.notif-bell__item--non-lu { background: #FBEAEA; border-left: 3px solid var(--red); }
+.notif-bell__item--non-lu:hover { background: #F8DCDC; }
+
 .admin-main { flex: 1; width: 100%; min-width: 0; background: var(--gray-100); overflow-y: auto; overflow-x: hidden; }
 .admin-page { padding: 2.5rem 2rem; width: 100%; }
 .admin-page__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
