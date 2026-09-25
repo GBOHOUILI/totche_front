@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Plus, Pencil, Trash2, X, Image, Route } from 'lucide-react'
+import { Plus, Pencil, Trash2, X, Image, Route, MessageCircleQuestion } from 'lucide-react'
 import { prestatairesApi, regionsApi, villesApi } from '../../api/services'
 import { Spinner } from '../../components/ui/index'
 import toast from 'react-hot-toast'
@@ -14,8 +14,8 @@ const emptyForm = {
 }
 const emptyTrajetForm = { id_ville_depart: '', id_ville_arrivee: '', horaire_depart: '', prix: '' }
 
-const statusColor = (s) => ({ valide: 'success', rejete: 'danger', en_attente: 'warning', suspendu: 'danger' })[s] || 'warning'
-const statusLabel = (s) => ({ valide: 'Validé', rejete: 'Rejeté', en_attente: 'En attente', suspendu: 'Suspendu' })[s] || s
+const statusColor = (s) => ({ valide: 'success', rejete: 'danger', en_attente: 'warning', suspendu: 'danger', precisions_demandees: 'info' })[s] || 'warning'
+const statusLabel = (s) => ({ valide: 'Validé', rejete: 'Rejeté', en_attente: 'En attente', suspendu: 'Suspendu', precisions_demandees: 'Précisions demandées' })[s] || s
 
 export default function PrestataireTransports() {
   const [transports, setTransports] = useState([])
@@ -155,7 +155,12 @@ export default function PrestataireTransports() {
                 <td>{transport.adresse}</td>
                 <td>{transport.type_transport || '-'}</td>
                 <td>{transport.region?.nom || '-'}</td>
-                <td><span className={`status-badge status-badge--${statusColor(transport.status)}`}>{statusLabel(transport.status)}</span></td>
+                <td>
+                  <span className={`status-badge status-badge--${statusColor(transport.status)}`}>{statusLabel(transport.status)}</span>
+                  {transport.commentaire_responsable && (
+                    <div className="precisions-note"><MessageCircleQuestion size={14} /><span>{transport.commentaire_responsable}</span></div>
+                  )}
+                </td>
                 <td>
                   <div className="admin-table__actions">
                     <button className="admin-icon-btn" title="Trajets" onClick={() => setTrajetModal(transport)}><Route size={15} /></button>

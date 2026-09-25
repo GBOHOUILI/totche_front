@@ -15,6 +15,7 @@
   --red-dark:   #C1121F;
   --success:    #1E7A46;
   --warning:    #B45309;
+  --info:       #2563EB;
   --black:      #0D0D0D;
   --dark:       #1a1a1a;
   --gray-900:   #111;
@@ -517,6 +518,10 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .status-badge--success { background: #EAF5EE; color: var(--success); }
 .status-badge--danger { background: #FBEAEA; color: var(--red-dark); }
 .status-badge--warning { background: #FCF0E3; color: var(--warning); }
+.status-badge--info { background: #EAF1FC; color: var(--info); }
+
+.precisions-note { display: flex; gap: 0.5rem; align-items: flex-start; background: #EAF1FC; border-left: 3px solid var(--info); color: var(--gray-900); padding: 0.6rem 0.85rem; font-size: 0.82rem; line-height: 1.5; margin-top: 0.4rem; max-width: 420px; }
+.precisions-note svg { color: var(--info); flex-shrink: 0; margin-top: 0.15rem; }
 
 /* ═══════════════════════════════════════════════════════════
    FOOTER

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Plus, Pencil, Trash2, X, Image, Tag } from 'lucide-react'
+import { Plus, Pencil, Trash2, X, Image, Tag, MessageCircleQuestion } from 'lucide-react'
 import { prestatairesApi, categoriesApi, regionsApi } from '../../api/services'
 import { Spinner } from '../../components/ui/index'
 import toast from 'react-hot-toast'
@@ -15,8 +15,8 @@ const emptyForm = {
 }
 const emptyPrixForm = { libelle: '', montant: '' }
 
-const statusColor = (s) => ({ valide: 'success', rejete: 'danger', en_attente: 'warning', suspendu: 'danger' })[s] || 'warning'
-const statusLabel = (s) => ({ valide: 'Validé', rejete: 'Rejeté', en_attente: 'En attente', suspendu: 'Suspendu' })[s] || s
+const statusColor = (s) => ({ valide: 'success', rejete: 'danger', en_attente: 'warning', suspendu: 'danger', precisions_demandees: 'info' })[s] || 'warning'
+const statusLabel = (s) => ({ valide: 'Validé', rejete: 'Rejeté', en_attente: 'En attente', suspendu: 'Suspendu', precisions_demandees: 'Précisions demandées' })[s] || s
 
 export default function PrestataireSites() {
   const [sites, setSites] = useState([])
@@ -151,7 +151,12 @@ export default function PrestataireSites() {
                 <td>{site.adresse}</td>
                 <td>{site.categorie?.libelle || '-'}</td>
                 <td>{site.region?.nom || '-'}</td>
-                <td><span className={`status-badge status-badge--${statusColor(site.status)}`}>{statusLabel(site.status)}</span></td>
+                <td>
+                  <span className={`status-badge status-badge--${statusColor(site.status)}`}>{statusLabel(site.status)}</span>
+                  {site.commentaire_responsable && (
+                    <div className="precisions-note"><MessageCircleQuestion size={14} /><span>{site.commentaire_responsable}</span></div>
+                  )}
+                </td>
                 <td>
                   <div className="admin-table__actions">
                     <button className="admin-icon-btn" title="Tarifs" onClick={() => setPrixModal(site)}><Tag size={15} /></button>

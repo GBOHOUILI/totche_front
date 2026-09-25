@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Plus, Pencil, Trash2, X, Image, BedDouble } from 'lucide-react'
+import { Plus, Pencil, Trash2, X, Image, BedDouble, MessageCircleQuestion } from 'lucide-react'
 import { prestatairesApi, regionsApi } from '../../api/services'
 import { Spinner, Stars } from '../../components/ui/index'
 import toast from 'react-hot-toast'
@@ -14,8 +14,8 @@ const emptyForm = {
 }
 const emptyChambreForm = { type_chambre: '', prix_nuit: '', capacite: '', disponibilite: true }
 
-const statusColor = (s) => ({ valide: 'success', rejete: 'danger', en_attente: 'warning', suspendu: 'danger' })[s] || 'warning'
-const statusLabel = (s) => ({ valide: 'Validé', rejete: 'Rejeté', en_attente: 'En attente', suspendu: 'Suspendu' })[s] || s
+const statusColor = (s) => ({ valide: 'success', rejete: 'danger', en_attente: 'warning', suspendu: 'danger', precisions_demandees: 'info' })[s] || 'warning'
+const statusLabel = (s) => ({ valide: 'Validé', rejete: 'Rejeté', en_attente: 'En attente', suspendu: 'Suspendu', precisions_demandees: 'Précisions demandées' })[s] || s
 
 export default function PrestataireHotels() {
   const [hotels, setHotels] = useState([])
@@ -153,7 +153,12 @@ export default function PrestataireHotels() {
                 <td>{hotel.adresse}</td>
                 <td>{hotel.nombre_etoiles ? <Stars value={hotel.nombre_etoiles} size={12} /> : '-'}</td>
                 <td>{hotel.region?.nom || '-'}</td>
-                <td><span className={`status-badge status-badge--${statusColor(hotel.status)}`}>{statusLabel(hotel.status)}</span></td>
+                <td>
+                  <span className={`status-badge status-badge--${statusColor(hotel.status)}`}>{statusLabel(hotel.status)}</span>
+                  {hotel.commentaire_responsable && (
+                    <div className="precisions-note"><MessageCircleQuestion size={14} /><span>{hotel.commentaire_responsable}</span></div>
+                  )}
+                </td>
                 <td>
                   <div className="admin-table__actions">
                     <button className="admin-icon-btn" title="Chambres" onClick={() => setChambreModal(hotel)}><BedDouble size={15} /></button>
