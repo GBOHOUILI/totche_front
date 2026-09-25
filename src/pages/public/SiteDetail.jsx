@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { MapPin, Clock, ChevronLeft, ChevronRight } from 'lucide-react'
+import { MapPin, Clock, Gauge, ChevronLeft, ChevronRight } from 'lucide-react'
 import { sitesApi, prixApi, reservationsApi, avisApi } from '../../api/services'
 import { Spinner } from '../../components/ui/index'
 import { useAuth } from '../../context/AuthContext'
+import { HighlightsSection, IncludedSection, PracticalInfoSection, FactsCard } from '../../components/detail/EnrichedSections'
 import toast from 'react-hot-toast'
+
+const DIFFICULTE_LABEL = { facile: 'Facile', moderee: 'Modérée', difficile: 'Difficile' }
 
 export default function SiteDetail() {
   const { id } = useParams()
@@ -117,6 +120,8 @@ export default function SiteDetail() {
           <div className="detail-hero__meta">
             {site.adresse && <span><MapPin size={14} /> {site.adresse}</span>}
             {site.ouverture && <span><Clock size={14} /> {site.ouverture} – {site.fermeture}</span>}
+            {site.duree_visite && <span><Clock size={14} /> {site.duree_visite}</span>}
+            {site.difficulte && <span><Gauge size={14} /> {DIFFICULTE_LABEL[site.difficulte]}</span>}
             {site.categorie && <span>{site.categorie.libelle}</span>}
           </div>
         </div>
@@ -130,6 +135,10 @@ export default function SiteDetail() {
               <h2>Description</h2>
               <p className="detail-description">{site.description || 'Aucune description disponible.'}</p>
             </section>
+
+            <HighlightsSection points={site.points_forts} />
+            <IncludedSection inclus={site.inclus} nonInclus={site.non_inclus} inclusLabel="Ce que le billet inclut" />
+            <PracticalInfoSection infosPratiques={site.infos_pratiques} recommandations={site.recommandations} />
 
             {/* Galerie thumbnails */}
             {images.length > 1 && (
@@ -260,6 +269,11 @@ export default function SiteDetail() {
                 </form>
               )}
             </div>
+
+            <FactsCard facts={[
+              { icon: Clock, label: 'Durée de visite', value: site.duree_visite },
+              { icon: Gauge, label: 'Difficulté', value: site.difficulte ? DIFFICULTE_LABEL[site.difficulte] : null },
+            ]} />
 
             {/* Infos pratiques */}
             {(site.ouverture || site.adresse) && (

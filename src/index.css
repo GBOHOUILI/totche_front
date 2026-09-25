@@ -353,6 +353,30 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .detail-nearby-item strong { display: block; font-size: 0.875rem; }
 .detail-nearby-item span { font-size: 0.8rem; color: var(--gray-500); }
 
+/* Contenu enrichi (moments forts / itinéraire / inclus / infos pratiques) */
+.detail-highlights { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.4rem 1.5rem; }
+.detail-highlights li { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.9375rem; color: var(--gray-700); padding: 0.4rem 0; }
+.detail-highlights li svg { color: var(--success); flex-shrink: 0; margin-top: 0.2rem; }
+
+.detail-itinerary { display: flex; flex-direction: column; gap: 1.5rem; }
+.detail-itinerary__step { display: flex; gap: 1rem; }
+.detail-itinerary__num { flex-shrink: 0; width: 32px; height: 32px; border: 1px solid var(--red); color: var(--red); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 600; font-size: 0.9375rem; }
+.detail-itinerary__step strong { display: block; margin-bottom: 0.25rem; font-size: 0.9375rem; }
+.detail-itinerary__step p { color: var(--gray-700); font-size: 0.875rem; line-height: 1.6; }
+
+.detail-included { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.detail-included h3 { font-size: 0.9375rem; margin-bottom: 0.75rem; }
+.detail-included ul { display: flex; flex-direction: column; gap: 0.5rem; }
+.detail-included li { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.875rem; color: var(--gray-700); }
+.detail-included li svg { flex-shrink: 0; margin-top: 0.2rem; }
+.detail-included__col svg { color: var(--success); }
+.detail-included__col--neg svg { color: var(--gray-500); }
+
+.detail-facts { display: flex; flex-direction: column; gap: 0.85rem; }
+.detail-facts__item { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.875rem; color: var(--gray-700); }
+.detail-facts__item svg { flex-shrink: 0; color: var(--red); margin-top: 0.2rem; }
+.detail-facts__item strong { display: block; color: var(--black); font-size: 0.8125rem; }
+
 /* Avis */
 .avis-list { display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2.25rem; }
 .avis-item { border-bottom: 1px solid var(--gray-100); padding-bottom: 1.25rem; }
@@ -710,6 +734,7 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
   .home__overlap-inner { grid-template-columns: 1fr; gap: 2.5rem; }
   .home__overlap-images { height: 280px; margin-bottom: 1rem; }
   .detail-sidebar { grid-template-columns: 1fr; }
+  .detail-highlights, .detail-included { grid-template-columns: 1fr; }
   .apropos-values { grid-template-columns: 1fr; }
   .reservation-item { flex-wrap: wrap; }
   .reservation-item__right { flex-direction: row; align-items: center; width: 100%; justify-content: flex-start; }
