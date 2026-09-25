@@ -1,15 +1,24 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { MapPin, Clock, ChevronLeft, ChevronRight, Route } from 'lucide-react'
-import { transportsApi } from '../../api/services'
-import { Spinner } from '../../components/ui/index'
+import { transportsApi, avisApi } from '../../api/services'
+import { Stars, StarRatingInput, NoteResume, Spinner } from '../../components/ui/index'
 import { HighlightsSection, IncludedSection, PracticalInfoSection, FactsCard } from '../../components/detail/EnrichedSections'
+import { useAuth } from '../../context/AuthContext'
+import toast from 'react-hot-toast'
 
 export default function TransportDetail() {
   const { id } = useParams()
+  const { isAuthenticated } = useAuth()
   const [transport, setTransport] = useState(null)
   const [loading, setLoading] = useState(true)
   const [imgIdx, setImgIdx] = useState(0)
+
+  const [avisList, setAvisList] = useState([])
+  const [avisMessage, setAvisMessage] = useState('')
+  const [avisNote, setAvisNote] = useState(0)
+  const [avisSubmitting, setAvisSubmitting] = useState(false)
+  const [avisJustSubmitted, setAvisJustSubmitted] = useState(false)
 
   useEffect(() => {
     setLoading(true)
@@ -17,6 +26,27 @@ export default function TransportDetail() {
       .then(r => setTransport(r.data?.data || r.data))
       .finally(() => setLoading(false))
   }, [id])
+
+  useEffect(() => {
+    avisApi.list({ id_transport: id, status: 'approuve' })
+      .then(r => setAvisList(r.data?.data || r.data || []))
+      .catch(() => {})
+  }, [id])
+
+  const submitAvis = async (e) => {
+    e.preventDefault()
+    if (!avisMessage.trim() || !avisNote) return
+    setAvisSubmitting(true)
+    try {
+      await avisApi.create({ id_transport: id, message: avisMessage.trim(), note: avisNote })
+      toast.success('Merci ! Votre avis sera visible après modération.')
+      setAvisJustSubmitted(true)
+      setAvisMessage('')
+      setAvisNote(0)
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Erreur lors de l'envoi de l'avis")
+    } finally { setAvisSubmitting(false) }
+  }
 
   if (loading) return <div className="page-loading"><Spinner size="lg" /></div>
   if (!transport) return <div className="container page-error"><p>Service de transport introuvable.</p></div>
@@ -77,6 +107,54 @@ export default function TransportDetail() {
                 </div>
               </section>
             )}
+
+            {/* Avis */}
+            <section className="detail-section">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '1rem' }}>
+                <h2 style={{ marginBottom: 0 }}>Avis des visiteurs</h2>
+                <NoteResume moyenne={transport.note_moyenne} nombre={transport.nombre_avis} size={15} />
+              </div>
+              {avisList.length === 0 ? (
+                <p className="detail-description" style={{ color: 'var(--gray-500)' }}>Aucun avis pour l'instant.</p>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {avisList.map(a => (
+                    <div key={a.id} style={{ borderLeft: '3px solid var(--red)', paddingLeft: '1rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                        <strong>{a.user?.prenom} {a.user?.nom}</strong>
+                        {a.note && <Stars value={a.note} size={12} />}
+                      </div>
+                      <p style={{ color: 'var(--gray-700)', marginTop: '0.25rem' }}>{a.message}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {isAuthenticated && !avisJustSubmitted && (
+                <form onSubmit={submitAvis} style={{ marginTop: '1.5rem' }}>
+                  <label style={{ fontSize: '0.8rem', color: 'var(--gray-700)', display: 'block', marginBottom: '0.35rem' }}>
+                    Vous avez utilisé ce service — laissez un avis
+                  </label>
+                  <StarRatingInput value={avisNote} onChange={setAvisNote} />
+                  <textarea
+                    required
+                    rows={3}
+                    value={avisMessage}
+                    onChange={e => setAvisMessage(e.target.value)}
+                    placeholder="Partagez votre expérience..."
+                    style={{ width: '100%', margin: '0.75rem 0' }}
+                  />
+                  <button type="submit" className="btn btn--primary" disabled={avisSubmitting || !avisNote}>
+                    {avisSubmitting ? 'Envoi...' : "Envoyer l'avis"}
+                  </button>
+                </form>
+              )}
+              {avisJustSubmitted && (
+                <p style={{ marginTop: '1rem', color: 'var(--gray-500)', fontSize: '0.875rem' }}>
+                  Votre avis a été envoyé et sera visible après modération.
+                </p>
+              )}
+            </section>
           </div>
 
           <div className="detail-sidebar">

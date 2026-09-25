@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { CheckCircle, XCircle, Eye, X } from 'lucide-react'
 import { avisApi } from '../../api/services'
-import { Spinner } from '../../components/ui/index'
+import { Spinner, Stars } from '../../components/ui/index'
 import toast from 'react-hot-toast'
 
 const STATUS_LABELS = {
@@ -19,16 +19,19 @@ const StatusBadge = ({ status }) => {
   )
 }
 
-// L'API n'expose pas directement { user, site, evenement } sur l'avis : ces
-// infos remontent via avis -> reservation (un avis porte sur une réservation
-// confirmée du touriste, cf. décision produit du 2026-09-18 - avant, il
-// fallait une Utilisation scannée par un staff, trop lourd opérationnellement).
-// Pas de note chiffrée dans le modèle Avis actuel (seulement message + status).
-const avisUser = (a) => a.reservation?.user
+// Un avis Site/Événement porte sur une réservation confirmée (auteur/cible
+// remontent via avis -> reservation, cf. décision produit du 2026-09-18).
+// Hôtel/Restaurant/Transport n'ont pas de Reservation (cf. migration
+// "note chiffrée par service", 2026-09-25) - l'avis porte directement sur la
+// fiche, auteur via id_user.
+const avisUser = (a) => a.reservation?.user || a.user
 const avisCible = (a) => {
   const reservation = a.reservation
   if (reservation?.site) return { libelle: reservation.site.libelle, type: 'Site touristique' }
   if (reservation?.evenement) return { libelle: reservation.evenement.libelle, type: 'Événement' }
+  if (a.hotel) return { libelle: a.hotel.libelle, type: 'Hôtel' }
+  if (a.restaurant) return { libelle: a.restaurant.libelle, type: 'Restaurant' }
+  if (a.transport) return { libelle: a.transport.libelle, type: 'Transport' }
   return { libelle: '-', type: '-' }
 }
 
@@ -124,6 +127,7 @@ export default function AdminAvis() {
                 <th>#</th>
                 <th>Utilisateur</th>
                 <th>Cible</th>
+                <th>Note</th>
                 <th>Message</th>
                 <th>Statut</th>
                 <th>Actions</th>
@@ -131,7 +135,7 @@ export default function AdminAvis() {
             </thead>
             <tbody>
               {avis.length === 0 ? (
-                <tr><td colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: 'var(--gray-500)' }}>Aucun avis</td></tr>
+                <tr><td colSpan={7} style={{ textAlign: 'center', padding: '2rem', color: 'var(--gray-500)' }}>Aucun avis</td></tr>
               ) : avis.map(a => (
                 <tr key={a.id}>
                   <td>{a.id}</td>
@@ -139,6 +143,7 @@ export default function AdminAvis() {
                   <td style={{ fontSize: '0.82rem', color: 'var(--gray-700)' }}>
                     {avisCible(a).libelle}
                   </td>
+                  <td>{a.note ? <Stars value={a.note} size={13} /> : '-'}</td>
                   <td style={{ fontSize: '0.82rem', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {a.message || <span style={{ color: 'var(--gray-500)' }}>Aucun commentaire</span>}
                   </td>
@@ -198,7 +203,8 @@ export default function AdminAvis() {
                 <div style={{ background: 'var(--gray-100)', padding: '0.75rem', borderRadius: '8px' }}>
                   <p style={{ fontSize: '0.75rem', color: 'var(--gray-500)', marginBottom: '0.25rem' }}>Cible</p>
                   <p style={{ fontWeight: 600 }}>{avisCible(selected).libelle}</p>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>{avisCible(selected).type}</p>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--gray-500)', marginBottom: selected.note ? '0.4rem' : 0 }}>{avisCible(selected).type}</p>
+                  {selected.note && <Stars value={selected.note} size={14} />}
                 </div>
               </div>
               <div style={{ marginBottom: '1.25rem' }}>
