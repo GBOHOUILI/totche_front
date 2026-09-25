@@ -314,15 +314,18 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .filters__error { color: var(--red-dark); font-size: 0.8rem; }
 
 /* ═══════════════════════════════════════════════════════════
-   PAGE HEADERS - bandeau éditorial clair, plus de bloc sombre
-   centré : titre large aligné à gauche + court chapeau.
+   PAGE HEADERS - bandeau plein cadre : image (ou couleur pleine
+   à défaut, cf. Contacts) + surcouche sombre + texte centré,
+   même logique que .detail-hero. L'image se fixe par page via
+   style inline (background-image), cette classe ne gère que la
+   structure/l'overlay/le centrage.
    ═══════════════════════════════════════════════════════════ */
-.page-hero { padding: 4rem 0 2.5rem; background: var(--white); color: var(--black); text-align: left; border-bottom: 1px solid var(--gray-100); }
-.page-hero .container { display: flex; flex-direction: column; }
-.page-hero--sm { padding: 3.5rem 0 2rem; }
-.page-hero--events { border-bottom-color: var(--red); }
-.page-hero h1 { max-width: 16ch; margin-bottom: 0.85rem; }
-.page-hero p { color: var(--gray-700); font-size: 1.0625rem; max-width: 56ch; margin: 0; }
+.page-hero { padding: 5rem 0 3.5rem; background-color: var(--black); background-size: cover; background-position: center; color: var(--white); text-align: center; position: relative; }
+.page-hero::before { content: ''; position: absolute; inset: 0; background: rgba(13,13,13,.55); }
+.page-hero .container { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
+.page-hero--sm { padding: 4rem 0 3rem; }
+.page-hero h1 { color: var(--white); max-width: 20ch; margin: 0 auto 0.85rem; }
+.page-hero p { color: rgba(255,255,255,.9); font-size: 1.0625rem; max-width: 56ch; margin: 0 auto; }
 
 /* ═══════════════════════════════════════════════════════════
    DETAIL PAGE

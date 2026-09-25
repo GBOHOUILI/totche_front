@@ -51,7 +51,7 @@ export default function Hotels() {
 
   return (
     <div className="page-sites">
-      <div className="page-hero page-hero--sm">
+      <div className="page-hero page-hero--sm" style={{ backgroundImage: "url('https://commons.wikimedia.org/wiki/Special:FilePath/Sun%20Beach%20Hotel%20Cotonou%2C%20B%C3%A9nin.jpg?width=1600')" }}>
         <h1>Hôtels</h1>
         <p>Trouvez où séjourner partout au Bénin</p>
       </div>

@@ -76,7 +76,7 @@ export default function Sites() {
 
   return (
     <div className="page-sites">
-      <div className="page-hero page-hero--sm">
+      <div className="page-hero page-hero--sm" style={{ backgroundImage: "url('https://commons.wikimedia.org/wiki/Special:FilePath/Royal%20Palaces%20of%20Abomey-133469.jpg?width=1600')" }}>
         <h1>Sites Touristiques</h1>
         <p>Découvrez les merveilles historiques, culturelles et naturelles du Bénin</p>
       </div>

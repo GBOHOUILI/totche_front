@@ -51,7 +51,7 @@ export default function Transports() {
 
   return (
     <div className="page-sites">
-      <div className="page-hero page-hero--sm">
+      <div className="page-hero page-hero--sm" style={{ backgroundImage: "url('https://commons.wikimedia.org/wiki/Special:FilePath/Le%20transport%20avec%20moto%20%C3%A0%20Cotonou%20au%20B%C3%A9nin.jpg?width=1600')" }}>
         <h1>Transports</h1>
         <p>Déplacez-vous facilement à travers le Bénin</p>
       </div>

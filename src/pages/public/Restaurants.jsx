@@ -53,7 +53,7 @@ export default function Restaurants() {
 
   return (
     <div className="page-sites">
-      <div className="page-hero page-hero--sm">
+      <div className="page-hero page-hero--sm" style={{ backgroundImage: "url('https://commons.wikimedia.org/wiki/Special:FilePath/Arts%20culinaire%20du%20B%C3%A9nin%20-%20Les%20plats%20de%20la%20cuisine%20b%C3%A9ninoise%2012.jpg?width=1600')" }}>
         <h1>Restaurants</h1>
         <p>Savourez la gastronomie béninoise</p>
       </div>

@@ -76,7 +76,7 @@ export default function Evenements() {
 
   return (
     <div className="page-evenements">
-      <div className="page-hero page-hero--sm page-hero--events">
+      <div className="page-hero page-hero--sm" style={{ backgroundImage: "url('https://commons.wikimedia.org/wiki/Special:FilePath/10%20Janvier%202023,%20F%C3%AAte%20de%20vodoun%20%C3%A0%20Ouidah%2033.jpg?width=1600')" }}>
         <h1>Évènements Culturels</h1>
         <p>Festivals, expositions, concerts et bien plus au cœur du Bénin</p>
       </div>

@@ -157,7 +157,7 @@ export default function Circuits() {
 
   return (
     <div className="page-circuits">
-      <div className="page-hero page-hero--sm">
+      <div className="page-hero page-hero--sm" style={{ backgroundImage: "url('https://commons.wikimedia.org/wiki/Special:FilePath/Pirogue%20%C3%A0%20voile%20ou%20pirogue%20%C3%A0%20balancier%20de%20type%20b%C3%A9ninois%20sur%20le%20fleuve%20de%20Ganvi%C3%A9%2005.jpg?width=1600')" }}>
         <h1>Composez votre circuit</h1>
         <p>Choisissez vos sites et événements, organisez votre itinéraire dans l'ordre qui vous convient, et visualisez-le sur la carte.</p>
       </div>
