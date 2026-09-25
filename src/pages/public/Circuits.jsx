@@ -9,35 +9,64 @@ import CircuitMap from '../../components/map/CircuitMap'
 import toast from 'react-hot-toast'
 
 const INTERETS_DISPONIBLES = ['Culture', 'Nature', 'Plage', 'Gastronomie', 'Artisanat', 'Aventure']
+const JOURS_RAPIDES = [1, 2, 3, 5, 7, 10]
+const BUDGETS_RAPIDES = [25000, 50000, 100000, 200000]
 
-// Assistant de génération - une seule proposition à la fois, jamais persistée
-// ici : le résultat vient simplement remplacer le brouillon existant
-// (Circuits.jsx gère déjà tout le cycle édition/enregistrement manuel).
-function AiWizard({ onGenerated }) {
+// Appel de génération partagé par les 3 modes (conversation/curseurs/cartes -
+// mêmes 3 variantes que le prototype web.html) : même contrat API, seule
+// l'interface de saisie des contraintes change. Ne persiste rien - le
+// résultat remplace simplement le brouillon existant (onGenerated).
+async function genererCircuit(contraintes) {
+  const { data } = await circuitsApi.genererIA(contraintes)
+  return data
+}
+
+function notifierResultat(data) {
+  const budgetLine = data.budget_estime
+    ? ` · budget estimé ${Number(data.budget_estime).toLocaleString('fr-FR')} FCFA`
+    : ''
+  toast.success(`Circuit proposé : « ${data.titre} »${budgetLine}`)
+}
+
+function ToggleUnique({ options, value, onChange }) {
+  return (
+    <div className="filters__cats">
+      {options.map(([val, label]) => (
+        <button type="button" key={val} className={`filters__cat${value === val ? ' filters__cat--active' : ''}`} onClick={() => onChange(val)}>
+          {label}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+function InteretsChips({ value, onChange }) {
+  const toggle = (i) => onChange(value.includes(i) ? value.filter(x => x !== i) : [...value, i])
+  return (
+    <div className="filters__cats">
+      {INTERETS_DISPONIBLES.map(i => (
+        <button type="button" key={i} className={`filters__cat${value.includes(i) ? ' filters__cat--active' : ''}`} onClick={() => toggle(i)}>
+          {i}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+// ── Mode "Curseurs" ──────────────────────────────────────────────────────
+function AiSliders({ onGenerated }) {
   const [jours, setJours] = useState(3)
-  const [budget, setBudget] = useState('')
+  const [budget, setBudget] = useState(75000)
   const [saison, setSaison] = useState('sec')
   const [interets, setInterets] = useState([])
   const [loading, setLoading] = useState(false)
 
-  const toggleInteret = (i) => {
-    setInterets(cur => cur.includes(i) ? cur.filter(x => x !== i) : [...cur, i])
-  }
-
   const generer = async () => {
     setLoading(true)
     try {
-      const { data } = await circuitsApi.genererIA({
-        jours,
-        budget: budget || undefined,
-        saison,
-        interets,
-      })
+      const data = await genererCircuit({ jours, budget, saison, interets })
       onGenerated(data)
-      const budgetLine = data.budget_estime
-        ? ` · budget estimé ${Number(data.budget_estime).toLocaleString('fr-FR')} FCFA`
-        : ''
-      toast.success(`Circuit proposé : « ${data.titre} »${budgetLine}`)
+      notifierResultat(data)
     } catch (err) {
       toast.error(err.response?.data?.message || "Impossible de générer un circuit pour l'instant")
     } finally {
@@ -46,52 +75,184 @@ function AiWizard({ onGenerated }) {
   }
 
   return (
+    <div>
+      <div className="ai-wizard__slider">
+        <label>Séjour de <strong>{jours} jour{jours > 1 ? 's' : ''}</strong></label>
+        <input type="range" min={1} max={14} value={jours} onChange={e => setJours(Number(e.target.value))} />
+      </div>
+      <div className="ai-wizard__slider">
+        <label>Budget total : <strong>{Number(budget).toLocaleString('fr-FR')} FCFA</strong></label>
+        <input type="range" min={0} max={300000} step={5000} value={budget} onChange={e => setBudget(Number(e.target.value))} />
+      </div>
+      <div className="ai-wizard__field">
+        <label>Période</label>
+        <ToggleUnique options={[['sec', 'Saison sèche'], ['pluie', 'Saison des pluies']]} value={saison} onChange={setSaison} />
+      </div>
+      <div className="ai-wizard__field">
+        <label>Centres d'intérêt</label>
+        <InteretsChips value={interets} onChange={setInterets} />
+      </div>
+      <button className="btn btn--primary" onClick={generer} disabled={loading}>
+        <Sparkles size={16} /> {loading ? 'Génération en cours...' : 'Générer mon circuit'}
+      </button>
+    </div>
+  )
+}
+
+// ── Mode "Conversation" ──────────────────────────────────────────────────
+// Questions à choix rapides (pas de texte libre) : garde une génération
+// fiable sans dépendre d'une analyse de langage sur la conversation
+// elle-même - seule l'étape finale interroge réellement le modèle.
+function AiChat({ onGenerated }) {
+  const [reponses, setReponses] = useState({ jours: null, budget: null, saison: null, interets: [] })
+  const [etape, setEtape] = useState(0)
+  const [loading, setLoading] = useState(false)
+
+  const repondreEtSuivre = (cle, valeur) => {
+    setReponses(r => ({ ...r, [cle]: valeur }))
+    setEtape(e => e + 1)
+  }
+
+  const generer = async () => {
+    setLoading(true)
+    try {
+      const data = await genererCircuit(reponses)
+      onGenerated(data)
+      notifierResultat(data)
+      setEtape(0)
+      setReponses({ jours: null, budget: null, saison: null, interets: [] })
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Impossible de générer un circuit pour l'instant")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const historique = []
+  if (reponses.jours) historique.push({ q: 'Combien de jours dure votre séjour ?', a: `${reponses.jours} jour${reponses.jours > 1 ? 's' : ''}` })
+  if (etape > 1) historique.push({ q: 'Quel est votre budget total ?', a: reponses.budget ? `${Number(reponses.budget).toLocaleString('fr-FR')} FCFA` : 'Pas de limite précise' })
+  if (reponses.saison) historique.push({ q: "Quelle période de l'année ?", a: reponses.saison === 'sec' ? 'Saison sèche' : 'Saison des pluies' })
+  if (etape > 3) historique.push({ q: "Qu'est-ce qui vous intéresse ?", a: reponses.interets.length ? reponses.interets.join(', ') : 'Surprenez-moi' })
+
+  return (
+    <div className="ai-chat">
+      {historique.map((m, i) => (
+        <div key={i} className="ai-chat__exchange">
+          <div className="ai-chat__bubble ai-chat__bubble--bot">{m.q}</div>
+          <div className="ai-chat__bubble ai-chat__bubble--user">{m.a}</div>
+        </div>
+      ))}
+
+      {etape === 0 && (
+        <div className="ai-chat__step">
+          <div className="ai-chat__bubble ai-chat__bubble--bot">Combien de jours dure votre séjour ?</div>
+          <div className="filters__cats">
+            {JOURS_RAPIDES.map(j => (
+              <button type="button" key={j} className="filters__cat" onClick={() => repondreEtSuivre('jours', j)}>{j} jour{j > 1 ? 's' : ''}</button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {etape === 1 && (
+        <div className="ai-chat__step">
+          <div className="ai-chat__bubble ai-chat__bubble--bot">Quel est votre budget total (FCFA) ?</div>
+          <div className="filters__cats">
+            {BUDGETS_RAPIDES.map(b => (
+              <button type="button" key={b} className="filters__cat" onClick={() => repondreEtSuivre('budget', b)}>{b.toLocaleString('fr-FR')} FCFA</button>
+            ))}
+            <button type="button" className="filters__cat" onClick={() => repondreEtSuivre('budget', null)}>Pas de limite précise</button>
+          </div>
+        </div>
+      )}
+
+      {etape === 2 && (
+        <div className="ai-chat__step">
+          <div className="ai-chat__bubble ai-chat__bubble--bot">Quelle période de l'année ?</div>
+          <div className="filters__cats">
+            <button type="button" className="filters__cat" onClick={() => repondreEtSuivre('saison', 'sec')}>Saison sèche</button>
+            <button type="button" className="filters__cat" onClick={() => repondreEtSuivre('saison', 'pluie')}>Saison des pluies</button>
+          </div>
+        </div>
+      )}
+
+      {etape === 3 && (
+        <div className="ai-chat__step">
+          <div className="ai-chat__bubble ai-chat__bubble--bot">Qu'est-ce qui vous intéresse ? (plusieurs choix possibles)</div>
+          <InteretsChips value={reponses.interets} onChange={v => setReponses(r => ({ ...r, interets: v }))} />
+          <button type="button" className="btn btn--ghost btn--sm" style={{ marginTop: '0.75rem' }} onClick={() => setEtape(4)}>Continuer</button>
+        </div>
+      )}
+
+      {etape >= 4 && (
+        <div className="ai-chat__step">
+          <div className="ai-chat__bubble ai-chat__bubble--bot">Parfait, je vous prépare un circuit sur mesure !</div>
+          <button className="btn btn--primary" onClick={generer} disabled={loading}>
+            <Sparkles size={16} /> {loading ? 'Génération en cours...' : 'Générer mon circuit'}
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ── Mode "Cartes à trier" ────────────────────────────────────────────────
+// Pas de nouvelle mécanique de swipe : le tri par glisser-déposer/flèches
+// existe déjà (StepList, section "Nouveau circuit" ci-dessous) - ce mode
+// y renvoie directement plutôt que de dupliquer la fonctionnalité.
+function AiCartes() {
+  return (
+    <div className="ai-chat__step">
+      <p style={{ color: 'var(--gray-700)', marginBottom: '1rem', fontSize: '0.9rem' }}>
+        Choisissez vos sites et événements librement, puis triez vos étapes par glisser-déposer
+        ou avec les flèches - directement dans la composition manuelle juste en dessous.
+      </p>
+      <button
+        type="button"
+        className="btn btn--ghost"
+        onClick={() => document.getElementById('circuit-manuel')?.scrollIntoView({ behavior: 'smooth' })}
+      >
+        Aller à la composition manuelle <ChevronRight size={16} />
+      </button>
+    </div>
+  )
+}
+
+const MODES_IA = [
+  ['conversation', 'Conversation'],
+  ['curseurs', 'Curseurs'],
+  ['cartes', 'Cartes à trier'],
+]
+
+function AiSection({ onGenerated }) {
+  const [mode, setMode] = useState('conversation')
+
+  return (
     <div className="ai-wizard">
       <div className="ai-wizard__header">
         <Sparkles size={18} />
         <div>
           <h3>Composer avec l'IA</h3>
-          <p>Répondez à quelques questions, l'IA propose un itinéraire que vous pourrez ensuite ajuster librement.</p>
+          <p>Trois façons d'exprimer vos envies, la même IA derrière - choisissez celle qui vous convient.</p>
         </div>
       </div>
 
-      <div className="ai-wizard__fields">
-        <div className="ai-wizard__field">
-          <label>Combien de jours ?</label>
-          <input type="number" min={1} max={14} value={jours} onChange={e => setJours(Number(e.target.value))} />
-        </div>
-        <div className="ai-wizard__field">
-          <label>Budget total (FCFA, optionnel)</label>
-          <input type="number" min={0} placeholder="Ex: 50000" value={budget} onChange={e => setBudget(e.target.value)} />
-        </div>
-        <div className="ai-wizard__field">
-          <label>Période</label>
-          <div className="seg">
-            <label className="seg-opt"><input type="radio" checked={saison === 'sec'} onChange={() => setSaison('sec')} /><span>Saison sèche</span></label>
-            <label className="seg-opt"><input type="radio" checked={saison === 'pluie'} onChange={() => setSaison('pluie')} /><span>Saison des pluies</span></label>
-          </div>
-        </div>
+      <div className="ai-wizard__tabs">
+        {MODES_IA.map(([val, label]) => (
+          <button
+            type="button"
+            key={val}
+            className={`ai-wizard__tab${mode === val ? ' ai-wizard__tab--active' : ''}`}
+            onClick={() => setMode(val)}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
-      <div className="ai-wizard__field">
-        <label>Centres d'intérêt</label>
-        <div className="filters__cats">
-          {INTERETS_DISPONIBLES.map(i => (
-            <button
-              type="button"
-              key={i}
-              className={`filters__cat${interets.includes(i) ? ' filters__cat--active' : ''}`}
-              onClick={() => toggleInteret(i)}
-            >
-              {i}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <button className="btn btn--primary" onClick={generer} disabled={loading}>
-        <Sparkles size={16} /> {loading ? 'Génération en cours...' : 'Générer mon circuit'}
-      </button>
+      {mode === 'conversation' && <AiChat onGenerated={onGenerated} />}
+      {mode === 'curseurs' && <AiSliders onGenerated={onGenerated} />}
+      {mode === 'cartes' && <AiCartes />}
     </div>
   )
 }
@@ -296,10 +457,10 @@ export default function Circuits() {
         )}
 
         <section style={{ marginBottom: '2.5rem' }}>
-          <AiWizard onGenerated={applyAiProposal} />
+          <AiSection onGenerated={applyAiProposal} />
         </section>
 
-        <section>
+        <section id="circuit-manuel">
           <h2 className="circuit-section-title">Nouveau circuit</h2>
           {!isAuthenticated && (
             <p className="circuit-banner">

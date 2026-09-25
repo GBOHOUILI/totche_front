@@ -656,10 +656,23 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .ai-wizard__header svg { color: var(--red); flex-shrink: 0; margin-top: 0.2rem; }
 .ai-wizard__header h3 { font-size: 1.1rem; margin-bottom: 0.25rem; }
 .ai-wizard__header p { font-size: 0.85rem; color: var(--gray-700); }
-.ai-wizard__fields { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1rem; }
 .ai-wizard__field { margin-bottom: 1rem; }
 .ai-wizard__field label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--gray-700); margin-bottom: 0.4rem; }
-.ai-wizard__field input[type="number"] { width: 100%; padding: 0.6rem 0.75rem; border: 1px solid var(--gray-300); background: var(--white); font-size: 0.9rem; }
+
+.ai-wizard__tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--gray-300); }
+.ai-wizard__tab { padding: 0.6rem 1rem; font-size: 0.85rem; font-weight: 600; color: var(--gray-500); border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.ai-wizard__tab--active { color: var(--red); border-color: var(--red); }
+
+.ai-wizard__slider { margin-bottom: 1.25rem; }
+.ai-wizard__slider label { display: block; font-size: 0.85rem; color: var(--gray-700); margin-bottom: 0.5rem; }
+.ai-wizard__slider label strong { color: var(--black); }
+.ai-wizard__slider input[type="range"] { width: 100%; accent-color: var(--red); }
+
+.ai-chat__exchange { margin-bottom: 1rem; }
+.ai-chat__step { margin-top: 0.5rem; }
+.ai-chat__bubble { max-width: 80%; padding: 0.65rem 1rem; font-size: 0.9rem; margin-bottom: 0.5rem; }
+.ai-chat__bubble--bot { background: var(--white); border: 1px solid var(--gray-300); color: var(--black); }
+.ai-chat__bubble--user { background: var(--red); color: var(--white); margin-left: auto; }
 
 .circuit-picker { border: 1px solid var(--gray-100); background: var(--white); }
 .circuit-picker__tabs { display: flex; border-bottom: 1px solid var(--gray-100); }
@@ -767,7 +780,7 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
   .reservation-item { flex-wrap: wrap; }
   .reservation-item__right { flex-direction: row; align-items: center; width: 100%; justify-content: flex-start; }
   .circuit-builder, .circuit-builder__form { grid-template-columns: 1fr; }
-  .ai-wizard__fields { grid-template-columns: 1fr; }
+  .ai-wizard__tabs { overflow-x: auto; }
   .circuit-list__link { flex-wrap: wrap; }
   .step-list__item { flex-wrap: wrap; }
   .step-list__actions { margin-left: auto; }
