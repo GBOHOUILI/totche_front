@@ -17,7 +17,7 @@ export function APropos() {
 
   return (
     <div className="page-apropos">
-      <div className="page-hero">
+      <div className="page-hero" style={{ backgroundImage: "url('https://commons.wikimedia.org/wiki/Special:FilePath/The%20village%20of%20Ganvi%C3%A9%20on%20Lake%20Nokou%C3%A9.jpg?width=1600')" }}>
         <h1>À propos de Totché</h1>
         <p>La plateforme qui valorise le patrimoine touristique et culturel du Bénin</p>
       </div>
