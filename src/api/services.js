@@ -597,6 +597,27 @@ export const plansApi = {
   delete: (id) => api.delete(`/admin/plans/${id}`),
 }
 
+// ─── TÉMOIGNAGES PLATEFORME (Chantier 3, section Accueil) ──────────────────
+// GET  /api/temoignages            (public, actif=true uniquement)
+// GET  /api/admin/temoignages      (admin, tous)
+// POST/PUT/DELETE /api/admin/temoignages (admin)
+// update() passe par POST + _method=PUT (method-spoofing Laravel) : seul
+// moyen de recevoir un fichier multipart sur une route PUT en PHP.
+export const temoignagesApi = {
+  list: () => api.get('/temoignages'),
+  adminList: () => api.get('/admin/temoignages'),
+  create: (formData) => api.post('/admin/temoignages', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  update: (id, formData) => {
+    formData.append('_method', 'PUT')
+    return api.post(`/admin/temoignages/${id}`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+  },
+  delete: (id) => api.delete(`/admin/temoignages/${id}`),
+}
+
 // ─── ABONNEMENTS (Kkiapay, mêmes mécanismes que commandesApi/paiementsApi) ─
 // GET   /api/prestataire/abonnement                                    { abonnement, actif }
 // POST  /api/prestataire/abonnements                { id_plan }        crée/réutilise l'abonnement en_attente + une facture à payer

@@ -43,6 +43,7 @@ const AdminTarifs = lazy(() => import('../pages/admin/AdminPrix'))
 const AdminResponsables = lazy(() => import('../pages/admin/AdminResponsables'))
 const AdminPlans = lazy(() => import('../pages/admin/AdminPlans'))
 const AdminAbonnements = lazy(() => import('../pages/admin/AdminAbonnements'))
+const AdminTemoignages = lazy(() => import('../pages/admin/AdminTemoignages'))
 
 const ResponsableLayout = lazy(() => import('../pages/responsable/ResponsableLayout'))
 const ResponsableAValider = lazy(() => import('../pages/responsable/ResponsableAValider'))
@@ -196,6 +197,7 @@ const router = createBrowserRouter([
         { path: 'responsables', element: <AdminResponsables /> },
         { path: 'plans', element: <AdminPlans /> },
         { path: 'abonnements', element: <AdminAbonnements /> },
+        { path: 'temoignages', element: <AdminTemoignages /> },
       ]
     }
   ]

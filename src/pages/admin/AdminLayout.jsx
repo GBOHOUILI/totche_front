@@ -1,7 +1,7 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, MapPin, Calendar, Tag, Ticket,
-  Users, Shield, ShieldCheck, Star, LogOut, Hotel, UtensilsCrossed, Bus, CreditCard, Receipt
+  Users, Shield, ShieldCheck, Star, LogOut, Hotel, UtensilsCrossed, Bus, CreditCard, Receipt, Quote
 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import toast from 'react-hot-toast'
@@ -22,6 +22,7 @@ const NAV_ITEMS = [
   { to: '/admin/responsables', label: 'Responsables régionaux', icon: ShieldCheck },
   { to: '/admin/plans', label: 'Plans SaaS', icon: CreditCard },
   { to: '/admin/abonnements', label: 'Abonnements', icon: Receipt },
+  { to: '/admin/temoignages', label: 'Témoignages', icon: Quote },
 ]
 
 export default function AdminLayout() {

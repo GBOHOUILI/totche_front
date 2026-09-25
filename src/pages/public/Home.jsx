@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { ChevronDown, ChevronRight, ArrowRight } from 'lucide-react'
-import { sitesApi, evenementsApi } from '../../api/services'
+import { sitesApi, evenementsApi, temoignagesApi } from '../../api/services'
 import { SiteCard, EventCard, SectionHeader, Spinner } from '../../components/ui/index'
+import { getImageUrl } from '../../api/helpers'
 
 import hero1 from '../../assets/images/PNG image 21.png'
 import hero2 from '../../assets/images/PNG image 27.png'
@@ -25,6 +26,7 @@ const HERO_IMAGES = [
 export default function Home() {
   const [sites, setSites] = useState([])
   const [events, setEvents] = useState([])
+  const [temoignages, setTemoignages] = useState([])
   const [loading, setLoading] = useState(true)
   const [heroIdx, setHeroIdx] = useState(0)
 
@@ -35,6 +37,7 @@ export default function Home() {
         setEvents(e.data?.data || e.data || [])
       })
       .finally(() => setLoading(false))
+    temoignagesApi.list().then(r => setTemoignages(r.data || [])).catch(() => {})
   }, [])
 
   // Hero carousel
@@ -183,6 +186,32 @@ export default function Home() {
                 ? <img src={sites[0].galeries[0].url_fichier} alt={sites[0].libelle} />
                 : <div className="home__featured-placeholder" />
               }
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── TÉMOIGNAGES ── */}
+      {temoignages.length > 0 && (
+        <section className="home__section">
+          <div className="container">
+            <SectionHeader title="Ce que pensent nos utilisateurs" />
+            <div className="temoignages-grid">
+              {temoignages.map(t => (
+                <div key={t.id} className="temoignage-card">
+                  <p className="temoignage-card__message">« {t.message} »</p>
+                  <div className="temoignage-card__author">
+                    {t.photo
+                      ? <img src={getImageUrl(t.photo)} alt={t.nom} className="temoignage-card__avatar" />
+                      : <div className="temoignage-card__avatar temoignage-card__avatar--placeholder">{t.nom.charAt(0)}</div>
+                    }
+                    <div>
+                      <strong>{t.nom}</strong>
+                      <span>{t.role}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
