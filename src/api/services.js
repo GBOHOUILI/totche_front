@@ -514,15 +514,20 @@ export const responsablesApi = {
   aValider: () => api.get('/responsable/a-valider'),
   validerSite: (id) => api.patch(`/responsable/sites/${id}/valider`),
   rejeterSite: (id) => api.patch(`/responsable/sites/${id}/rejeter`),
+  demanderPrecisionsSite: (id, commentaire) => api.patch(`/responsable/sites/${id}/demander-precisions`, { commentaire }),
   validerEvenement: (id) => api.patch(`/responsable/evenements/${id}/valider`),
   rejeterEvenement: (id) => api.patch(`/responsable/evenements/${id}/rejeter`),
+  demanderPrecisionsEvenement: (id, commentaire) => api.patch(`/responsable/evenements/${id}/demander-precisions`, { commentaire }),
 
   validerHotel: (id) => api.patch(`/responsable/hotels/${id}/valider`),
   rejeterHotel: (id) => api.patch(`/responsable/hotels/${id}/rejeter`),
+  demanderPrecisionsHotel: (id, commentaire) => api.patch(`/responsable/hotels/${id}/demander-precisions`, { commentaire }),
   validerRestaurant: (id) => api.patch(`/responsable/restaurants/${id}/valider`),
   rejeterRestaurant: (id) => api.patch(`/responsable/restaurants/${id}/rejeter`),
+  demanderPrecisionsRestaurant: (id, commentaire) => api.patch(`/responsable/restaurants/${id}/demander-precisions`, { commentaire }),
   validerTransport: (id) => api.patch(`/responsable/transports/${id}/valider`),
   rejeterTransport: (id) => api.patch(`/responsable/transports/${id}/rejeter`),
+  demanderPrecisionsTransport: (id, commentaire) => api.patch(`/responsable/transports/${id}/demander-precisions`, { commentaire }),
 
   // Mes propres fiches (un responsable connaît son territoire) - jamais
   // auto-validées, seul un admin les valide.

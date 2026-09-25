@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Plus, Pencil, Trash2, X, Image, UtensilsCrossed } from 'lucide-react'
+import { Plus, Pencil, Trash2, X, Image, UtensilsCrossed, MessageCircleQuestion } from 'lucide-react'
 import { prestatairesApi, regionsApi } from '../../api/services'
 import { Spinner } from '../../components/ui/index'
 import toast from 'react-hot-toast'
@@ -14,8 +14,8 @@ const emptyForm = {
 }
 const emptyPlatForm = { nom: '', prix: '', description: '' }
 
-const statusColor = (s) => ({ valide: 'success', rejete: 'danger', en_attente: 'warning', suspendu: 'danger' })[s] || 'warning'
-const statusLabel = (s) => ({ valide: 'Validé', rejete: 'Rejeté', en_attente: 'En attente', suspendu: 'Suspendu' })[s] || s
+const statusColor = (s) => ({ valide: 'success', rejete: 'danger', en_attente: 'warning', suspendu: 'danger', precisions_demandees: 'info' })[s] || 'warning'
+const statusLabel = (s) => ({ valide: 'Validé', rejete: 'Rejeté', en_attente: 'En attente', suspendu: 'Suspendu', precisions_demandees: 'Précisions demandées' })[s] || s
 
 export default function PrestataireRestaurants() {
   const [restaurants, setRestaurants] = useState([])
@@ -150,7 +150,12 @@ export default function PrestataireRestaurants() {
                 <td>{restaurant.adresse}</td>
                 <td>{restaurant.type_cuisine || '-'}</td>
                 <td>{restaurant.region?.nom || '-'}</td>
-                <td><span className={`status-badge status-badge--${statusColor(restaurant.status)}`}>{statusLabel(restaurant.status)}</span></td>
+                <td>
+                  <span className={`status-badge status-badge--${statusColor(restaurant.status)}`}>{statusLabel(restaurant.status)}</span>
+                  {restaurant.commentaire_responsable && (
+                    <div className="precisions-note"><MessageCircleQuestion size={14} /><span>{restaurant.commentaire_responsable}</span></div>
+                  )}
+                </td>
                 <td>
                   <div className="admin-table__actions">
                     <button className="admin-icon-btn" title="Plats" onClick={() => setPlatModal(restaurant)}><UtensilsCrossed size={15} /></button>

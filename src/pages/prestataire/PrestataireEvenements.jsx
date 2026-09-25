@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Plus, Pencil, Trash2, X, Image, Tag } from 'lucide-react'
+import { Plus, Pencil, Trash2, X, Image, Tag, MessageCircleQuestion } from 'lucide-react'
 import { prestatairesApi, categoriesApi, regionsApi } from '../../api/services'
 import { Spinner } from '../../components/ui/index'
 import toast from 'react-hot-toast'
@@ -17,8 +17,8 @@ const emptyForm = {
 }
 const emptyPrixForm = { libelle: '', montant: '' }
 
-const statusColor = (s) => ({ valide: 'success', rejete: 'danger', en_attente: 'warning', suspendu: 'danger' })[s] || 'warning'
-const statusLabel = (s) => ({ valide: 'Validé', rejete: 'Rejeté', en_attente: 'En attente', suspendu: 'Suspendu' })[s] || s
+const statusColor = (s) => ({ valide: 'success', rejete: 'danger', en_attente: 'warning', suspendu: 'danger', precisions_demandees: 'info' })[s] || 'warning'
+const statusLabel = (s) => ({ valide: 'Validé', rejete: 'Rejeté', en_attente: 'En attente', suspendu: 'Suspendu', precisions_demandees: 'Précisions demandées' })[s] || s
 
 export default function PrestataireEvenements() {
   const [events, setEvents] = useState([])
@@ -158,7 +158,12 @@ export default function PrestataireEvenements() {
                 <td>{evt.adresse}</td>
                 <td>{evt.date_debut ? new Date(evt.date_debut).toLocaleDateString('fr-FR') : '-'}</td>
                 <td>{evt.region?.nom || '-'}</td>
-                <td><span className={`status-badge status-badge--${statusColor(evt.status)}`}>{statusLabel(evt.status)}</span></td>
+                <td>
+                  <span className={`status-badge status-badge--${statusColor(evt.status)}`}>{statusLabel(evt.status)}</span>
+                  {evt.commentaire_responsable && (
+                    <div className="precisions-note"><MessageCircleQuestion size={14} /><span>{evt.commentaire_responsable}</span></div>
+                  )}
+                </td>
                 <td>
                   <div className="admin-table__actions">
                     <button className="admin-icon-btn" title="Tarifs" onClick={() => setPrixModal(evt)}><Tag size={15} /></button>
