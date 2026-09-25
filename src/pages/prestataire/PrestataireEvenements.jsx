@@ -3,11 +3,17 @@ import { Plus, Pencil, Trash2, X, Image, Tag } from 'lucide-react'
 import { prestatairesApi, categoriesApi, regionsApi } from '../../api/services'
 import { Spinner } from '../../components/ui/index'
 import toast from 'react-hot-toast'
+import LocationPicker from '../../components/map/LocationPicker'
+import TagListInput from '../../components/forms/TagListInput'
+import ItineraryEditor from '../../components/forms/ItineraryEditor'
 
 const emptyForm = {
   libelle: '', adresse: '', description: '',
   id_cat_evenmt: '', date_debut: '', date_fin: '',
   latitude: '', longitude: '', id_region: '',
+  points_forts: [], inclus: [], non_inclus: [],
+  infos_pratiques: '', recommandations: '', itineraire: [],
+  groupe_min: '', groupe_max: '', langue: '', difficulte: '',
 }
 const emptyPrixForm = { libelle: '', montant: '' }
 
@@ -51,6 +57,11 @@ export default function PrestataireEvenements() {
       date_fin: evt.date_fin?.split('T')[0] || '',
       latitude: evt.latitude || '', longitude: evt.longitude || '',
       id_region: evt.id_region || '',
+      points_forts: evt.points_forts || [], inclus: evt.inclus || [], non_inclus: evt.non_inclus || [],
+      infos_pratiques: evt.infos_pratiques || '', recommandations: evt.recommandations || '',
+      itineraire: evt.itineraire || [],
+      groupe_min: evt.groupe_min ?? '', groupe_max: evt.groupe_max ?? '',
+      langue: evt.langue || '', difficulte: evt.difficulte || '',
     })
     setModal(evt)
   }
@@ -59,10 +70,20 @@ export default function PrestataireEvenements() {
     e.preventDefault()
     const payload = {
       ...form,
-      latitude: form.latitude ? parseFloat(form.latitude) : undefined,
-      longitude: form.longitude ? parseFloat(form.longitude) : undefined,
+      latitude: form.latitude !== '' && form.latitude != null ? parseFloat(form.latitude) : undefined,
+      longitude: form.longitude !== '' && form.longitude != null ? parseFloat(form.longitude) : undefined,
       id_cat_evenmt: form.id_cat_evenmt ? parseInt(form.id_cat_evenmt) : undefined,
       id_region: form.id_region ? parseInt(form.id_region) : undefined,
+      points_forts: form.points_forts.filter(v => v.trim()),
+      inclus: form.inclus.filter(v => v.trim()),
+      non_inclus: form.non_inclus.filter(v => v.trim()),
+      infos_pratiques: form.infos_pratiques || undefined,
+      recommandations: form.recommandations || undefined,
+      itineraire: form.itineraire.filter(s => s.titre?.trim() && s.description?.trim()),
+      groupe_min: form.groupe_min !== '' ? parseInt(form.groupe_min) : undefined,
+      groupe_max: form.groupe_max !== '' ? parseInt(form.groupe_max) : undefined,
+      langue: form.langue || undefined,
+      difficulte: form.difficulte || undefined,
     }
     try {
       if (modal === 'create') { await prestatairesApi.createEvenement(payload); toast.success('Événement créé - en attente de validation') }
@@ -183,12 +204,54 @@ export default function PrestataireEvenements() {
                 <div className="admin-form__field"><label>Date fin *</label>
                   <input type="date" value={form.date_fin} onChange={e => setForm(f => ({ ...f, date_fin: e.target.value }))} required /></div>
               </div>
+              <LocationPicker
+                latitude={form.latitude}
+                longitude={form.longitude}
+                onChange={({ latitude, longitude }) => setForm(f => ({ ...f, latitude, longitude }))}
+              />
+              <TagListInput
+                label="Points forts"
+                value={form.points_forts}
+                onChange={v => setForm(f => ({ ...f, points_forts: v }))}
+                placeholder="Ex: Ambiance festive, artisanat local"
+              />
+              <TagListInput
+                label="Ce qui est inclus"
+                value={form.inclus}
+                onChange={v => setForm(f => ({ ...f, inclus: v }))}
+                placeholder="Ex: Accès à l'événement, animation"
+              />
+              <TagListInput
+                label="Non inclus"
+                value={form.non_inclus}
+                onChange={v => setForm(f => ({ ...f, non_inclus: v }))}
+                placeholder="Ex: Transport, hébergement"
+              />
+              <ItineraryEditor
+                value={form.itineraire}
+                onChange={v => setForm(f => ({ ...f, itineraire: v }))}
+              />
               <div className="admin-form__row">
-                <div className="admin-form__field"><label>Latitude *</label>
-                  <input type="number" step="any" value={form.latitude} onChange={e => setForm(f => ({ ...f, latitude: e.target.value }))} required /></div>
-                <div className="admin-form__field"><label>Longitude *</label>
-                  <input type="number" step="any" value={form.longitude} onChange={e => setForm(f => ({ ...f, longitude: e.target.value }))} required /></div>
+                <div className="admin-form__field"><label>Groupe min.</label>
+                  <input type="number" min="1" value={form.groupe_min} onChange={e => setForm(f => ({ ...f, groupe_min: e.target.value }))} /></div>
+                <div className="admin-form__field"><label>Groupe max.</label>
+                  <input type="number" min="1" value={form.groupe_max} onChange={e => setForm(f => ({ ...f, groupe_max: e.target.value }))} /></div>
               </div>
+              <div className="admin-form__row">
+                <div className="admin-form__field"><label>Langue</label>
+                  <input type="text" value={form.langue} onChange={e => setForm(f => ({ ...f, langue: e.target.value }))} placeholder="Ex: Français, Fon" /></div>
+                <div className="admin-form__field"><label>Difficulté</label>
+                  <select value={form.difficulte} onChange={e => setForm(f => ({ ...f, difficulte: e.target.value }))}>
+                    <option value="">Non précisée</option>
+                    <option value="facile">Facile</option>
+                    <option value="moderee">Modérée</option>
+                    <option value="difficile">Difficile</option>
+                  </select></div>
+              </div>
+              <div className="admin-form__field"><label>Infos pratiques</label>
+                <textarea rows={3} value={form.infos_pratiques} onChange={e => setForm(f => ({ ...f, infos_pratiques: e.target.value }))} placeholder="Ex: Prévoir de l'eau, chaussures fermées recommandées" /></div>
+              <div className="admin-form__field"><label>Recommandations</label>
+                <textarea rows={3} value={form.recommandations} onChange={e => setForm(f => ({ ...f, recommandations: e.target.value }))} placeholder="Ex: Meilleure période : novembre à février" /></div>
               <div className="admin-form__field"><label>Description</label>
                 <textarea rows={4} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
               <p style={{ fontSize: '0.78rem', color: 'var(--gray-500)' }}>

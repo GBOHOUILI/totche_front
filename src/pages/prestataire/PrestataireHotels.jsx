@@ -3,10 +3,14 @@ import { Plus, Pencil, Trash2, X, Image, BedDouble } from 'lucide-react'
 import { prestatairesApi, regionsApi } from '../../api/services'
 import { Spinner, Stars } from '../../components/ui/index'
 import toast from 'react-hot-toast'
+import LocationPicker from '../../components/map/LocationPicker'
+import TagListInput from '../../components/forms/TagListInput'
 
 const emptyForm = {
   libelle: '', adresse: '', description: '',
   latitude: '', longitude: '', nombre_etoiles: '', id_region: '',
+  points_forts: [], inclus: [], non_inclus: [],
+  infos_pratiques: '', recommandations: '', heure_arrivee: '', heure_depart: '',
 }
 const emptyChambreForm = { type_chambre: '', prix_nuit: '', capacite: '', disponibilite: true }
 
@@ -46,6 +50,9 @@ export default function PrestataireHotels() {
       description: hotel.description || '', latitude: hotel.latitude || '',
       longitude: hotel.longitude || '', nombre_etoiles: hotel.nombre_etoiles || '',
       id_region: hotel.id_region || '',
+      points_forts: hotel.points_forts || [], inclus: hotel.inclus || [], non_inclus: hotel.non_inclus || [],
+      infos_pratiques: hotel.infos_pratiques || '', recommandations: hotel.recommandations || '',
+      heure_arrivee: hotel.heure_arrivee || '', heure_depart: hotel.heure_depart || '',
     })
     setModal(hotel)
   }
@@ -54,10 +61,17 @@ export default function PrestataireHotels() {
     e.preventDefault()
     const payload = {
       ...form,
-      latitude: form.latitude ? parseFloat(form.latitude) : undefined,
-      longitude: form.longitude ? parseFloat(form.longitude) : undefined,
+      latitude: form.latitude !== '' && form.latitude != null ? parseFloat(form.latitude) : undefined,
+      longitude: form.longitude !== '' && form.longitude != null ? parseFloat(form.longitude) : undefined,
       nombre_etoiles: form.nombre_etoiles ? parseInt(form.nombre_etoiles) : undefined,
       id_region: form.id_region ? parseInt(form.id_region) : undefined,
+      points_forts: form.points_forts.filter(v => v.trim()),
+      inclus: form.inclus.filter(v => v.trim()),
+      non_inclus: form.non_inclus.filter(v => v.trim()),
+      infos_pratiques: form.infos_pratiques || undefined,
+      recommandations: form.recommandations || undefined,
+      heure_arrivee: form.heure_arrivee || undefined,
+      heure_depart: form.heure_depart || undefined,
     }
     try {
       if (modal === 'create') { await prestatairesApi.createHotel(payload); toast.success('Hôtel créé - en attente de validation') }
@@ -179,12 +193,39 @@ export default function PrestataireHotels() {
                     {regions.map(r => <option key={r.id} value={r.id}>{r.nom}</option>)}
                   </select></div>
               </div>
+              <LocationPicker
+                latitude={form.latitude}
+                longitude={form.longitude}
+                onChange={({ latitude, longitude }) => setForm(f => ({ ...f, latitude, longitude }))}
+              />
+              <TagListInput
+                label="Points forts"
+                value={form.points_forts}
+                onChange={v => setForm(f => ({ ...f, points_forts: v }))}
+                placeholder="Ex: Piscine, vue sur mer"
+              />
+              <TagListInput
+                label="Ce qui est inclus"
+                value={form.inclus}
+                onChange={v => setForm(f => ({ ...f, inclus: v }))}
+                placeholder="Ex: Petit-déjeuner, Wi-Fi"
+              />
+              <TagListInput
+                label="Non inclus"
+                value={form.non_inclus}
+                onChange={v => setForm(f => ({ ...f, non_inclus: v }))}
+                placeholder="Ex: Navette aéroport, spa"
+              />
               <div className="admin-form__row">
-                <div className="admin-form__field"><label>Latitude *</label>
-                  <input type="number" step="any" value={form.latitude} onChange={e => setForm(f => ({ ...f, latitude: e.target.value }))} required /></div>
-                <div className="admin-form__field"><label>Longitude *</label>
-                  <input type="number" step="any" value={form.longitude} onChange={e => setForm(f => ({ ...f, longitude: e.target.value }))} required /></div>
+                <div className="admin-form__field"><label>Heure d'arrivée</label>
+                  <input type="time" value={form.heure_arrivee} onChange={e => setForm(f => ({ ...f, heure_arrivee: e.target.value }))} /></div>
+                <div className="admin-form__field"><label>Heure de départ</label>
+                  <input type="time" value={form.heure_depart} onChange={e => setForm(f => ({ ...f, heure_depart: e.target.value }))} /></div>
               </div>
+              <div className="admin-form__field"><label>Infos pratiques</label>
+                <textarea rows={3} value={form.infos_pratiques} onChange={e => setForm(f => ({ ...f, infos_pratiques: e.target.value }))} placeholder="Ex: Parking gratuit sur place" /></div>
+              <div className="admin-form__field"><label>Recommandations</label>
+                <textarea rows={3} value={form.recommandations} onChange={e => setForm(f => ({ ...f, recommandations: e.target.value }))} placeholder="Ex: Réserver 48h à l'avance en haute saison" /></div>
               <div className="admin-form__field"><label>Description</label>
                 <textarea rows={4} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
               <p style={{ fontSize: '0.78rem', color: 'var(--gray-500)' }}>
