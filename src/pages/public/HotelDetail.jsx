@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { MapPin, ChevronLeft, ChevronRight, BedDouble } from 'lucide-react'
+import { MapPin, Clock, ChevronLeft, ChevronRight, BedDouble } from 'lucide-react'
 import { hotelsApi } from '../../api/services'
 import { Stars, Spinner } from '../../components/ui/index'
+import { HighlightsSection, IncludedSection, PracticalInfoSection, FactsCard } from '../../components/detail/EnrichedSections'
 
 export default function HotelDetail() {
   const { id } = useParams()
@@ -46,6 +47,9 @@ export default function HotelDetail() {
           <div className="detail-hero__meta">
             {hotel.adresse && <span><MapPin size={14} /> {hotel.adresse}</span>}
             {hotel.nombre_etoiles && <Stars value={hotel.nombre_etoiles} size={14} />}
+            {(hotel.heure_arrivee || hotel.heure_depart) && (
+              <span><Clock size={14} /> Arrivée {hotel.heure_arrivee?.slice(0, 5) || '—'} · Départ {hotel.heure_depart?.slice(0, 5) || '—'}</span>
+            )}
             {hotel.region && <span>{hotel.region.nom}</span>}
           </div>
         </div>
@@ -58,6 +62,10 @@ export default function HotelDetail() {
               <h2>Description</h2>
               <p className="detail-description">{hotel.description || 'Aucune description disponible.'}</p>
             </section>
+
+            <HighlightsSection points={hotel.points_forts} />
+            <IncludedSection inclus={hotel.inclus} nonInclus={hotel.non_inclus} />
+            <PracticalInfoSection infosPratiques={hotel.infos_pratiques} recommandations={hotel.recommandations} />
 
             {images.length > 1 && (
               <section className="detail-section">
@@ -93,6 +101,11 @@ export default function HotelDetail() {
                 </div>
               )}
             </div>
+
+            <FactsCard facts={[
+              { icon: Clock, label: "Heure d'arrivée", value: hotel.heure_arrivee?.slice(0, 5) },
+              { icon: Clock, label: 'Heure de départ', value: hotel.heure_depart?.slice(0, 5) },
+            ]} />
 
             {hotel.adresse && (
               <div className="detail-card">

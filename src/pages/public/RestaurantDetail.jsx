@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { MapPin, ChevronLeft, ChevronRight, UtensilsCrossed } from 'lucide-react'
+import { MapPin, Clock, ChevronLeft, ChevronRight, UtensilsCrossed } from 'lucide-react'
 import { restaurantsApi } from '../../api/services'
 import { Spinner } from '../../components/ui/index'
+import { HighlightsSection, IncludedSection, PracticalInfoSection, FactsCard } from '../../components/detail/EnrichedSections'
 
 const GAMME_LABEL = { economique: 'Économique', moyen: 'Moyen', eleve: 'Élevé' }
 
@@ -49,6 +50,7 @@ export default function RestaurantDetail() {
             {restaurant.adresse && <span><MapPin size={14} /> {restaurant.adresse}</span>}
             {restaurant.type_cuisine && <span>{restaurant.type_cuisine}</span>}
             {restaurant.gamme_prix && <span>{GAMME_LABEL[restaurant.gamme_prix] || restaurant.gamme_prix}</span>}
+            {restaurant.horaires && <span><Clock size={14} /> {restaurant.horaires}</span>}
           </div>
         </div>
       </div>
@@ -60,6 +62,10 @@ export default function RestaurantDetail() {
               <h2>Description</h2>
               <p className="detail-description">{restaurant.description || 'Aucune description disponible.'}</p>
             </section>
+
+            <HighlightsSection points={restaurant.points_forts} />
+            <IncludedSection inclus={restaurant.inclus} nonInclus={restaurant.non_inclus} />
+            <PracticalInfoSection infosPratiques={restaurant.infos_pratiques} recommandations={restaurant.recommandations} />
 
             {images.length > 1 && (
               <section className="detail-section">
@@ -91,6 +97,10 @@ export default function RestaurantDetail() {
                 </div>
               )}
             </div>
+
+            <FactsCard facts={[
+              { icon: Clock, label: 'Horaires', value: restaurant.horaires },
+            ]} />
 
             {restaurant.adresse && (
               <div className="detail-card">

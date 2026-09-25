@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { MapPin, ChevronLeft, ChevronRight, Route } from 'lucide-react'
+import { MapPin, Clock, ChevronLeft, ChevronRight, Route } from 'lucide-react'
 import { transportsApi } from '../../api/services'
 import { Spinner } from '../../components/ui/index'
+import { HighlightsSection, IncludedSection, PracticalInfoSection, FactsCard } from '../../components/detail/EnrichedSections'
 
 export default function TransportDetail() {
   const { id } = useParams()
@@ -47,6 +48,7 @@ export default function TransportDetail() {
             {transport.adresse && <span><MapPin size={14} /> {transport.adresse}</span>}
             {transport.type_transport && <span>{transport.type_transport}</span>}
             {transport.capacite && <span>{transport.capacite} places</span>}
+            {transport.duree_trajet_estimee && <span><Clock size={14} /> {transport.duree_trajet_estimee}</span>}
           </div>
         </div>
       </div>
@@ -58,6 +60,10 @@ export default function TransportDetail() {
               <h2>Description</h2>
               <p className="detail-description">{transport.description || 'Aucune description disponible.'}</p>
             </section>
+
+            <HighlightsSection points={transport.points_forts} />
+            <IncludedSection inclus={transport.inclus} nonInclus={transport.non_inclus} />
+            <PracticalInfoSection infosPratiques={transport.infos_pratiques} recommandations={transport.recommandations} />
 
             {images.length > 1 && (
               <section className="detail-section">
@@ -92,6 +98,10 @@ export default function TransportDetail() {
                 </div>
               )}
             </div>
+
+            <FactsCard facts={[
+              { icon: Clock, label: 'Durée de trajet estimée', value: transport.duree_trajet_estimee },
+            ]} />
 
             {transport.adresse && (
               <div className="detail-card">

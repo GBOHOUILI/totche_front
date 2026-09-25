@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { MapPin, Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
+import { MapPin, Calendar, Users, Languages, Gauge, ChevronLeft, ChevronRight } from 'lucide-react'
 import { evenementsApi, prixApi, reservationsApi, avisApi } from '../../api/services'
 import { Spinner } from '../../components/ui/index'
 import { useAuth } from '../../context/AuthContext'
+import { HighlightsSection, ItinerarySection, IncludedSection, PracticalInfoSection, FactsCard } from '../../components/detail/EnrichedSections'
 import toast from 'react-hot-toast'
+
+const DIFFICULTE_LABEL = { facile: 'Facile', moderee: 'Modérée', difficile: 'Difficile' }
 
 export default function EvenementDetail() {
   const { id } = useParams()
@@ -89,6 +92,16 @@ export default function EvenementDetail() {
   const images = event.galeries || []
   const dateDebut = event.date_debut ? new Date(event.date_debut) : null
   const dateFin = event.date_fin ? new Date(event.date_fin) : null
+  const fmtDate = d => d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
+  // getUTCHours/Minutes (pas getHours) : le backend stocke en UTC et n'envoie
+  // jamais qu'une date sans heure (formulaire actuel = <input type="date">,
+  // donc toujours minuit UTC) - lire l'heure locale du navigateur ferait
+  // apparaître un horaire fantôme dès que le fuseau du visiteur n'est pas UTC
+  // (ex. UTC+1 au Bénin affiche 01:00 pour un événement sans heure réelle).
+  const fmtTime = d => (d.getUTCHours() !== 0 || d.getUTCMinutes() !== 0) ? d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' }) : null
+  const groupeLabel = (event.groupe_min || event.groupe_max)
+    ? (event.groupe_min && event.groupe_max ? `${event.groupe_min} – ${event.groupe_max} pers.` : `${event.groupe_min || event.groupe_max} pers.`)
+    : null
 
   return (
     <div className="page-detail">
@@ -111,10 +124,11 @@ export default function EvenementDetail() {
             {event.adresse && <span><MapPin size={14} /> {event.adresse}</span>}
             {dateDebut && (
               <span><Calendar size={14} />
-                {dateDebut.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
-                {dateFin && ` → ${dateFin.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}`}
+                {fmtDate(dateDebut)}{fmtTime(dateDebut) && ` à ${fmtTime(dateDebut)}`}
+                {dateFin && ` → ${fmtDate(dateFin)}`}
               </span>
             )}
+            {groupeLabel && <span><Users size={14} /> {groupeLabel}</span>}
           </div>
         </div>
       </div>
@@ -126,6 +140,11 @@ export default function EvenementDetail() {
               <h2>Description</h2>
               <p className="detail-description">{event.description || 'Aucune description disponible.'}</p>
             </section>
+
+            <HighlightsSection points={event.points_forts} />
+            <ItinerarySection steps={event.itineraire} />
+            <IncludedSection inclus={event.inclus} nonInclus={event.non_inclus} inclusLabel="Ce que le billet inclut" />
+            <PracticalInfoSection infosPratiques={event.infos_pratiques} recommandations={event.recommandations} />
 
             {images.length > 1 && (
               <section className="detail-section">
@@ -233,11 +252,17 @@ export default function EvenementDetail() {
               <div className="detail-card">
                 <h3>Dates</h3>
                 <p style={{ fontSize: '0.875rem', color: 'var(--gray-700)' }}>
-                  Du {dateDebut.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
-                  {dateFin && <><br />au {dateFin.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</>}
+                  Du {fmtDate(dateDebut)}{fmtTime(dateDebut) && ` à ${fmtTime(dateDebut)}`}
+                  {dateFin && <><br />au {fmtDate(dateFin)}</>}
                 </p>
               </div>
             )}
+
+            <FactsCard facts={[
+              { icon: Users, label: 'Groupe', value: groupeLabel },
+              { icon: Languages, label: 'Langue', value: event.langue },
+              { icon: Gauge, label: 'Difficulté', value: event.difficulte ? DIFFICULTE_LABEL[event.difficulte] : null },
+            ]} />
           </div>
         </div>
       </div>
