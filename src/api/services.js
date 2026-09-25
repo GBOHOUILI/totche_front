@@ -397,6 +397,13 @@ export const circuitsApi = {
   genererIA: (contraintes) => api.post('/circuits/generer-ia', contraintes),
 }
 
+// POST /api/assistant/chat  public  { messages: [{role, content}] } -> { reponse, circuit: {...} | null }
+// Discussion libre (pas de contraintes structurées) - même contrat de circuit que
+// circuitsApi.genererIA quand l'assistant en propose un dans sa réponse.
+export const assistantApi = {
+  chat: (messages) => api.post('/assistant/chat', { messages }),
+}
+
 export const etapesApi = {
   create: (idCircuit, data) => api.post(`/circuits/${idCircuit}/etapes`, data),
   update: (id, data) => api.put(`/etapes/${id}`, data),
