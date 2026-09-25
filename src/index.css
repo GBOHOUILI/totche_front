@@ -310,6 +310,7 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .filters__extra { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin-top: 0.75rem; width: 100%; }
 .filters__select { padding: 0.5rem 0.75rem; border: 1px solid var(--gray-300); border-radius: var(--radius); background: var(--white); color: var(--black); font-size: 0.85rem; }
 .filters__input-sm { width: 100px; padding: 0.5rem 0.6rem; border: 1px solid var(--gray-300); border-radius: var(--radius); font-size: 0.85rem; }
+.filters__input-sm--wide { width: 130px; }
 .filters__error { color: var(--red-dark); font-size: 0.8rem; }
 
 /* ═══════════════════════════════════════════════════════════

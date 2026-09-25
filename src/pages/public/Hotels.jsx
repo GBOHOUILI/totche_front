@@ -113,7 +113,7 @@ export default function Hotels() {
               placeholder="Prix/nuit min"
               value={prixMin}
               onChange={e => { setPrixMin(e.target.value); setPage(1) }}
-              className="filters__input-sm"
+              className="filters__input-sm filters__input-sm--wide"
             />
             <input
               type="number"
@@ -121,7 +121,7 @@ export default function Hotels() {
               placeholder="Prix/nuit max"
               value={prixMax}
               onChange={e => { setPrixMax(e.target.value); setPage(1) }}
-              className="filters__input-sm"
+              className="filters__input-sm filters__input-sm--wide"
             />
             {geoError && <span className="filters__error">{geoError}</span>}
           </div>
