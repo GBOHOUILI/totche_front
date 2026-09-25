@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { ChevronDown, ChevronRight, ArrowRight } from 'lucide-react'
+import { ChevronDown, ChevronRight, ArrowRight, Sparkles } from 'lucide-react'
 import { sitesApi, evenementsApi, temoignagesApi } from '../../api/services'
 import { SiteCard, EventCard, SectionHeader, Spinner } from '../../components/ui/index'
 import { getImageUrl } from '../../api/helpers'
@@ -107,6 +107,22 @@ export default function Home() {
           <Link to="/circuits">
             <span>Composez votre circuit</span>
             <ArrowRight size={16} />
+          </Link>
+        </div>
+      </section>
+
+      {/* ── CIRCUIT IA ── */}
+      <section className="home__ai-promo">
+        <div className="container">
+          <span className="home__ai-promo-eyebrow"><Sparkles size={14} /> Nouveau</span>
+          <h2>Composez votre circuit en discutant avec l'IA</h2>
+          <p>
+            Quelques questions - durée du séjour, budget, centres d'intérêt - et l'assistant
+            vous propose un itinéraire sur mesure entre sites et événements, modifiable comme
+            un circuit classique.
+          </p>
+          <Link to="/circuits#circuit-ia" className="btn btn--primary">
+            Discuter avec l'assistant <ArrowRight size={16} />
           </Link>
         </div>
       </section>
