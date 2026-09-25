@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { MapPin, Clock, Gauge, ChevronLeft, ChevronRight } from 'lucide-react'
 import { sitesApi, prixApi, reservationsApi, avisApi } from '../../api/services'
-import { Spinner } from '../../components/ui/index'
+import { Spinner, Stars, StarRatingInput, NoteResume } from '../../components/ui/index'
 import { useAuth } from '../../context/AuthContext'
 import { HighlightsSection, IncludedSection, PracticalInfoSection, FactsCard } from '../../components/detail/EnrichedSections'
 import toast from 'react-hot-toast'
@@ -22,6 +22,7 @@ export default function SiteDetail() {
   const [avisList, setAvisList] = useState([])
   const [reviewableReservation, setReviewableReservation] = useState(null)
   const [avisMessage, setAvisMessage] = useState('')
+  const [avisNote, setAvisNote] = useState(0)
   const [avisSubmitting, setAvisSubmitting] = useState(false)
   const [avisJustSubmitted, setAvisJustSubmitted] = useState(false)
 
@@ -60,13 +61,14 @@ export default function SiteDetail() {
 
   const submitAvis = async (e) => {
     e.preventDefault()
-    if (!reviewableReservation || !avisMessage.trim()) return
+    if (!reviewableReservation || !avisMessage.trim() || !avisNote) return
     setAvisSubmitting(true)
     try {
-      await avisApi.create({ id_reservation: reviewableReservation.id, message: avisMessage.trim() })
+      await avisApi.create({ id_reservation: reviewableReservation.id, message: avisMessage.trim(), note: avisNote })
       toast.success('Merci ! Votre avis sera visible après modération.')
       setAvisJustSubmitted(true)
       setAvisMessage('')
+      setAvisNote(0)
     } catch (err) {
       toast.error(err.response?.data?.message || "Erreur lors de l'envoi de l'avis")
     } finally { setAvisSubmitting(false) }
@@ -176,14 +178,20 @@ export default function SiteDetail() {
 
             {/* Avis */}
             <section className="detail-section">
-              <h2>Avis des visiteurs</h2>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '1rem' }}>
+                <h2 style={{ marginBottom: 0 }}>Avis des visiteurs</h2>
+                <NoteResume moyenne={site.note_moyenne} nombre={site.nombre_avis} size={15} />
+              </div>
               {avisList.length === 0 ? (
                 <p className="detail-description" style={{ color: 'var(--gray-500)' }}>Aucun avis pour l'instant.</p>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   {avisList.map(a => (
                     <div key={a.id} style={{ borderLeft: '3px solid var(--red)', paddingLeft: '1rem' }}>
-                      <strong>{a.reservation?.user?.prenom} {a.reservation?.user?.nom}</strong>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                        <strong>{a.reservation?.user?.prenom} {a.reservation?.user?.nom}</strong>
+                        {a.note && <Stars value={a.note} size={12} />}
+                      </div>
                       <p style={{ color: 'var(--gray-700)', marginTop: '0.25rem' }}>{a.message}</p>
                     </div>
                   ))}
@@ -195,15 +203,16 @@ export default function SiteDetail() {
                   <label style={{ fontSize: '0.8rem', color: 'var(--gray-700)', display: 'block', marginBottom: '0.35rem' }}>
                     Vous avez visité ce site — laissez un avis
                   </label>
+                  <StarRatingInput value={avisNote} onChange={setAvisNote} />
                   <textarea
                     required
                     rows={3}
                     value={avisMessage}
                     onChange={e => setAvisMessage(e.target.value)}
                     placeholder="Partagez votre expérience..."
-                    style={{ width: '100%', marginBottom: '0.75rem' }}
+                    style={{ width: '100%', margin: '0.75rem 0' }}
                   />
-                  <button type="submit" className="btn btn--primary" disabled={avisSubmitting}>
+                  <button type="submit" className="btn btn--primary" disabled={avisSubmitting || !avisNote}>
                     {avisSubmitting ? 'Envoi...' : "Envoyer l'avis"}
                   </button>
                 </form>

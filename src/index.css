@@ -277,6 +277,15 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .star--filled { color: var(--red); }
 .star--empty { color: var(--gray-300); }
 
+.note-resume { display: inline-flex; align-items: center; gap: 0.4rem; }
+.note-resume__valeur { font-size: 0.8rem; font-weight: 700; color: var(--black); }
+.note-resume__nombre { font-size: 0.78rem; color: var(--gray-500); }
+
+.star-input { display: flex; gap: 0.3rem; }
+.star-input__btn { color: var(--gray-300); transition: color var(--transition), transform var(--transition); }
+.star-input__btn:hover { transform: scale(1.1); }
+.star-input__btn .star--filled { color: var(--red); }
+
 /* Badges - étiquette à bordure gauche, jamais une pilule */
 .badge { display: inline-block; padding: 0.2rem 0.6rem 0.2rem 0.55rem; font-size: 0.75rem; font-weight: 600; border-left: 3px solid currentColor; }
 .badge--default { background: var(--gray-100); color: var(--gray-700); }

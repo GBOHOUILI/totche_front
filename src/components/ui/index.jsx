@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Star, ArrowRight, Heart } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useFavoris } from '../../context/FavorisContext'
@@ -37,6 +38,44 @@ export function Stars({ value = 0, max = 5, size = 14 }) {
   )
 }
 
+// ─── Résumé note moyenne (utilisé sur les cards ET les pages détail) ──────
+export function NoteResume({ moyenne, nombre, size = 13 }) {
+  if (! nombre) return null
+  return (
+    <span className="note-resume">
+      <Stars value={moyenne} size={size} />
+      <span className="note-resume__valeur">{Number(moyenne).toFixed(1)}</span>
+      <span className="note-resume__nombre">({nombre})</span>
+    </span>
+  )
+}
+
+// ─── Saisie d'une note (1-5, cliquable) ───────────────────────────────────
+export function StarRatingInput({ value, onChange, size = 22 }) {
+  const [hover, setHover] = useState(0)
+  return (
+    <div className="star-input" role="radiogroup" aria-label="Votre note">
+      {Array.from({ length: 5 }, (_, i) => {
+        const n = i + 1
+        const rempli = n <= (hover || value)
+        return (
+          <button
+            type="button"
+            key={n}
+            className="star-input__btn"
+            aria-label={`${n} étoile${n > 1 ? 's' : ''}`}
+            onMouseEnter={() => setHover(n)}
+            onMouseLeave={() => setHover(0)}
+            onClick={() => onChange(n)}
+          >
+            <Star size={size} fill={rempli ? 'currentColor' : 'none'} className={rempli ? 'star--filled' : 'star--empty'} />
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 // ─── Badge ───────────────────────────────────────────────
 export function Badge({ children, variant = 'default' }) {
   return <span className={`badge badge--${variant}`}>{children}</span>
@@ -69,6 +108,7 @@ export function SiteCard({ site, index = 0 }) {
       <div className="card__body">
         {site.categorie && <p className="card__eyebrow">{site.categorie.libelle}</p>}
         <h3 className="card__title">{site.libelle}</h3>
+        <NoteResume moyenne={site.note_moyenne} nombre={site.nombre_avis} />
         {locLine && <p className="card__location">{locLine}</p>}
         {site.description && <p className="card__desc">{site.description}</p>}
         <span className="card__link">Découvrir <ArrowRight size={13} /></span>
@@ -102,6 +142,7 @@ export function EventCard({ event, index = 0 }) {
           {dateDebut && dateDebut.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
         </p>
         <h3 className="card__title">{event.libelle}</h3>
+        <NoteResume moyenne={event.note_moyenne} nombre={event.nombre_avis} />
         {locLine && <p className="card__location">{locLine}</p>}
         {event.description && <p className="card__desc">{event.description}</p>}
         <span className="card__link">Découvrir <ArrowRight size={13} /></span>
@@ -123,6 +164,7 @@ export function HotelCard({ hotel, index = 0 }) {
       <div className="card__body">
         {hotel.nombre_etoiles && <div className="card__eyebrow"><Stars value={hotel.nombre_etoiles} size={12} /></div>}
         <h3 className="card__title">{hotel.libelle}</h3>
+        <NoteResume moyenne={hotel.note_moyenne} nombre={hotel.nombre_avis} />
         {locLine && <p className="card__location">{locLine}</p>}
         {hotel.description && <p className="card__desc">{hotel.description}</p>}
         <span className="card__link">Découvrir <ArrowRight size={13} /></span>
@@ -144,6 +186,7 @@ export function RestaurantCard({ restaurant, index = 0 }) {
       <div className="card__body">
         {restaurant.type_cuisine && <p className="card__eyebrow">{restaurant.type_cuisine}</p>}
         <h3 className="card__title">{restaurant.libelle}</h3>
+        <NoteResume moyenne={restaurant.note_moyenne} nombre={restaurant.nombre_avis} />
         {locLine && <p className="card__location">{locLine}</p>}
         {restaurant.description && <p className="card__desc">{restaurant.description}</p>}
         <span className="card__link">Découvrir <ArrowRight size={13} /></span>
@@ -165,6 +208,7 @@ export function TransportCard({ transport, index = 0 }) {
       <div className="card__body">
         {transport.type_transport && <p className="card__eyebrow">{transport.type_transport}</p>}
         <h3 className="card__title">{transport.libelle}</h3>
+        <NoteResume moyenne={transport.note_moyenne} nombre={transport.nombre_avis} />
         {locLine && <p className="card__location">{locLine}</p>}
         {transport.description && <p className="card__desc">{transport.description}</p>}
         <span className="card__link">Découvrir <ArrowRight size={13} /></span>
