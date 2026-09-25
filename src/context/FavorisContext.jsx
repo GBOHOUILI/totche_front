@@ -10,17 +10,22 @@ const FavorisContext = createContext(null)
 // clic - les cartes (SiteCard, EventCard...) n'ont donc jamais à interroger
 // l'API individuellement pour savoir si elles sont favorites.
 export function FavorisProvider({ children }) {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, user } = useAuth()
+  // GET /favoris n'existe que sur le guard sanctum (touriste) - pour un
+  // admin/prestataire/responsable authentifié, cet appel renvoie 401 et
+  // déclenche l'intercepteur global (client.js), qui déconnecte et redirige
+  // vers /connexion en pleine session admin/prestataire/responsable.
+  const estTouriste = isAuthenticated && user?.role === 'user'
   const [favoris, setFavoris] = useState(new Map())
 
   const load = useCallback(() => {
-    if (!isAuthenticated) { setFavoris(new Map()); return }
+    if (!estTouriste) { setFavoris(new Map()); return }
     favorisApi.list().then(r => {
       const map = new Map()
       ;(r.data || []).forEach(f => { if (f.item) map.set(`${f.type}:${f.item.id}`, f.id) })
       setFavoris(map)
     }).catch(() => {})
-  }, [isAuthenticated])
+  }, [estTouriste])
 
   useEffect(() => { load() }, [load])
 
