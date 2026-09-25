@@ -15,6 +15,8 @@ export default function Hotels() {
   const [geo, setGeo] = useState(null)
   const [radius, setRadius] = useState(25)
   const [geoError, setGeoError] = useState('')
+  const [prixMin, setPrixMin] = useState('')
+  const [prixMax, setPrixMax] = useState('')
 
   useEffect(() => {
     regionsApi.list().then(r => setRegions(r.data || []))
@@ -30,10 +32,12 @@ export default function Hotels() {
       lat: geo?.lat,
       lng: geo?.lng,
       radius: geo ? radius : undefined,
+      prix_min: prixMin || undefined,
+      prix_max: prixMax || undefined,
     })
       .then(r => { setHotels(r.data?.data || r.data || []); setMeta(r.data?.meta || null) })
       .finally(() => setLoading(false))
-  }, [page, search, selectedRegion, minEtoiles, geo, radius])
+  }, [page, search, selectedRegion, minEtoiles, geo, radius, prixMin, prixMax])
 
   const toggleGeo = () => {
     if (geo) { setGeo(null); setGeoError(''); return }
@@ -103,6 +107,22 @@ export default function Hotels() {
                 <option value={100}>100 km</option>
               </select>
             )}
+            <input
+              type="number"
+              min="0"
+              placeholder="Prix/nuit min"
+              value={prixMin}
+              onChange={e => { setPrixMin(e.target.value); setPage(1) }}
+              className="filters__input-sm"
+            />
+            <input
+              type="number"
+              min="0"
+              placeholder="Prix/nuit max"
+              value={prixMax}
+              onChange={e => { setPrixMax(e.target.value); setPage(1) }}
+              className="filters__input-sm"
+            />
             {geoError && <span className="filters__error">{geoError}</span>}
           </div>
         </div>
