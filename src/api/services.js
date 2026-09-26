@@ -1,15 +1,5 @@
 import api from './client'
 
-// ─── AUTH ────────────────────────────────────────────────────
-// POST /api/register
-// POST /api/login
-// POST /api/admin/login
-// POST /api/logout
-// POST /api/admin/logout
-// GET  /api/me
-// GET  /api/admin/me
-// POST /api/update-password
-// POST /api/admin/update-password
 export const authApi = {
   register: (data) => api.post('/register', data),
   login: (data) => api.post('/login', data),
@@ -20,26 +10,14 @@ export const authApi = {
   updatePassword: (data) => api.post('/update-password', data),
 }
 
-// Commun aux 4 types de comptes (user/admin/prestataire/responsable) - le
-// recouvrement se fait par email pour tous, même si la connexion elle-même
-// se fait par tel pour admin/responsable. Réponse toujours identique côté
-// demander() (compte trouvé ou non), jamais d'énumération d'emails.
+// Recouvrement par email pour les 4 types de comptes, même si la connexion
+// se fait par tel pour admin/responsable. demander() répond toujours pareil
+// (compte trouvé ou non) pour ne jamais laisser deviner un email existant.
 export const passwordResetApi = {
   demander: (type, email) => api.post('/mot-de-passe/oublie', { type, email }),
   reinitialiser: (data) => api.post('/mot-de-passe/reinitialiser', data),
 }
 
-// ─── PRESTATAIRES (portail SaaS) ───────────────────────────────
-// POST /api/prestataire/register   { nom_entreprise, type_prestataire, email, tel?, password, password_confirmation }
-// POST /api/prestataire/login      { email, password }
-// GET  /api/prestataire/me
-// POST /api/prestataire/logout
-// POST /api/prestataire/update-password
-// PUT  /api/prestataire/profil
-// GET  /api/prestataire/dashboard
-// GET/POST/PUT/DELETE /api/prestataire/sites, /api/prestataire/evenements
-// POST/PUT/DELETE     /api/prestataire/prix
-// POST/PUT/DELETE     /api/prestataire/galeries/sites, /api/prestataire/galeries/evenements
 export const prestatairesApi = {
   register: (data) => api.post('/prestataire/register', data),
   login: (data) => api.post('/prestataire/login', data),
@@ -112,12 +90,6 @@ export const prestatairesApi = {
   deleteGalerieTransport: (id) => api.delete(`/prestataire/galeries/transports/${id}`),
 }
 
-// ─── SITES ───────────────────────────────────────────────────
-// GET  /api/sites
-// GET  /api/sites/{site}
-// POST /api/admin/sites         (admin)
-// PUT  /api/admin/sites/{site}  (admin)
-// DEL  /api/admin/sites/{site}  (admin)
 export const sitesApi = {
   list: (params) => api.get('/sites', { params }),
   // Tous statuts confondus (admin) - la liste publique ne renvoie que les sites validés
@@ -130,17 +102,8 @@ export const sitesApi = {
   rejeter: (id) => api.patch(`/admin/sites/${id}/rejeter`),
 }
 
-// ─── ÉVÉNEMENTS ──────────────────────────────────────────────
-// GET   /api/evenements
-// GET   /api/evenements/{evenement}
-// POST  /api/admin/evenements           (admin)
-// PUT   /api/admin/evenements/{id}      (admin)
-// DEL   /api/admin/evenements/{id}      (admin)
-// PATCH /api/admin/evenements/{id}/valider (admin)
-// PATCH /api/admin/evenements/{id}/rejeter (admin)
 export const evenementsApi = {
   list: (params) => api.get('/evenements', { params }),
-  // Tous statuts confondus (admin) - la liste publique ne renvoie que les événements validés
   adminList: (params) => api.get('/admin/evenements', { params }),
   get: (id) => api.get(`/evenements/${id}`),
   create: (data) => api.post('/admin/evenements', data),
@@ -150,14 +113,6 @@ export const evenementsApi = {
   rejeter: (id) => api.patch(`/admin/evenements/${id}/rejeter`),
 }
 
-// ─── HÔTELS ──────────────────────────────────────────────────
-// GET   /api/hotels
-// GET   /api/hotels/{hotel}
-// POST  /api/admin/hotels                  (admin)
-// PUT   /api/admin/hotels/{id}             (admin)
-// DEL   /api/admin/hotels/{id}             (admin)
-// PATCH /api/admin/hotels/{id}/valider     (admin)
-// PATCH /api/admin/hotels/{id}/rejeter     (admin)
 export const hotelsApi = {
   list: (params) => api.get('/hotels', { params }),
   adminList: (params) => api.get('/admin/hotels', { params }),
@@ -169,7 +124,6 @@ export const hotelsApi = {
   rejeter: (id) => api.patch(`/admin/hotels/${id}/rejeter`),
 }
 
-// ─── RESTAURANTS ─────────────────────────────────────────────
 export const restaurantsApi = {
   list: (params) => api.get('/restaurants', { params }),
   adminList: (params) => api.get('/admin/restaurants', { params }),
@@ -181,7 +135,6 @@ export const restaurantsApi = {
   rejeter: (id) => api.patch(`/admin/restaurants/${id}/rejeter`),
 }
 
-// ─── TRANSPORTS ──────────────────────────────────────────────
 export const transportsApi = {
   list: (params) => api.get('/transports', { params }),
   adminList: (params) => api.get('/admin/transports', { params }),
@@ -193,8 +146,6 @@ export const transportsApi = {
   rejeter: (id) => api.patch(`/admin/transports/${id}/rejeter`),
 }
 
-// ─── VILLES ──────────────────────────────────────────────────
-// GET /api/villes - liste ouverte (contrairement aux régions, fixe/seedée)
 export const villesApi = {
   list: () => api.get('/villes'),
   get: (id) => api.get(`/villes/${id}`),
@@ -203,8 +154,6 @@ export const villesApi = {
   delete: (id) => api.delete(`/admin/villes/${id}`),
 }
 
-// ─── CHAMBRES (sous-entité Hôtel) ──────────────────────────────
-// GET /api/chambres ?id_hotel=
 export const chambresApi = {
   list: (params) => api.get('/chambres', { params }),
   get: (id) => api.get(`/chambres/${id}`),
@@ -213,8 +162,6 @@ export const chambresApi = {
   delete: (id) => api.delete(`/admin/chambres/${id}`),
 }
 
-// ─── PLATS (sous-entité Restaurant) ────────────────────────────
-// GET /api/plats ?id_restaurant=
 export const platsApi = {
   list: (params) => api.get('/plats', { params }),
   get: (id) => api.get(`/plats/${id}`),
@@ -223,8 +170,6 @@ export const platsApi = {
   delete: (id) => api.delete(`/admin/plats/${id}`),
 }
 
-// ─── TRAJETS (sous-entité Transport) ───────────────────────────
-// GET /api/trajets ?id_transport=&id_ville_depart=&id_ville_arrivee=
 export const trajetsApi = {
   list: (params) => api.get('/trajets', { params }),
   get: (id) => api.get(`/trajets/${id}`),
@@ -233,12 +178,6 @@ export const trajetsApi = {
   delete: (id) => api.delete(`/admin/trajets/${id}`),
 }
 
-// ─── CATÉGORIES SITES ────────────────────────────────────────
-// GET /api/categories/sites
-// GET /api/categories/sites/{catSite}
-// POST   /api/admin/categories/sites         (admin)
-// PUT    /api/admin/categories/sites/{id}    (admin)
-// DELETE /api/admin/categories/sites/{id}    (admin)
 export const categoriesApi = {
   sites: () => api.get('/categories/sites'),
   site: (id) => api.get(`/categories/sites/${id}`),
@@ -246,12 +185,6 @@ export const categoriesApi = {
   updateSite: (id, data) => api.put(`/admin/categories/sites/${id}`, data),
   deleteSite: (id) => api.delete(`/admin/categories/sites/${id}`),
 
-  // ─── CATÉGORIES ÉVÉNEMENTS ───────────────────────────────
-  // GET /api/categories/evenements
-  // GET /api/categories/evenements/{catEvenmt}
-  // POST   /api/admin/categories/evenements      (admin)
-  // PUT    /api/admin/categories/evenements/{id} (admin)
-  // DELETE /api/admin/categories/evenements/{id} (admin)
   evenements: () => api.get('/categories/evenements'),
   evenement: (id) => api.get(`/categories/evenements/${id}`),
   createEvenement: (data) => api.post('/admin/categories/evenements', data),
@@ -259,12 +192,6 @@ export const categoriesApi = {
   deleteEvenement: (id) => api.delete(`/admin/categories/evenements/${id}`),
 }
 
-// ─── GALERIES SITES ──────────────────────────────────────────
-// GET /api/galeries/sites
-// GET /api/galeries/sites/{galerieSite}
-// POST   /api/admin/galeries/sites             (admin, multipart)
-// PUT    /api/admin/galeries/sites/{id}        (admin)
-// DELETE /api/admin/galeries/sites/{id}        (admin)
 export const galeriesApi = {
   sites: (params) => api.get('/galeries/sites', { params }),
   site: (id) => api.get(`/galeries/sites/${id}`),
@@ -274,12 +201,6 @@ export const galeriesApi = {
   updateSite: (id, data) => api.put(`/admin/galeries/sites/${id}`, data),
   deleteSite: (id) => api.delete(`/admin/galeries/sites/${id}`),
 
-  // ─── GALERIES ÉVÉNEMENTS ─────────────────────────────────
-  // GET /api/galeries/evenements
-  // GET /api/galeries/evenements/{gallerieEvnmt}
-  // POST   /api/admin/galeries/evenements        (admin, multipart)
-  // PUT    /api/admin/galeries/evenements/{id}   (admin)
-  // DELETE /api/admin/galeries/evenements/{id}   (admin)
   evenements: (params) => api.get('/galeries/evenements', { params }),
   evenement: (id) => api.get(`/galeries/evenements/${id}`),
   createEvenement: (formData) => api.post('/admin/galeries/evenements', formData, {
@@ -288,7 +209,6 @@ export const galeriesApi = {
   updateEvenement: (id, data) => api.put(`/admin/galeries/evenements/${id}`, data),
   deleteEvenement: (id) => api.delete(`/admin/galeries/evenements/${id}`),
 
-  // ─── GALERIES HÔTELS ─────────────────────────────────────
   hotels: (params) => api.get('/galeries/hotels', { params }),
   hotel: (id) => api.get(`/galeries/hotels/${id}`),
   createHotel: (formData) => api.post('/admin/galeries/hotels', formData, {
@@ -297,7 +217,6 @@ export const galeriesApi = {
   updateHotel: (id, data) => api.put(`/admin/galeries/hotels/${id}`, data),
   deleteHotel: (id) => api.delete(`/admin/galeries/hotels/${id}`),
 
-  // ─── GALERIES RESTAURANTS ────────────────────────────────
   restaurants: (params) => api.get('/galeries/restaurants', { params }),
   restaurant: (id) => api.get(`/galeries/restaurants/${id}`),
   createRestaurant: (formData) => api.post('/admin/galeries/restaurants', formData, {
@@ -306,7 +225,6 @@ export const galeriesApi = {
   updateRestaurant: (id, data) => api.put(`/admin/galeries/restaurants/${id}`, data),
   deleteRestaurant: (id) => api.delete(`/admin/galeries/restaurants/${id}`),
 
-  // ─── GALERIES TRANSPORTS ─────────────────────────────────
   transports: (params) => api.get('/galeries/transports', { params }),
   transport: (id) => api.get(`/galeries/transports/${id}`),
   createTransport: (formData) => api.post('/admin/galeries/transports', formData, {
@@ -316,13 +234,6 @@ export const galeriesApi = {
   deleteTransport: (id) => api.delete(`/admin/galeries/transports/${id}`),
 }
 
-// ─── PRIX ────────────────────────────────────────────────────
-// GET /api/prix              ?id_site=&id_evnmt=
-// GET /api/prix/{prix}
-// POST   /api/admin/prix         (admin)
-// PUT    /api/admin/prix/{prix}  (admin)
-// DELETE /api/admin/prix/{prix}  (admin)
-// Champs : { libelle, montant, id_site, id_evnmt }
 export const prixApi = {
   list: (params) => api.get('/prix', { params }),
   get: (id) => api.get(`/prix/${id}`),
@@ -331,17 +242,8 @@ export const prixApi = {
   delete: (id) => api.delete(`/admin/prix/${id}`),
 }
 
-// ─── AVIS ────────────────────────────────────────────────────
-// GET  /api/avis              public
-// GET  /api/avis/{avi}        public
-// POST /api/avis              auth requis
-// PUT  /api/avis/{avi}        auth requis
-// DEL  /api/avis/{avi}        auth requis
-// PATCH /api/admin/avis/{avi}/approuver (admin)
-// PATCH /api/admin/avis/{avi}/rejeter   (admin)
-// Champs : { id_reservation, message, status } - id_reservation doit référencer
-// une réservation confirmee appartenant à l'utilisateur connecté (2026-09-18)
-// list() accepte aussi { id_site } ou { id_evnmt } pour filtrer par cible
+// id_reservation doit référencer une réservation confirmée appartenant à
+// l'utilisateur connecté. list() accepte aussi { id_site } ou { id_evnmt }.
 export const avisApi = {
   list: (params) => api.get('/avis', { params }),
   get: (id) => api.get(`/avis/${id}`),
@@ -352,14 +254,7 @@ export const avisApi = {
   rejeter: (id) => api.patch(`/admin/avis/${id}/rejeter`),
 }
 
-// ─── RÉSERVATIONS ────────────────────────────────────────────
-// GET  /api/reservations         auth requis  ?id_site=&id_evnmt=&type=
-// GET  /api/reservations/{id}    auth requis
-// POST /api/reservations         auth requis
-// PUT  /api/reservations/{id}    auth requis
-// DEL  /api/reservations/{id}    auth requis
-// Champs : { type:'site'|'evenement', prix, nombre, description, id_site, id_evnmt }
-// total calculé auto : prix * nombre
+// total calculé côté serveur (prix * nombre), jamais confié au client
 export const reservationsApi = {
   list: (params) => api.get('/reservations', { params }),
   get: (id) => api.get(`/reservations/${id}`),
@@ -368,11 +263,6 @@ export const reservationsApi = {
   delete: (id) => api.delete(`/reservations/${id}`),
 }
 
-// ─── COMMANDES / PAIEMENTS (Kkiapay) ──────────────────────────
-// GET   /api/commandes                    auth requis
-// GET   /api/commandes/{id}               auth requis
-// POST  /api/commandes                    auth requis  { reservation_ids: [], echelonner? }
-// PATCH /api/paiements/{id}/verifier      auth requis  { transaction_id }
 export const commandesApi = {
   list: () => api.get('/commandes'),
   get: (id) => api.get(`/commandes/${id}`),
@@ -384,16 +274,6 @@ export const paiementsApi = {
   verifier: (id, transactionId) => api.patch(`/paiements/${id}/verifier`, { transaction_id: transactionId }),
 }
 
-// ─── CIRCUITS (itinéraires personnalisés) ─────────────────────
-// GET    /api/circuits                              auth requis - mes circuits
-// POST   /api/circuits                              auth requis  { libelle, description? }
-// GET    /api/circuits/{id}                         auth requis
-// PUT    /api/circuits/{id}                         auth requis  { libelle?, description? }
-// DELETE /api/circuits/{id}                         auth requis
-// POST   /api/circuits/{id}/etapes                  auth requis  { id_site? | id_evnmt?, ordre? }
-// PATCH  /api/circuits/{id}/etapes/reordonner        auth requis  { ordre: [id_etape,...] }
-// PUT    /api/etapes/{id}                           auth requis  { ordre?, id_reservation? }
-// DELETE /api/etapes/{id}                           auth requis
 export const circuitsApi = {
   list: () => api.get('/circuits'),
   get: (id) => api.get(`/circuits/${id}`),
@@ -406,8 +286,7 @@ export const circuitsApi = {
   genererIA: (contraintes) => api.post('/circuits/generer-ia', contraintes),
 }
 
-// POST /api/assistant/chat  public  { messages: [{role, content}] } -> { reponse, circuit: {...} | null }
-// Discussion libre (pas de contraintes structurées) - même contrat de circuit que
+// Chat libre (pas de contraintes structurées), même contrat de circuit que
 // circuitsApi.genererIA quand l'assistant en propose un dans sa réponse.
 export const assistantApi = {
   chat: (messages) => api.post('/assistant/chat', { messages }),
@@ -419,36 +298,18 @@ export const etapesApi = {
   delete: (id) => api.delete(`/etapes/${id}`),
 }
 
-// ─── FAVORIS (auth:sanctum) ─────────────────────────────────────────────
-// GET    /api/favoris            [{ id, type, item }]
-// POST   /api/favoris            { type, id }  idempotent
-// DELETE /api/favoris/{id}
 export const favorisApi = {
   list: () => api.get('/favoris'),
   add: (type, id) => api.post('/favoris', { type, id }),
   remove: (favoriId) => api.delete(`/favoris/${favoriId}`),
 }
 
-// ─── TICKETS ─────────────────────────────────────────────────
-// GET  /api/admin/tickets            (admin)
-// GET  /api/admin/tickets/{id}       (admin)
-// POST /api/admin/tickets            (admin)
-// PUT  /api/admin/tickets/{id}       (admin)
-// DEL  /api/admin/tickets/{id}       (admin)
-// POST /api/tickets/verifier         public  { numero }
 export const ticketsApi = {
   list: (params) => api.get('/admin/tickets', { params }),
   get: (id) => api.get(`/admin/tickets/${id}`),
   verifier: (numero) => api.post('/tickets/verifier', { numero }),
 }
 
-// ─── UTILISATIONS ────────────────────────────────────────────
-// GET  /api/admin/utilisations       (admin)
-// GET  /api/admin/utilisations/{id}  (admin)
-// POST /api/admin/utilisations       (admin)
-// PUT  /api/admin/utilisations/{id}  (admin)
-// DEL  /api/admin/utilisations/{id}  (admin)
-// Champs : { date_visite, heure, id_ticket }
 export const utilisationsApi = {
   list: (params) => api.get('/admin/utilisations', { params }),
   get: (id) => api.get(`/admin/utilisations/${id}`),
@@ -457,31 +318,14 @@ export const utilisationsApi = {
   delete: (id) => api.delete(`/admin/utilisations/${id}`),
 }
 
-// ─── USERS ───────────────────────────────────────────────────
-// GET    /api/admin/users              (admin)
-// POST   /api/admin/users              (admin)
-// DELETE /api/admin/users/{user}       (admin - supprime n'importe quel compte)
-// GET    /api/users/{user}             auth requis, self uniquement
-// PUT    /api/users/{user}             auth requis, self uniquement
-// DELETE /api/users/{user}             auth requis, self uniquement
-// Champs : { nom, prenom, tel, email, password, nationalite, longitude, latitude }
 export const usersApi = {
   list: () => api.get('/admin/users'),
   get: (id) => api.get(`/users/${id}`),
   update: (id, data) => api.put(`/users/${id}`, data),
-  // Suppression depuis l'espace personnel du touriste (self uniquement)
   deleteSelf: (id) => api.delete(`/users/${id}`),
-  // Suppression depuis l'admin (n'importe quel compte)
   delete: (id) => api.delete(`/admin/users/${id}`),
 }
 
-// ─── ADMINS ──────────────────────────────────────────────────
-// GET  /api/admin/admins        (admin)
-// POST /api/admin/admins        (admin)
-// GET  /api/admin/admins/{id}   (admin)
-// PUT  /api/admin/admins/{id}   (admin)
-// DEL  /api/admin/admins/{id}   (admin)
-// Champs : { nom, prenom, tel, password, status }
 export const adminsApi = {
   list: () => api.get('/admin/admins'),
   get: (id) => api.get(`/admin/admins/${id}`),
@@ -490,23 +334,10 @@ export const adminsApi = {
   delete: (id) => api.delete(`/admin/admins/${id}`),
 }
 
-// ─── RÉGIONS ─────────────────────────────────────────────────
-// GET /api/regions - liste fixe (12 départements du Bénin), pas de mutation exposée
 export const regionsApi = {
   list: () => api.get('/regions'),
 }
 
-// ─── RESPONSABLES RÉGIONAUX ────────────────────────────────────
-// Gestion des comptes par un admin :
-// GET/POST/PUT/DELETE /api/admin/responsables (admin) - { nom, prenom, tel, password, status, id_region? }
-// Portail du responsable connecté :
-// POST /api/responsable/login   { tel, password }
-// GET  /api/responsable/me
-// POST /api/responsable/logout
-// POST /api/responsable/update-password
-// GET  /api/responsable/a-valider - { sites: [...], evenements: [...] } en attente dans son périmètre
-// PATCH /api/responsable/sites/{id}/valider | /rejeter
-// PATCH /api/responsable/evenements/{id}/valider | /rejeter
 export const adminResponsablesApi = {
   list: () => api.get('/admin/responsables'),
   get: (id) => api.get(`/admin/responsables/${id}`),
@@ -538,8 +369,7 @@ export const responsablesApi = {
   rejeterTransport: (id) => api.patch(`/responsable/transports/${id}/rejeter`),
   demanderPrecisionsTransport: (id, commentaire) => api.patch(`/responsable/transports/${id}/demander-precisions`, { commentaire }),
 
-  // Mes propres fiches (un responsable connaît son territoire) - jamais
-  // auto-validées, seul un admin les valide.
+  // Fiches créées par le responsable lui-même - jamais auto-validées, seul un admin les valide.
   mesSites: () => api.get('/responsable/sites'),
   createSite: (data) => api.post('/responsable/sites', data),
   updateSite: (id, data) => api.put(`/responsable/sites/${id}`, data),
@@ -603,14 +433,6 @@ export const responsablesApi = {
   deleteGalerieTransport: (id) => api.delete(`/responsable/galeries/transports/${id}`),
 }
 
-// ─── FONCTIONNALITÉS ─────────────────────────────────────────
-// GET  /api/admin/fonctionnalites       (admin)
-// POST /api/admin/fonctionnalites       (admin)
-// GET  /api/admin/fonctionnalites/{id}  (admin)
-// PUT  /api/admin/fonctionnalites/{id}  (admin)
-// DEL  /api/admin/fonctionnalites/{id}  (admin)
-// POST /api/admin/fonctionnalites/{id}/assigner-admin (admin)
-// POST /api/admin/fonctionnalites/{id}/assigner-user  (admin)
 export const fonctionnalitesApi = {
   list: (params) => api.get('/admin/fonctionnalites', { params }),
   get: (id) => api.get(`/admin/fonctionnalites/${id}`),
@@ -621,9 +443,6 @@ export const fonctionnalitesApi = {
   assignerUser: (id, data) => api.post(`/admin/fonctionnalites/${id}/assigner-user`, data),
 }
 
-// ─── PLANS D'ABONNEMENT SaaS (module Prestataire, étape 3) ─────
-// GET  /api/plans              (public)
-// POST/PUT/DELETE /api/admin/plans (admin)
 export const plansApi = {
   list: () => api.get('/plans'),
   create: (data) => api.post('/admin/plans', data),
@@ -631,18 +450,14 @@ export const plansApi = {
   delete: (id) => api.delete(`/admin/plans/${id}`),
 }
 
-// ─── TÉMOIGNAGES PLATEFORME (Chantier 3, section Accueil) ──────────────────
-// GET  /api/temoignages            (public, actif=true uniquement)
-// GET  /api/admin/temoignages      (admin, tous)
-// POST/PUT/DELETE /api/admin/temoignages (admin)
-// update() passe par POST + _method=PUT (method-spoofing Laravel) : seul
-// moyen de recevoir un fichier multipart sur une route PUT en PHP.
 export const temoignagesApi = {
   list: () => api.get('/temoignages'),
   adminList: () => api.get('/admin/temoignages'),
   create: (formData) => api.post('/admin/temoignages', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   }),
+  // POST + _method=PUT (method-spoofing Laravel) : seul moyen de recevoir
+  // un fichier multipart sur une route PUT en PHP.
   update: (id, formData) => {
     formData.append('_method', 'PUT')
     return api.post(`/admin/temoignages/${id}`, formData, {
@@ -652,11 +467,6 @@ export const temoignagesApi = {
   delete: (id) => api.delete(`/admin/temoignages/${id}`),
 }
 
-// ─── ABONNEMENTS (Kkiapay, mêmes mécanismes que commandesApi/paiementsApi) ─
-// GET   /api/prestataire/abonnement                                    { abonnement, actif }
-// POST  /api/prestataire/abonnements                { id_plan }        crée/réutilise l'abonnement en_attente + une facture à payer
-// PATCH /api/prestataire/factures-abonnement/{id}/verifier { transaction_id }
-// GET   /api/admin/abonnements (admin)
 export const abonnementsApi = {
   statut: () => api.get('/prestataire/abonnement'),
   souscrire: (idPlan) => api.post('/prestataire/abonnements', { id_plan: idPlan }),
@@ -665,9 +475,8 @@ export const abonnementsApi = {
   adminList: () => api.get('/admin/abonnements'),
 }
 
-// ─── NOTIFICATIONS ────────────────────────────────────────────────────────
-// Même contrôleur backend monté sous les 4 guards (cf. routes/api.php) -
-// seul le préfixe change selon le rôle connecté (AuthContext user.role).
+// Même contrôleur backend monté sous les 4 guards - seul le préfixe change
+// selon le rôle connecté (AuthContext user.role).
 const PREFIX_NOTIFICATIONS = { user: '', admin: '/admin', prestataire: '/prestataire', responsable: '/responsable' }
 export const notificationsApi = {
   list: (role) => api.get(`${PREFIX_NOTIFICATIONS[role] || ''}/mes-notifications`),

@@ -12,7 +12,7 @@ export function APropos() {
   ]
 
   const team = [
-    { name: 'Eldo-Moréo GBOHOUILI', role: 'Fondateur & Développeur', initials: 'EG' },
+    { name: 'Justin Bénin', role: 'Fondateur & Développeur', initials: 'JB' },
     { name: SITE.nomEntreprise, role: 'Technologies', initials: 'SI' },
   ]
 
