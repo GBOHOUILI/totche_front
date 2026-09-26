@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Mail, Phone, MapPin, Facebook, Twitter, Instagram } from 'lucide-react'
+import { SITE } from '../../config/site'
 
 export default function Footer() {
   return (
@@ -45,9 +46,9 @@ export default function Footer() {
           <div className="footer__col">
             <h4>Nous Contacter</h4>
             <ul className="footer__contact">
-              <li><MapPin size={14} /><span>Cotonou, Bénin</span></li>
-              <li><Phone size={14} /><span>+229 01 67 75 88 20</span></li>
-              <li><Mail size={14} /><span>ajustinsena@gmail.com</span></li>
+              <li><MapPin size={14} /><span>{SITE.contactAdresse}</span></li>
+              <li><Phone size={14} /><span>{SITE.contactTel}</span></li>
+              <li><Mail size={14} /><span>{SITE.contactEmail}</span></li>
             </ul>
             <h4 style={{marginTop:'1.5rem'}}>Newsletter</h4>
             <form className="footer__newsletter" onSubmit={e => e.preventDefault()}>
@@ -59,7 +60,7 @@ export default function Footer() {
 
         <div className="footer__bottom">
           <p>© {new Date().getFullYear()} Totché – Tous droits réservés</p>
-          <p>Bénin Tourisme · Sen Impact Technologies</p>
+          <p>Bénin Tourisme · {SITE.nomEntreprise}</p>
           <p className="footer__legal-links">
             <Link to="/politique-de-confidentialite">Politique de confidentialité</Link>
             {' · '}
