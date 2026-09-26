@@ -1,4 +1,4 @@
-// Infos plateforme centralisées ici plutôt qu'en dur dans chaque page —
+// Infos plateforme centralisées ici plutôt qu'en dur dans chaque page,
 // modifiables sans toucher au code via les variables VITE_* (figées au
 // build, cf. Dockerfile). Valeurs par défaut = celles de production actuelles.
 export const SITE = {
