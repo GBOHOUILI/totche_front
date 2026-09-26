@@ -60,6 +60,11 @@ export default function Footer() {
         <div className="footer__bottom">
           <p>© {new Date().getFullYear()} Totché – Tous droits réservés</p>
           <p>Bénin Tourisme · Sen Impact Technologies</p>
+          <p className="footer__legal-links">
+            <Link to="/politique-de-confidentialite">Politique de confidentialité</Link>
+            {' · '}
+            <Link to="/conditions-utilisation">Conditions d'utilisation</Link>
+          </p>
         </div>
       </div>
 

@@ -21,6 +21,7 @@ import PrestataireLogin from '../pages/prestataire/PrestataireLogin'
 import PrestataireRegister from '../pages/prestataire/PrestataireRegister'
 import ResponsableLogin from '../pages/responsable/ResponsableLogin'
 import { APropos, Contact } from '../pages/public/AProposContact'
+import { PolitiqueConfidentialite, ConditionsUtilisation } from '../pages/public/Legal'
 import Profil from '../pages/user/Profil'
 import MesReservations from '../pages/user/MesReservations'
 import MesFavoris from '../pages/user/MesFavoris'
@@ -127,6 +128,8 @@ const router = createBrowserRouter([
       { path: 'inscription', element: <Register /> },
       { path: 'a-propos', element: <APropos /> },
       { path: 'contacts', element: <Contact /> },
+      { path: 'politique-de-confidentialite', element: <PolitiqueConfidentialite /> },
+      { path: 'conditions-utilisation', element: <ConditionsUtilisation /> },
       { path: 'circuits', element: <Circuits /> },
       {
         element: <RequireAuth />,

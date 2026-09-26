@@ -62,12 +62,14 @@ export function Register() {
   const [form, setForm] = useState({ nom: '', prenom: '', tel: '', email: '', password: '', password_confirmation: '', nationalite: '' })
   const [errors, setErrors] = useState({})
   const [showPwd, setShowPwd] = useState(false)
+  const [acceptCgu, setAcceptCgu] = useState(false)
   const { register, loading } = useAuth()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (!acceptCgu) { toast.error('Merci d\'accepter les conditions d\'utilisation et la politique de confidentialité'); return }
     const res = await register(form)
     if (res.success) { toast.success('Compte créé !'); navigate(searchParams.get('redirect') || '/') }
     else { toast.error(res.message); if (res.errors) setErrors(res.errors) }
@@ -107,6 +109,13 @@ export function Register() {
             {errors.password && <span className="auth-form__error">{errors.password[0]}</span>}
           </div>
           {field('password_confirmation', 'Confirmer le mot de passe', 'password', '••••••••')}
+          <label className="auth-form__checkbox">
+            <input type="checkbox" checked={acceptCgu} onChange={e => setAcceptCgu(e.target.checked)} required />
+            <span>
+              J'accepte les <Link to="/conditions-utilisation" target="_blank">conditions d'utilisation</Link>{' '}
+              et la <Link to="/politique-de-confidentialite" target="_blank">politique de confidentialité</Link>
+            </span>
+          </label>
           <button type="submit" className="btn btn--primary btn--full auth-btn" disabled={loading}>
             {loading ? 'Inscription...' : 'INSCRIPTION'}
           </button>
