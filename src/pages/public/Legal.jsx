@@ -4,6 +4,8 @@
 // une relecture par un juriste est recommandée avant usage commercial réel,
 // notamment pour la conformité APDP (loi béninoise n°2017-20).
 
+import { SITE } from '../../config/site'
+
 const misAJour = '26 septembre 2026'
 
 export function PolitiqueConfidentialite() {
@@ -18,10 +20,10 @@ export function PolitiqueConfidentialite() {
         <section>
           <h2>1. Qui sommes-nous ?</h2>
           <p>
-            Totché (Bénin Tourisme) est une plateforme éditée par Sen Impact Technologies,
-            basée à Cotonou, Bénin. Pour toute question relative à vos données personnelles,
-            vous pouvez nous contacter à <strong>ajustinsena@gmail.com</strong> ou au{' '}
-            <strong>+229 01 67 75 88 20</strong>.
+            {SITE.nomPlateforme} (Bénin Tourisme) est une plateforme éditée par {SITE.nomEntreprise},
+            basée à {SITE.contactAdresse}. Pour toute question relative à vos données personnelles,
+            vous pouvez nous contacter à <strong>{SITE.contactEmail}</strong> ou au{' '}
+            <strong>{SITE.contactTel}</strong>.
           </p>
         </section>
 
@@ -75,7 +77,7 @@ export function PolitiqueConfidentialite() {
             Conformément à la loi béninoise n°2017-20 du 20 avril 2018 relative au code du numérique
             (protection des données à caractère personnel), vous disposez d'un droit d'accès, de
             rectification, d'opposition et de suppression de vos données. Vous pouvez exercer ces droits
-            en nous contactant à <strong>ajustinsena@gmail.com</strong>. Vous pouvez aussi modifier vos
+            en nous contactant à <strong>{SITE.contactEmail}</strong>. Vous pouvez aussi modifier vos
             informations directement depuis votre espace personnel, ou demander la suppression de votre compte.
           </p>
         </section>
@@ -122,8 +124,8 @@ export function ConditionsUtilisation() {
         <section>
           <h2>1. Objet</h2>
           <p>
-            Les présentes conditions régissent l'utilisation de la plateforme Totché (Bénin Tourisme),
-            éditée par Sen Impact Technologies, qui met en relation touristes, prestataires touristiques
+            Les présentes conditions régissent l'utilisation de la plateforme {SITE.nomPlateforme} (Bénin Tourisme),
+            éditée par {SITE.nomEntreprise}, qui met en relation touristes, prestataires touristiques
             (hôtels, restaurants, transporteurs, organisateurs d'événements, sites touristiques) et
             responsables régionaux chargés de la validation des offres.
           </p>
@@ -216,8 +218,8 @@ export function ConditionsUtilisation() {
         <section>
           <h2>11. Contact</h2>
           <p>
-            Pour toute question relative à ces conditions : <strong>ajustinsena@gmail.com</strong> —{' '}
-            <strong>+229 01 67 75 88 20</strong> — Cotonou, Bénin.
+            Pour toute question relative à ces conditions : <strong>{SITE.contactEmail}</strong> —{' '}
+            <strong>{SITE.contactTel}</strong> — {SITE.contactAdresse}.
           </p>
         </section>
       </div>

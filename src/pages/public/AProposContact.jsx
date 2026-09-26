@@ -1,6 +1,7 @@
 import { Mail, Phone, MapPin, Send } from 'lucide-react'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
+import { SITE } from '../../config/site'
 
 // ─── À PROPOS ────────────────────────────────────────────
 export function APropos() {
@@ -12,7 +13,7 @@ export function APropos() {
 
   const team = [
     { name: 'Justin Bénin', role: 'Fondateur & Développeur', initials: 'JB' },
-    { name: 'Sen Impact', role: 'Technologies', initials: 'SI' },
+    { name: SITE.nomEntreprise, role: 'Technologies', initials: 'SI' },
   ]
 
   return (
@@ -92,9 +93,9 @@ export function Contact() {
   }
 
   const contacts = [
-    { icon: Phone, label: 'Téléphone', value: '+229 01 67 75 88 20' },
-    { icon: Mail, label: 'Email', value: 'ajustinsena@gmail.com' },
-    { icon: MapPin, label: 'Adresse', value: 'Cotonou, Bénin' },
+    { icon: Phone, label: 'Téléphone', value: SITE.contactTel },
+    { icon: Mail, label: 'Email', value: SITE.contactEmail },
+    { icon: MapPin, label: 'Adresse', value: SITE.contactAdresse },
   ]
 
   return (
