@@ -1,4 +1,4 @@
-// Pages légales — rédigées à partir des pratiques réelles de la plateforme
+// Pages légales : rédigées à partir des pratiques réelles de la plateforme
 // (données collectées, sous-traitants tiers effectivement intégrés : Kkiapay,
 // Google Gemini, Brevo). Base de départ raisonnable, pas un avis juridique :
 // une relecture par un juriste est recommandée avant usage commercial réel,
@@ -34,7 +34,7 @@ export function PolitiqueConfidentialite() {
             <li><strong>Touriste :</strong> nom, prénom, email, téléphone, nationalité, mot de passe (stocké de façon chiffrée, jamais en clair).</li>
             <li><strong>Prestataire :</strong> nom de l'entreprise, type d'activité, email, téléphone, mot de passe, ainsi que le contenu des fiches que vous publiez (hôtel, restaurant, transport, site, événement).</li>
             <li><strong>Utilisation du service :</strong> réservations, billets achetés, avis et notes laissés, favoris enregistrés, circuits générés ou créés manuellement.</li>
-            <li><strong>Géolocalisation :</strong> si vous l'autorisez dans votre navigateur, votre position est utilisée pour la recherche « à proximité » — elle n'est pas enregistrée côté serveur, seulement utilisée le temps de la recherche.</li>
+            <li><strong>Géolocalisation :</strong> si vous l'autorisez dans votre navigateur, votre position est utilisée pour la recherche « à proximité ». Elle n'est pas enregistrée côté serveur, seulement utilisée le temps de la recherche.</li>
             <li><strong>Assistant IA / génération de circuit :</strong> les messages que vous saisissez dans le chat et vos critères (budget, période, préférences) sont transmis au moteur d'IA pour générer une réponse ou un circuit. Évitez d'y saisir des informations sensibles inutiles à votre demande.</li>
           </ul>
         </section>
@@ -55,9 +55,9 @@ export function PolitiqueConfidentialite() {
           <h2>4. Avec qui partageons-nous vos données ?</h2>
           <p>Nous ne vendons jamais vos données. Elles peuvent transiter par les prestataires techniques suivants, uniquement pour les besoins du service :</p>
           <ul>
-            <li><strong>Kkiapay</strong> — traitement des paiements en ligne. Nous ne stockons aucune donnée bancaire ou de mobile money ; Kkiapay traite la transaction et nous transmet uniquement son statut.</li>
-            <li><strong>Google Gemini (API IA)</strong> — génération des réponses de l'assistant conversationnel et des circuits personnalisés, à partir des critères que vous fournissez.</li>
-            <li><strong>Brevo</strong> — envoi de nos emails transactionnels (confirmations, notifications, réinitialisation de mot de passe).</li>
+            <li><strong>Kkiapay</strong> : traitement des paiements en ligne. Nous ne stockons aucune donnée bancaire ou de mobile money ; Kkiapay traite la transaction et nous transmet uniquement son statut.</li>
+            <li><strong>Google Gemini (API IA)</strong> : génération des réponses de l'assistant conversationnel et des circuits personnalisés, à partir des critères que vous fournissez.</li>
+            <li><strong>Brevo</strong> : envoi de nos emails transactionnels (confirmations, notifications, réinitialisation de mot de passe).</li>
           </ul>
           <p>Ces prestataires n'utilisent vos données que pour exécuter le service demandé, pas pour leur propre compte.</p>
         </section>
@@ -218,8 +218,8 @@ export function ConditionsUtilisation() {
         <section>
           <h2>11. Contact</h2>
           <p>
-            Pour toute question relative à ces conditions : <strong>{SITE.contactEmail}</strong> —{' '}
-            <strong>{SITE.contactTel}</strong> — {SITE.contactAdresse}.
+            Pour toute question relative à ces conditions : <strong>{SITE.contactEmail}</strong> ·{' '}
+            <strong>{SITE.contactTel}</strong> · {SITE.contactAdresse}.
           </p>
         </section>
       </div>
