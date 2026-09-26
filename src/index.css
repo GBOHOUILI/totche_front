@@ -56,7 +56,6 @@ ul { list-style: none; }
 h1, .h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(2rem, 1.2rem + 3.2vw, 3.75rem); line-height: 1.08; letter-spacing: -.01em; }
 h2, .h2 { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.65rem, 1.1rem + 2vw, 2.5rem); line-height: 1.15; }
 h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375rem; line-height: 1.3; }
-.lead { font-size: clamp(1.05rem, 1vw + .8rem, 1.1875rem); line-height: 1.6; color: var(--gray-700); }
 
 /* ── Container ── */
 .container { max-width: var(--container-w); margin: 0 auto; padding: 0 2rem; }
@@ -184,14 +183,11 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .cta-block--circuits { background: linear-gradient(135deg, var(--success), var(--black)); }
 .cta-block__vodun { position: absolute; inset: 0; background: url('https://commons.wikimedia.org/wiki/Special:FilePath/10%20Janvier%202023,%20F%C3%AAte%20de%20vodoun%20%C3%A0%20Ouidah%2033.jpg?width=800') center 25%/cover; }
 
-.home__tagline { display: none; } /* fusionné dans .hero__intro */
-
 .home__section { padding: 5rem 0; }
 .home__section--dark { background: var(--black); padding: 5rem 0; }
 .home__section--dark .section-title { color: var(--white); }
 .home__section--dark .section-subtitle { color: rgba(255,255,255,.55); }
 .home__section--dark .card__title { color: var(--white); }
-.home__section--dark .card__meta, .home__section--dark .card__eyebrow-loc { color: rgba(255,255,255,.55); }
 .home__section--dark .card__desc { color: rgba(255,255,255,.7); }
 
 /* Section immersive : deux photos qui se chevauchent en diagonale +
@@ -257,11 +253,10 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .card__fav-btn { position: absolute; top: 0.6rem; right: 0.6rem; z-index: 1; width: 32px; height: 32px; border-radius: var(--radius-full); background: rgba(255,255,255,.92); color: var(--gray-700); display: flex; align-items: center; justify-content: center; transition: color var(--transition), transform var(--transition); }
 .card__fav-btn:hover { transform: scale(1.08); }
 .card__fav-btn--active { color: var(--red); }
-.card__cat { display: none; } /* remplacé par .card__eyebrow, texte simple, plus de pastille */
 .card__body { padding: 1.1rem 0 0; flex: 1; display: flex; flex-direction: column; gap: 0.4rem; }
 .card__eyebrow { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--red); }
 .card__title { font-size: 1.15rem; font-weight: 600; color: var(--black); line-height: 1.3; }
-.card__location, .card__date, .card__meta { font-size: 0.8rem; color: var(--gray-500); }
+.card__location { font-size: 0.8rem; color: var(--gray-500); }
 .card__desc { font-size: 0.875rem; color: var(--gray-700); line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: 0.1rem; }
 .card__link { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--red); margin-top: 0.4rem; }
 .card__link svg { transition: transform var(--transition); }
@@ -409,20 +404,6 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .detail-facts__item svg { flex-shrink: 0; color: var(--red); margin-top: 0.2rem; }
 .detail-facts__item strong { display: block; color: var(--black); font-size: 0.8125rem; }
 
-/* Avis */
-.avis-list { display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2.25rem; }
-.avis-item { border-bottom: 1px solid var(--gray-100); padding-bottom: 1.25rem; }
-.avis-item__header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.6rem; }
-.avis-item__avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--red); color: var(--white); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.875rem; flex-shrink: 0; }
-.detail-no-avis { color: var(--gray-500); font-style: italic; margin-bottom: 1.5rem; }
-
-.avis-form h3 { font-size: 1.05rem; margin-bottom: 0.85rem; }
-.avis-form__stars { display: flex; gap: 0.25rem; margin-bottom: 0.85rem; }
-.avis-form__stars button { color: var(--red); }
-.avis-form textarea { width: 100%; border: 1px solid var(--gray-300); padding: 0.85rem 1rem; font-size: 0.9rem; resize: vertical; outline: none; transition: border-color var(--transition); }
-.avis-form textarea:focus { border-color: var(--red); }
-.avis-form .btn { margin-top: 0.85rem; }
-
 /* Reservation form */
 .reservation-form { margin-top: 1.1rem; display: flex; flex-direction: column; gap: 0.85rem; }
 .reservation-form select, .reservation-form input { width: 100%; border: 1px solid var(--gray-300); padding: 0.7rem 0.9rem; font-size: 0.9rem; outline: none; transition: border-color var(--transition); }
@@ -447,21 +428,11 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .auth-form__pwd input { padding-right: 2.5rem; }
 .auth-form__pwd button { position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--gray-500); }
 .auth-form__row { display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; }
-.auth-form__check { display: flex; align-items: center; gap: 0.4rem; cursor: pointer; color: var(--gray-700); }
 .auth-form__checkbox { display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer; color: var(--gray-700); font-size: 0.82rem; line-height: 1.5; }
 .auth-form__checkbox input { margin-top: 0.2rem; flex-shrink: 0; }
 .auth-form__checkbox a { color: var(--red); text-decoration: underline; }
-.auth-form__forgot { color: var(--red); font-size: 0.82rem; }
 .auth-form__row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
 .auth-btn { padding: 0.85rem; font-size: 0.85rem; margin-top: 0.35rem; }
-.auth-card__or { display: flex; align-items: center; gap: 1rem; color: var(--gray-500); font-size: 0.82rem; margin: 1.35rem 0 1.1rem; }
-.auth-card__or::before, .auth-card__or::after { content: ''; flex: 1; height: 1px; background: var(--gray-300); }
-.auth-card__socials { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1.35rem; }
-.social-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--gray-300); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.875rem; transition: border-color var(--transition); }
-.social-btn:hover { border-color: var(--gray-500); }
-.social-btn--google { color: #EA4335; }
-.social-btn--facebook { color: #1877F2; }
-.social-btn--twitter { color: var(--black); }
 .auth-card__switch { font-size: 0.9rem; color: var(--gray-700); }
 .auth-card__switch a { color: var(--red); font-weight: 600; }
 
@@ -507,9 +478,7 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .admin-page__header h1 { font-size: 1.75rem; }
 .admin-page__header p { color: var(--gray-500); margin-top: 0.25rem; font-size: 0.875rem; }
 
-.admin-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 2.5rem; }
 .admin-stat-card { background: var(--white); padding: 1.5rem; display: flex; align-items: center; gap: 1rem; border: 1px solid var(--gray-300); border-top: 3px solid var(--accent); }
-.admin-stat-card__icon { width: 48px; height: 48px; background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); display: flex; align-items: center; justify-content: center; }
 .admin-stat-card h2 { font-size: 2rem; font-weight: 700; line-height: 1; }
 .admin-stat-card p { font-size: 0.8rem; color: var(--gray-500); margin-top: 0.2rem; }
 
@@ -857,7 +826,6 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
   .cards-grid--5, .cards-grid--4 { grid-template-columns: repeat(2, 1fr); }
   .cards-grid--home .card:first-child { grid-column: span 2; }
   .home__cta-blocks { grid-template-columns: 1fr; }
-  .admin-stats { grid-template-columns: 1fr; }
   .footer__grid { grid-template-columns: 1fr; gap: 1.5rem; }
   .footer__bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
   .hero__scroll { display: none; }
