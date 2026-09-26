@@ -17,11 +17,13 @@ export default function PrestataireRegister() {
   const [form, setForm] = useState({ nom_entreprise: '', type_prestataire: '', email: '', tel: '', password: '', password_confirmation: '' })
   const [errors, setErrors] = useState({})
   const [showPwd, setShowPwd] = useState(false)
+  const [acceptCgu, setAcceptCgu] = useState(false)
   const { registerPrestataire, loading } = useAuth()
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (!acceptCgu) { toast.error('Merci d\'accepter les conditions d\'utilisation et la politique de confidentialité'); return }
     const res = await registerPrestataire(form)
     if (res.success) { toast.success('Compte prestataire créé !'); navigate('/prestataire') }
     else { toast.error(res.message); if (res.errors) setErrors(res.errors) }
@@ -70,6 +72,13 @@ export default function PrestataireRegister() {
             <input type={showPwd ? 'text' : 'password'} placeholder="••••••••"
               value={form.password_confirmation} onChange={e => setForm(f => ({ ...f, password_confirmation: e.target.value }))} required />
           </div>
+          <label className="auth-form__checkbox">
+            <input type="checkbox" checked={acceptCgu} onChange={e => setAcceptCgu(e.target.checked)} required />
+            <span>
+              J'accepte les <Link to="/conditions-utilisation" target="_blank">conditions d'utilisation</Link>{' '}
+              et la <Link to="/politique-de-confidentialite" target="_blank">politique de confidentialité</Link>
+            </span>
+          </label>
           <button type="submit" className="btn btn--primary btn--full auth-btn" disabled={loading}>
             {loading ? 'Création...' : 'CRÉER MON COMPTE'}
           </button>

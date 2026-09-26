@@ -448,6 +448,9 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .auth-form__pwd button { position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--gray-500); }
 .auth-form__row { display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; }
 .auth-form__check { display: flex; align-items: center; gap: 0.4rem; cursor: pointer; color: var(--gray-700); }
+.auth-form__checkbox { display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer; color: var(--gray-700); font-size: 0.82rem; line-height: 1.5; }
+.auth-form__checkbox input { margin-top: 0.2rem; flex-shrink: 0; }
+.auth-form__checkbox a { color: var(--red); text-decoration: underline; }
 .auth-form__forgot { color: var(--red); font-size: 0.82rem; }
 .auth-form__row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
 .auth-btn { padding: 0.85rem; font-size: 0.85rem; margin-top: 0.35rem; }
@@ -571,7 +574,9 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .footer__newsletter input::placeholder { color: var(--gray-500); }
 .footer__newsletter button { background: var(--red); color: var(--white); padding: 0.6rem 1.1rem; font-size: 0.8rem; font-weight: 700; transition: background var(--transition); }
 .footer__newsletter button:hover { background: var(--red-dark); }
-.footer__bottom { border-top: 1px solid var(--gray-300); padding-top: 1.75rem; padding-bottom: 1.75rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--gray-500); }
+.footer__bottom { border-top: 1px solid var(--gray-300); padding-top: 1.75rem; padding-bottom: 1.75rem; display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--gray-500); }
+.footer__legal-links a { color: var(--gray-500); }
+.footer__legal-links a:hover { color: var(--gray-800); }
 
 /* Signature géante en contour, tronquée en bas (armenia.travel, adapté) */
 .footer__wordmark { overflow: hidden; height: clamp(56px, 9vw, 150px); text-align: center; }
@@ -638,6 +643,13 @@ h3, .h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.375re
 .apropos-section { padding: 4rem 0; border-bottom: 1px solid var(--gray-100); }
 .apropos-section:last-child { border-bottom: none; }
 .apropos-section__title { margin-bottom: 2.25rem; text-align: left; max-width: 20ch; }
+
+.legal-content { max-width: 760px; padding: 3rem 1.5rem 4rem; }
+.legal-content section { margin-bottom: 2.25rem; }
+.legal-content h2 { font-size: 1.15rem; margin-bottom: 0.75rem; }
+.legal-content p, .legal-content li { color: var(--gray-600); line-height: 1.7; }
+.legal-content ul { padding-left: 1.25rem; margin-top: 0.5rem; }
+.legal-content li { margin-bottom: 0.5rem; }
 .apropos-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 4.5rem; align-items: center; }
 .apropos-intro__text h2 { margin-bottom: 1.4rem; }
 .apropos-intro__text p { color: var(--gray-700); line-height: 1.85; margin-bottom: 1.1rem; font-size: 1rem; }
